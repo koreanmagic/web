@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+★수정사항★
+0) <update> 구문에서 insertTime 삭제 (등록일은 갱신되면 안된다)
+1) resultMap에서 condition, list_type <association>으로 변경
+2) SQL 구문에서 condition -> condition.id 로 변경
+3) <insert>에서 updateTime 구문을 삭제 (자동갱신)
+4) <update>에서 updateTime 구문을 삭제 
+
+-->
+
+<mapper namespace="kr.co.koreanmagic.web.db.mybatis.mapper.WorkMapper" >
+  <resultMap id="BaseResultMap" type="kr.co.koreanmagic.web.domain.Work" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="customer" property="customer" jdbcType="VARCHAR" />
+    <result column="item" property="item" jdbcType="VARCHAR" />
+    <result column="item_type" property="itemType" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="SMALLINT" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="bleed" property="bleed" jdbcType="TINYINT" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delivery" property="delivery" jdbcType="VARCHAR" />
+    <result column="subcontract" property="subcontract" jdbcType="VARCHAR" />
+    <result column="delivery_time" property="deliveryTime" jdbcType="TIMESTAMP" />
+    <result column="item_memo" property="itemMemo" jdbcType="VARCHAR" />
+    <result column="read_count" property="readCount" jdbcType="INTEGER" />
+    <result column="bleed_size" property="bleedSize" jdbcType="VARCHAR" />
+    <result column="delivery_memo" property="deliveryMemo" jdbcType="VARCHAR" />
+    <result column="read_check" property="readCheck" jdbcType="TINYINT" />
+    <association property="listType" resultMap="kr.co.koreanmagic.web.db.mybatis.mapper.WorkListTypeMapper.BaseResultMap" column="list_type" />
+    <association property="condition" resultMap="kr.co.koreanmagic.web.db.mybatis.mapper.WorkConditionMapper.BaseResultMap" column="con_id" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, insert_time, con_id, customer, item, item_type, count, number, size, unit, bleed, 
+    memo, tag, cost, price, update_time, delivery, subcontract, delivery_time, item_memo, 
+    read_count, bleed_size, delivery_memo, list_type_id, read_check
+  </sql>
+  <insert id="insertSelective" parameterType="kr.co.koreanmagic.web.domain.Work" >
+    insert into work_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="condition != null" >
+        con_id,
+      </if>
+      <if test="customer != null" >
+        customer,
+      </if>
+      <if test="item != null" >
+        item,
+      </if>
+      <if test="itemType != null" >
+        item_type,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="bleed != null" >
+        bleed,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="delivery != null" >
+        delivery,
+      </if>
+      <if test="subcontract != null" >
+        subcontract,
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time,
+      </if>
+      <if test="itemMemo != null" >
+        item_memo,
+      </if>
+      <if test="readCount != null" >
+        read_count,
+      </if>
+      <if test="bleedSize != null" >
+        bleed_size,
+      </if>
+      <if test="deliveryMemo != null" >
+        delivery_memo,
+      </if>
+      <if test="listType != null" >
+        list_type_id,
+      </if>
+      <if test="readCheck != null" >
+        read_check,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="condition != null" >
+        #{condition.id,jdbcType=INTEGER},
+      </if>
+      <if test="customer != null" >
+        #{customer,jdbcType=VARCHAR},
+      </if>
+      <if test="item != null" >
+        #{item,jdbcType=VARCHAR},
+      </if>
+      <if test="itemType != null" >
+        #{itemType,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=SMALLINT},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="bleed != null" >
+        #{bleed,jdbcType=TINYINT},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        #{delivery,jdbcType=VARCHAR},
+      </if>
+      <if test="subcontract != null" >
+        #{subcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryTime != null" >
+        #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="itemMemo != null" >
+        #{itemMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="readCount != null" >
+        #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="bleedSize != null" >
+        #{bleedSize,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryMemo != null" >
+        #{deliveryMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="listType != null" >
+        #{listType.id,jdbcType=INTEGER},
+      </if>
+      <if test="readCheck != null" >
+        #{readCheck,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="kr.co.koreanmagic.web.domain.Work" >
+    update work_list
+    <set >
+      <if test="condition != null" >
+        con_id = #{condition.id,jdbcType=INTEGER},
+      </if>
+      <if test="customer != null" >
+        customer = #{customer,jdbcType=VARCHAR},
+      </if>
+      <if test="item != null" >
+        item = #{item,jdbcType=VARCHAR},
+      </if>
+      <if test="itemType != null" >
+        item_type = #{itemType,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=SMALLINT},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="bleed != null" >
+        bleed = #{bleed,jdbcType=TINYINT},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="delivery != null" >
+        delivery = #{delivery,jdbcType=VARCHAR},
+      </if>
+      <if test="subcontract != null" >
+        subcontract = #{subcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="itemMemo != null" >
+        item_memo = #{itemMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="readCount != null" >
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="bleedSize != null" >
+        bleed_size = #{bleedSize,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryMemo != null" >
+        delivery_memo = #{deliveryMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="listType != null" >
+        list_type_id = #{listType.id,jdbcType=INTEGER},
+      </if>
+      <if test="readCheck != null" >
+        read_check = #{readCheck,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 
+  	프로시저 호출 방법
+  	Map 객체나 bean객체의 프로퍼티가 IN/OUT 변수 그자체가 된다고 보면 된다. 
+   	★★★ 프로시저의 parameter는 <parameter> 선언 순서가 된다.
+  -->
+  <parameterMap type="hashmap" id="paramMap">
+  	<parameter property="wait" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="working" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="done" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="printing" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="printed" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="delivery" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  	<parameter property="complete" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  </parameterMap>
+  
+  <!-- 
+  	프로시저 안에 SELECT로 반환하는 값이 있다면 resultType 혹은 resultMap을 설정해서 반환받을 수 있다.
+   -->
+  <select id="workListStats" statementType="CALLABLE" parameterMap="paramMap">
+  	{
+  		{
+  		call work_list_stats(?,?,?,?,?,?,?)
+  		}
+  	}
+  </select>
+</mapper>

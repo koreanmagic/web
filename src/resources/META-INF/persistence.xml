@@ -1,0 +1,20 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+    http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+   version="1.0">
+
+   <persistence-unit name="hancome">
+
+      <properties>
+          <!-- Scan for annotated classes and Hibernate mapping XML files -->
+          <property name="hibernate.archive.autodetection" value="class, hbm"/>
+
+			<property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml" />
+			<property name="hibernate.jdbc.batch_size" value="20" />
+			<property name="hibernate.current_session_context_class" value="thread" />
+			
+      </properties>
+   </persistence-unit>
+
+</persistence>

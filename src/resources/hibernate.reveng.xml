@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+		<!DOCTYPE hibernate-reverse-engineering 
+  			SYSTEM "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+  			
+ <hibernate-reverse-engineering>
+ 	<!-- <table-filter match-schema="hanco" match-name=".*" package="kr.co.koreanmagic.hibernate.mapper.reveng" /> -->
+ 	<!-- <table-filter match-catalog="hancome" match-name=".*" exclude="false" /> -->
+ 	<table-filter match-catalog="hancome" match-name="magic" />
+ 	<table name="magic" class="kr.co.koreanmagic.hibernate.mapper.Magic" schema="hancome">
+ 		<!-- <primary-key>
+ 			<generator class="increment" />
+ 			<key-column name="id" property="id" type="long" />
+ 		</primary-key>
+ 		
+ 		<column name="firstname" property="firstname" /> -->
+ 	</table>
+ </hibernate-reverse-engineering>
+ 
+<!-- 
+<hibernate-reverse-engineering>
+
+	<type-mapping>
+		<sql-type jdbc-type="VARCHAR" length='20' hibernate-type="SomeUserType" />
+		<sql-type jdbc-type="VARCHAR" length='1' hibernate-type="yes_no" />
+		<sql-type jdbc-type="NUMERIC" precision='1' hibernate-type="boolean" />
+		<sql-type jdbc-type="NUMERIC" hibernate-type="long" />
+	</type-mapping>
+
+	<table-filter match-name="BIN$.*" exclude="true" />
+
+	<table-filter match-name="DoNotWantIt" exclude="true" />
+
+	<table-filter match-catalog="BAD" match-schema="SCHEMA"
+		match-name=".*" exclude="true" />
+
+	<table name="ORDERS">
+		<primary-key>
+			setting up a specific id generator for a table
+			<generator class="sequence">
+				<param name="table">seq_table</param>
+			</generator>
+			<key-column name="CUSTID" />
+		</primary-key>
+		<column name="NAME" property="orderName" type="string" />
+
+		<foreign-key constraint-name="ORDER_CUST">
+			<many-to-one property="customer" />
+			<set property="orders" />
+		</foreign-key>
+	</table>
+
+</hibernate-reverse-engineering>
+ -->

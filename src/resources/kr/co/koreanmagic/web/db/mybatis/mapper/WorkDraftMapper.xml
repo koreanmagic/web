@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.koreanmagic.web.db.mybatis.mapper.WorkDraftMapper" >
+  <resultMap id="BaseResultMap" type="kr.co.koreanmagic.web.domain.WorkDraft" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+    <result column="work_id" property="workId" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="VARCHAR" />
+    <result column="parent_path" property="parentPath" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="is_use" property="isUse" jdbcType="TINYINT" />
+    <result column="download_count" property="downloadCount" jdbcType="INTEGER" />
+    <result column="file_size" property="fileSize" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, upload_time, work_id, file_type, parent_path, file_name, memo, is_use, download_count, 
+    file_size
+  </sql>
+  <insert id="insertSelective" parameterType="kr.co.koreanmagic.web.domain.WorkDraft" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into work_drafts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uploadTime != null" >
+        upload_time,
+      </if>
+      <if test="workId != null" >
+        work_id,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+      <if test="parentPath != null" >
+        parent_path,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="isUse != null" >
+        is_use,
+      </if>
+      <if test="downloadCount != null" >
+        download_count,
+      </if>
+      <if test="fileSize != null" >
+        file_size,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workId != null" >
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentPath != null" >
+        #{parentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse != null" >
+        #{isUse,jdbcType=TINYINT},
+      </if>
+      <if test="downloadCount != null" >
+        #{downloadCount,jdbcType=INTEGER},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="kr.co.koreanmagic.web.domain.WorkDraft" >
+    update work_drafts
+    <set >
+      <if test="uploadTime != null" >
+        upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workId != null" >
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        file_type = #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentPath != null" >
+        parent_path = #{parentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse != null" >
+        is_use = #{isUse,jdbcType=TINYINT},
+      </if>
+      <if test="downloadCount != null" >
+        download_count = #{downloadCount,jdbcType=INTEGER},
+      </if>
+      <if test="fileSize != null" >
+        file_size = #{fileSize,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

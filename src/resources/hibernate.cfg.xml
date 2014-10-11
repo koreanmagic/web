@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+		<!DOCTYPE hibernate-configuration
+        PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"
+        >
+
+<hibernate-configuration>
+	
+    <session-factory>
+    	
+    	
+		<!-- JNDI SETTING -->
+		<!--
+		<property name="hibernate.connection.datasource">java:/MyDatasource</property>
+				<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property>
+				<property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
+				<property name="hibernate.session_factory_name">java:/hibernate/MySessionFactory</property>
+				<property name="hibernate.jndi.class">com.sun.jndi.fscontext.RefFSContextFactory</property>
+				<property name="hibernate.jndi.url">file:/G:/jndi</property>-->
+		
+
+		
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!-- DATABASE 셋팅 
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/hancome?characterEncoding=UTF-8</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">ko9984</property>
+        -->
+        
+
+		<!-- DB POLL -->
+        <property name="hibernate.c3p0.min_size">5</property>
+        <property name="hibernate.c3p0.max_size">20</property>
+        <property name="hibernate.c3p0.timeout">300</property>
+        <property name="hibernate.c3p0.max_statements">50</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+        
+        
+        <!-- 
+        	* "hibernate.current_session_context_class"
+        	* getCurrentSession()에 대한 설정이다.
+        	* 스프링과 연동할때는 이 설정을 Deprecated 해야 한다.
+        	* 왜냐면 currentSession을 스프링 트랜잭션 매니저가 관리하기 때문이다.
+        	* 
+        	* 이걸 thread로 놔두면 getCurrentSession()이 제대로 동작하지 않는다.
+        	* 이걸 thread로 하면 getCurrentSession()시 수동으로 Transaction을 시작해줘야 한다. 안그러면 아웃
+        	* 
+        <property name="hibernate.current_session_context_class">thread</property>
+        -->
+
+
+		<!-- SCHEMA CREATER -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+		<!-- <property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property>
+        <property name="hibernate.connection.datasource">java:/comp/env/jdbc/test</property> -->
+        
+		
+        <!-- SQL to stdout logging -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <!-- <property name="use_sql_comments">true</property> -->
+        
+		
+		<!-- 역공학  
+		<mapping resource="hibernate.reveng.xml"/>  -->
+       	
+       	<!-- <mapping class="kr.co.koreanmagic.hibernate.mapper.User" />
+       	<mapping class="kr.co.koreanmagic.hibernate.mapper.Address" /> -->
+       	
+       	
+       	<!-- ENTITTY registry
+		<mapping class="&package;.Subcontractor" />
+		<mapping class="&package;.Customer" />
+
+		<mapping package="kr.co.koreanmagic.hibernate.mapper" /> -->
+		
+    </session-factory>
+    
+</hibernate-configuration>

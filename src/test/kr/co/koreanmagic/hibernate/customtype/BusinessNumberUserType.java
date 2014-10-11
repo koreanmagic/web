@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kr.co.koreanmagic.commons.KoUtils;
-import kr.co.koreanmagic.hibernate.mapper.usertype.ThreeNumber;
+import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;

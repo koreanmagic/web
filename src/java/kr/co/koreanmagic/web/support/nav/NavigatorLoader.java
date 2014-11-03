@@ -1,7 +1,6 @@
 package kr.co.koreanmagic.web.support.nav;
 
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 

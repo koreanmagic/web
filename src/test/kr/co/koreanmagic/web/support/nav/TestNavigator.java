@@ -1,5 +1,7 @@
 package kr.co.koreanmagic.web.support.nav;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -54,6 +56,14 @@ public class TestNavigator {
 	
 	
 	@Test
+	public void 스스() throws Exception {
+		Path p = Paths.get("asdf/d/mname");
+		for(Path pp : p) {
+			log(pp);
+		}
+	}
+	
+	//@Test
 	public void 업로드() throws Exception {
 		Properties prop = new Properties();
 		prop.load(getClass().getClassLoader().getResourceAsStream("nav.properties"));

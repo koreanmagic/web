@@ -1,7 +1,8 @@
 package kr.co.koreanmagic.web.support.nav;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import kr.co.koreanmagic.web.support.page.PageContext;
@@ -55,7 +56,7 @@ public class GeneralNavigator implements Navigator {
 	public GeneralNavigator addMenu(GeneralNavigator child) {
 		childs().add(child);
 		child.setParent(this);
-		return this;
+		return child;
 	}
 	public void setParent(GeneralNavigator parent) {
 		this.parent = parent;
@@ -114,6 +115,30 @@ public class GeneralNavigator implements Navigator {
 		return result;
 	}
 	
+	private GeneralNavigator protoFind(String path) {
+		Path convertPath = Paths.get(path);
+		
+		GeneralNavigator nav = this;
+		for(Path p : convertPath) {
+			if((nav = protoFind(nav, p.toString(), false)) == null)
+					break;
+		}
+		return nav;
+	}
+	
+	private GeneralNavigator protoFind(GeneralNavigator navigator, String path, boolean onOff) {
+		
+		if(navigator == null) return null;
+		
+		if(onOff) navigator.off();
+		
+		for(GeneralNavigator child : navigator.childs()) {
+			if(path.equals(child.pageContext().toString()))
+				return child;
+		}
+		
+		return null;
+	}
 	
 
 	@Override
@@ -144,7 +169,7 @@ public class GeneralNavigator implements Navigator {
 	
 	@Override
 	public String toString() {
-		return "[ " + pageContext().getPath() + " : " + pageContext().toString() + " ]";
+		return "[ " + pageContext().toString() + " ]";
 	}
 	@Override
 	public String getPath() {

@@ -1,0 +1,219 @@
+@charset "UTF-8";
+/*
+ * 사용자 요구에 따라 리스트를 펼치는 위젯
+ * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
+ */
+ul.ui-item-container {
+  position: relative;
+  width: inherit;
+  height: auto;
+  background-color: white;
+  overflow: hidden;
+  /* Active 리스트가 열려있을 때 */ }
+  ul.ui-item-container > li {
+    position: relative;
+    border-top: 1px solid #aaaaaa;
+    min-height: 30px; }
+    ul.ui-item-container > li:last-child {
+      border-bottom: none; }
+  ul.ui-item-container > li.ui-item-header {
+    display: block;
+    width: inherit;
+    height: 4em;
+    background-color: #d9d9d9;
+    border-top: none; }
+    ul.ui-item-container > li.ui-item-header:hover {
+      cursor: pointer;
+      background-color: #d2d2d2; }
+  ul.ui-item-container.active > li.ui-item-header {
+    background-color: #d2d2d2; }
+    ul.ui-item-container.active > li.ui-item-header:hover {
+      cursor: default; }
+  ul.ui-item-container.active span._customer, ul.ui-item-container.active span._subject, ul.ui-item-container.active span._date, ul.ui-item-container.active span._delivery-limit {
+    font-weight: bold; }
+  ul.ui-item-container [class*=select-list-] {
+    font-size: 1.4em;
+    position: relative;
+    top: 15px; }
+
+/*
+* headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
+* 이는 vertical-align을 middle로 설정하기 위한 것이다.
+*/
+li.ui-item-header div[class^=_] {
+  display: table-cell;
+  height: inherit;
+  vertical-align: middle; }
+li.ui-item-header ._no {
+  width: 130px;
+  text-align: center; }
+li.ui-item-header ._work-state {
+  width: 120px;
+  /*
+   * ui에 해당하는 클래스다.
+   * 원래 ui 클래스 속성을 직접 바꾸는건 지양해야할 기술이지만, 이번에는 예외로 한다.
+   * JS를 통해 버튼값을 바꾸는데, 글자수가 다르기때문에 그때마다 버튼 사이즈가 같이 바뀌게 된다.
+   * 이를 방지하기 위해 width값을 강제로 지정한다.
+   */ }
+  li.ui-item-header ._work-state .btn {
+    width: 75px; }
+li.ui-item-header ._command-btns {
+  float: right;
+  height: inherit;
+  margin-left: 22px;
+  padding-right: 6px;
+  padding-left: 8px;
+  border-left: 1px solid #aaaaaa; }
+li.ui-item-header ._insert-date {
+  width: 150px;
+  text-align: center; }
+li.ui-item-header ._customer-icon > img {
+  border-radius: 4px;
+  position: relative;
+  top: 2px; }
+li.ui-item-header ._customer {
+  width: 130px;
+  text-align: left;
+  text-indent: 3px; }
+
+._list-item-container {
+  position: relative;
+  padding: 1em;
+  margin-top: 1em;
+  border: 1px solid #d6d6d6;
+  border-bottom: 1px solid #b8b8b8;
+  min-height: 200px;
+  overflow: hidden;
+  background: white; }
+  ._list-item-container.input {
+    border: 1px solid #3e6299;
+    outline: 1px solid #3e6299; }
+    ._list-item-container.input ._data {
+      border-bottom: 1px solid rgba(255, 255, 255, 0);
+      border-radius: 3px; }
+    ._list-item-container.input ._value {
+      border: 1px solid #aaa; }
+  ._list-item-container:hover {
+    outline: 1px solid #919191;
+    border: 1px solid #919191; }
+
+/* 글씨 속성 */
+span {
+  line-height: 1.2em; }
+  span._subject, span._customer {
+    font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
+    letter-spacing: -0.15em;
+    color: #4a4a4a;
+    text-shadow: 1px 1px 1px white; }
+  span._work-done, span._work-separator, span._delivery-limit, span._time {
+    position: relative; }
+  span._time {
+    left: -5px; }
+  span._delivery-limit {
+    left: 20px; }
+  span._work-done {
+    top: -1.5px; }
+  span._work-separator {
+    top: -2px;
+    left: -2px; }
+
+.ui-item-body {
+  padding: 1em;
+  padding-top: 0;
+  margin-bottom: 0; }
+  .ui-item-body ._item-btns, .ui-item-body ._item-resource {
+    text-align: right;
+    font-size: 1.16em; }
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+._notice-panel {
+  position: absolute;
+  width: 100px;
+  padding: .13em;
+  border: 1px solid #b8b8b8;
+  border-radius: 1em;
+  background: #efefef;
+  text-align: left;
+  color: #616161;
+  text-shadow: 1px 1px 0px white; }
+
+._panel {
+  overflow: hidden;
+  height: 150px;
+  margin-bottom: .6em;
+  outline: 1px solid #cdcdcd;
+  background: #e6e6e6;
+  text-align: center; }
+  ._panel > img {
+    max-height: 150px; }
+
+._item-btns {
+  margin-bottom: 0.6em;
+  margin-top: -.3em; }
+  ._item-btns i {
+    padding: .15em;
+    margin-left: -.15em;
+    border: 1px solid white;
+    border-radius: 2px;
+    cursor: pointer;
+    color: #505050; }
+    ._item-btns i:hover {
+      border: 1px solid #aaa;
+      background: #f3f3f3;
+      text-shadow: 1px 1px 1px white;
+      color: #323232; }
+  ._item-btns > a:hover {
+    color: #b51f1f; }
+
+._item-time {
+  margin-top: .9em;
+  margin-bottom: .2em;
+  text-align: right; }
+
+._item-data {
+  overflow: hidden;
+  font-family: 돋움;
+  letter-spacing: 0em; }
+  ._item-data ._label {
+    padding: .15em .3em;
+    margin-right: 5px;
+    border: 1px solid #646464;
+    border-radius: 2px;
+    font-family: 돋움;
+    letter-spacing: -0.05em;
+    background: #9e9e9e;
+    color: white; }
+  ._item-data ._data-cell {
+    float: left;
+    width: 100%;
+    margin-top: .3em;
+    padding-bottom: .3em;
+    border-bottom: 1px solid #f0f0f0; }
+    ._item-data ._data-cell._half {
+      width: 49%; }
+      ._item-data ._data-cell._half.float-right {
+        float: right; }
+    ._item-data ._data-cell ._value {
+      float: none;
+      overflow: hidden;
+      padding: .15em .3em;
+      border: 1px solid rgba(255, 255, 255, 0); }
+
+._item-resource {
+  margin-top: .7em;
+  /* border-top: 1px solid rgb(214, 214, 214); */
+  padding-top: .5em; }
+
+/* 상태값 :: 수정  */
+.ui-item-item {
+  /* 수정 시 */ }
+  .ui-item-item.modify ._value {
+    border: 1px solid #afafaf;
+    background: #fcfcfc; }
+    .ui-item-item.modify ._value input {
+      width: 100%;
+      border: 0;
+      font-family: 돋움;
+      font-size: .9em;
+      color: #3b619b;
+      background: #fafafa; }

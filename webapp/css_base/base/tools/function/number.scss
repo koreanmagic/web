@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+/*
+ * 각종 단위를 없애고 숫자만 돌려준다.
+ * SASS에서 단위는 숫자뒤에 있는 문자열을 뜻한다.
+ * 0을 곱하면 0px, 0% 등 단위만 남는다. 여기에 1을 더하면 1px, 1%가 된다.
+ * 본래값에서 1단위를 나누면 정수로 된 몫이 남는다.
+ * 그걸 돌려주면 결국 숫자값만 남게 되는것이다. 
+ */ 
+@function sprit-units($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+
+/*
+ * 100%를 숫자로 나눈 값.
+ */
+@function percent-of-100($value) {
+  @return sprit-units($value) / 100%;
+}

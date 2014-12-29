@@ -1,0 +1,416 @@
+@charset "UTF-8";
+
+
+/*
+ * 사용자 요구에 따라 리스트를 펼치는 위젯
+ * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
+ */
+ul.ui-item-container {  // UL
+  
+  position: relative;
+  width: inherit;
+  height: auto;
+  background-color: white;
+  overflow: hidden;
+  
+  // headerline 배경색상
+  $ui-select-list-normal-bgcolor: rgb(217,217,217);
+  $ui-select-list-active-bgcolor: rgb(210,210,210);
+  
+  
+  // 리스트 공통
+  > li {
+    position: relative;
+    //display: none;  // 처음에는 나타나지 않는다.
+    border-top: 1px solid rgb(170, 170, 170);
+    min-height: 30px;
+    
+    // 마지막 리스트는 밑줄을 지운다.
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  // 헤드라인 부분
+  > li.ui-item-header {
+    
+    display: block;
+    width: inherit;
+    height: 4em;
+    background-color: $ui-select-list-normal-bgcolor;
+    border-top: none;
+    
+    // 헤드라인만 클릭해도 리스트가 열린다.
+    &:hover {
+      cursor: pointer;
+      background-color: $ui-select-list-active-bgcolor;
+    }
+    
+  } // > li.headline 
+  
+  
+  /* Active 리스트가 열려있을 때 */
+  &.active {
+    
+    > li.ui-item-header {
+      background-color: $ui-select-list-active-bgcolor;
+      &:hover {
+        cursor: default;
+      }
+    } // > li.headline
+    
+    span {
+      // 글씨 진하게
+      &._customer, &._subject, &._date, &._delivery-limit {
+        font-weight: bold;
+      }
+    } // span
+  } // --&.active
+  
+  // ui 버튼 설정
+  [class*=select-list-] {
+    font-size: 1.4em;
+    position: relative;
+    top: 15px;
+  }
+  
+  
+  
+  
+  
+} //.ui-item-container
+
+
+
+/*
+* headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
+* 이는 vertical-align을 middle로 설정하기 위한 것이다.
+*/
+li.ui-item-header {
+  
+  div[class^=_] {
+    display: table-cell;
+    height: inherit;
+    vertical-align: middle;
+  } // div[class^=_]
+  
+  
+  ._no {
+    width: 130px;
+    text-align: center;
+  }
+      
+  ._work-state {
+    width: 120px;
+        /*
+         * ui에 해당하는 클래스다.
+         * 원래 ui 클래스 속성을 직접 바꾸는건 지양해야할 기술이지만, 이번에는 예외로 한다.
+         * JS를 통해 버튼값을 바꾸는데, 글자수가 다르기때문에 그때마다 버튼 사이즈가 같이 바뀌게 된다.
+         * 이를 방지하기 위해 width값을 강제로 지정한다.
+         */
+    .btn {
+      width: 75px;
+    }
+  } // ._work-state
+      
+  ._command-btns {
+    float: right;
+    height: inherit;
+    margin-left: 22px;
+    padding-right: 6px;
+    padding-left: 8px;
+    border-left: 1px solid rgb(170, 170, 170);
+  }
+      
+  ._insert-date {
+    width: 150px;
+    text-align: center;
+  }
+      
+  ._customer-icon {
+    > img {
+      border-radius: 4px;
+      position: relative;
+      top: 2px;
+    }
+  }
+      
+  ._customer {
+    width: 130px;
+    text-align: left;
+    text-indent: 3px;
+  }
+} // li.ui-item-header
+
+
+._list-item-container {
+  
+  // 수정중일때
+  &.input {
+    border: 1px solid rgb(62, 98, 153);
+    outline: 1px solid rgb(62, 98, 153);
+    
+    ._data {
+      border-bottom: 1px solid rgba(255,255,255,0);
+      border-radius: 3px;
+    }
+    
+    // 라벨과 데이터를 감싸고 있는 div
+    ._value {
+      border: 1px solid #aaa;
+    }
+    
+  }  
+  
+  position: relative;
+  padding: 1em;
+  margin-top: 1em;   // 각 아이템 박스들 사이를 띄위기 위한 것. 
+      
+  border: 1px solid rgb(214, 214, 214);
+  border-bottom: 1px solid rgb(184, 184, 184);
+  min-height: 200px;
+      
+  overflow: hidden;
+  background: white;
+    
+  &:hover {
+    outline: 1px solid rgb(145, 145, 145);
+    border: 1px solid rgb(145, 145, 145);
+  }
+    
+  // 컨테이너 수정
+  &:modify {
+    // 인풋코드
+    ._item-data {
+        
+      div.input {
+          
+      } // div.input
+    } // ._item-data
+  } // &:modify
+  
+}// ._list-item-container
+
+  
+
+/* 글씨 속성 */
+span {
+    
+  line-height: 1.2em;
+    
+  // 한글폰트
+  &._subject, &._customer {
+    font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
+    letter-spacing: -0.15em;
+    color: rgb(74, 74, 74);
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+  }
+    
+  // 위치 미세 조정
+  &._work-done, &._work-separator, &._delivery-limit, &._time {
+    position: relative;
+  }
+  
+  &._time {
+    left: -5px;
+  } // &._insert_time
+    
+    
+  &._delivery-limit {
+    left: 20px;
+  }
+    
+  &._work-done {
+    top: -1.5px;
+  }
+  
+  &._work-separator {
+    top: -2px;
+    left: -2px;
+  }
+} // span
+  
+
+
+// 세부 리스트
+.ui-item-body {
+    
+  padding: 1em;   // 모든 item-box가 적용받는 패딩
+  padding-top: 0; // 안에 위치한 박스가 상단 margin값을 가지고 있으므로 지워준다.
+  margin-bottom: 0;
+    
+  ._item-btns, ._item-resource {
+    text-align: right;
+    font-size: 1.16em;
+  }
+} // ._list-grid
+
+.ui-item-index {
+
+}
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+// 상황판
+._notice-panel {
+  position: absolute;
+  width: 100px;
+  padding: .13em;
+  border: 1px solid rgb(184, 184, 184);
+  border-radius: 1em;
+
+  background: rgb(239, 239, 239);
+  text-align: left;
+  color: rgb(97, 97, 97);
+  text-shadow: 1px 1px 0px rgb(255, 255, 255);
+          
+  // 현재 모드 알림
+  ._notice {
+    
+  }
+  
+}
+
+// 에디터
+._panel {
+  overflow: hidden;
+  height: 150px;
+  margin-bottom: .6em;
+  outline: 1px solid rgb(205, 205, 205);
+  background: rgb(230,230,230);
+  text-align: center;
+        
+        
+  > img {
+    max-height: 150px;
+  }
+} // ._panel
+
+
+
+
+// 각종 정보를 제공하는 버튼
+._item-btns {
+  margin-bottom: 0.6em;
+  margin-top: -.3em;
+        
+  // 추가 삭제 등 에디터 버튼
+  i {
+    
+    padding: .15em;
+    margin-left: -.15em;
+    border: 1px solid white;
+    border-radius: 2px;
+    
+    cursor: pointer;
+    color: rgb(80,80,80);
+    
+    &:hover {
+      border: 1px solid #aaa;
+      background: #f3f3f3;
+      text-shadow: 1px 1px 1px white;
+      color: rgb(50,50,50);
+    }
+  } // i
+  
+        
+  > a {
+    &:hover {
+      color: rgb(181, 31, 31);;
+    }
+  }
+} // > ._item-btns
+
+
+._item-time {
+  margin-top: .9em;
+  margin-bottom: .2em;
+  text-align: right;
+}
+      
+$_item-data-font-size: 1em;
+$_item-data-font-family: 돋움;
+
+
+
+// 아이템 세부 정보
+._item-data {
+  
+  overflow: hidden;   // 자식 Div들이 모두 float되었기때문에 이들을 인식해 height값을 보정하기 위한 태그
+  font-family: $_item-data-font-family;
+  letter-spacing: 0em; 
+  
+  // item-data의 메뉴글씨
+  ._label {
+      
+    padding: .15em .3em;
+    margin-right: 5px;
+      
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 2px;
+      
+    font-family: $_item-data-font-family;
+    letter-spacing: -0.05em;
+    
+    background: rgb(158, 158, 158);
+    color: rgb(255, 255, 255);
+  }
+  
+  ._data-cell {     // 세로로 쌓이는 데이터 Div
+    float: left;
+    width: 100%;
+    margin-top: .3em;
+    padding-bottom: .3em;
+    border-bottom: 1px solid rgb(240,240,240);
+    
+    &._half {
+      width: 49%;
+      
+      &.float-right {
+        float: right;
+      }
+    } // &._half
+    
+    ._value {   // 실제 값이 담기는 div 
+      float: none;
+      overflow: hidden;   // input태그가 삽입될 때를 대비한
+      padding: .15em .3em;
+      border: 1px solid rgba(255,255,255,0);
+      
+    } // ._value
+  } // ._data-cell
+} // > ._item-data
+
+
+
+._item-resource {
+  margin-top: .7em;
+  /* border-top: 1px solid rgb(214, 214, 214); */
+  padding-top: .5em;
+} // > ._item-resource
+
+
+/* 상태값 :: 수정  */
+// 각 모드별
+.ui-item-item {
+  
+  /* 수정 시 */
+  &.modify {
+    
+    ._value {   // 데이터 값을 싸고있는 엘리먼트
+      
+      border: 1px solid rgb(175,175,175);
+      background: rgb(252, 252, 252);
+      
+      input {
+        width: 100%;
+        border: 0;
+        font-family: $_item-data-font-family;
+        font-size: .9em; 
+        color: rgb(59, 97, 155);
+        background: rgb(250,250,250);
+      }
+    }
+  } // --&.modify
+
+} // .ui-item-item
+

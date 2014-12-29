@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+/*▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  전체템플릿 설정  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒*/
+$layout-admin-top-height: 83px;
+$layout-admin-left-width: 200px;
+$layout-admin-bodycontent-padding: 12px;  // 실제 내용이 들어가는 부분의 상 좌우 여백
+
+
+
+
+/*▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  레이아웃 변수 설정  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒*/
+// 기본 레이아웃의 컨테이너 width 설정
+$container-min-width: 1420px;   
+$container-max-width: 1920px;
+$container-layout-margin: 10px;
+
+@import "../../../css_base/template-style/gray";
+@import "../../src/admin/#";
+
+@import "../../../css_base/ui/#";
+
+
+

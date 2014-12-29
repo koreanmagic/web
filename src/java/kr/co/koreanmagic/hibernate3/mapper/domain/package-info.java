@@ -37,7 +37,6 @@ columns = { @ColumnResult(name = "id"),
 
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
-import org.hibernate.annotations.NamedNativeQuery;
 
 /*
 @SqlResultSetMapping(name="carkey",

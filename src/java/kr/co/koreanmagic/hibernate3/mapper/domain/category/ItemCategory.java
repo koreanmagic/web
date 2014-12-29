@@ -3,7 +3,6 @@ package kr.co.koreanmagic.hibernate3.mapper.domain.category;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,23 +10,14 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-/*
- * Basic		일반인쇄
- * Advanced		고급인쇄
- * Design		디자인 작업
- * Hard			특수품목
- * Large		대형출력
- * Soft			경인쇄
- */
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Table(name="item_category")
-@GenericGenerator(name="seq_id", strategy="kr.co.koreanmagic.hibernate.mapper.generator.CategoryUniqueNum")
+//@GenericGenerator(name="seq_id", strategy="kr.co.koreanmagic.hibernate.mapper.generator.CategoryUniqueNum")
 public abstract class ItemCategory implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	
 	private Long id;
 	private String name;
@@ -60,8 +50,6 @@ public abstract class ItemCategory implements Serializable {
 	}
 	
 	
-	
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -91,28 +79,5 @@ public abstract class ItemCategory implements Serializable {
 	public String toString() {
 		return getName();
 	}
-
 	
-	/*@Embeddable
-	public static class PrimaryKey implements Serializable {
-		
-		private String categoryName;
-		private Long num;
-		
-		@Column(name="category_name")
-		public String getCategoryName() {
-			return categoryName;
-		}
-		public void setCategoryName(String categoryName) {
-			this.categoryName = categoryName;
-		}
-		
-		@Column(name="num")
-		public Long getNum() {
-			return num;
-		}
-		public void setNum(Long num) {
-			this.num = num;
-		}
-	}*/
 }

@@ -8,8 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Bank;
-import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Website;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Bank;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Website;
 
 @Entity
 @Table(name="subcontractor")

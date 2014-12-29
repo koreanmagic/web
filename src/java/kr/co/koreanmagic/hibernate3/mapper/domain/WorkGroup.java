@@ -1,38 +1,47 @@
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+import kr.co.koreanmagic.commons.KoDateUtils;
+import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 
+/*
+ * @NOT NULL
+ * subject, customer, state 
+ */
 @GenericGenerator(name="seq_id", strategy="kr.co.koreanmagic.hibernate3.mapper.generate.CustomerSequence")
 @Entity
 @Table(name="work_group")
 public class WorkGroup {
 	
 	private String id;				// 아이디
+	private Long version;
+	
 	private String subject;			// 게시물제목
 	private Customer customer;		// 거래처
 	private WorkState state;		// 작업상황
 	
     private Date insertTime;		// 등록일
-    private Boolean readCheck;		// 읽음표시
-    private Integer readCount;		// 조회수
+    private Date deliveryDate;		// 납품일
 
-    private String memo;			// 메모
+    private String tag;				// 태그 :: 검색시 사용 키워드
     
     
     private Collection<Work> work = new ArrayList<>(); // 작업물
@@ -65,6 +74,14 @@ public class WorkGroup {
 		this.id = id;
 	}
 	
+	@Version
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	@Column(nullable=false)
 	public String getSubject() {
 		return subject;
@@ -73,8 +90,8 @@ public class WorkGroup {
 		this.subject = subject;
 	}
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="customer_id")
+	@ManyToOne(optional=false)
+	@JoinColumn(name="customer")
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -82,7 +99,8 @@ public class WorkGroup {
 		this.customer = customer;
 	}
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(optional=false)
+	@JoinColumn(name="state")
 	public WorkState getState() {
 		return state;
 	}
@@ -91,37 +109,42 @@ public class WorkGroup {
 	}
 	
 	
+	@Column(name="insert_time", nullable=false)
 	public Date getInsertTime() {
+		if(insertTime == null) insertTime = Date.from(Instant.now());
 		return insertTime;
 	}
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 	
-	public Boolean getReadCheck() {
-		return readCheck;
+	@Column(name="delivery_time", nullable=false)
+	public Date getDeliveryDate() {
+		return deliveryDate;
 	}
-	public void setReadCheck(Boolean readCheck) {
-		this.readCheck = readCheck;
-	}
-	
-	public Integer getReadCount() {
-		return readCount;
-	}
-	public void setReadCount(Integer readCount) {
-		this.readCount = readCount;
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 	
-	public String getMemo() {
-		return memo;
+	
+	public String getTag() {
+		return tag;
 	}
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
+	
+	
 	
 	@Override
 	public String toString() {
-		return getSubject();
+		return String.format(
+								"[%s | %s] (%s-%s) %s",
+								getId(),
+								getCustomer().getName(),
+								KoDateUtils.getSqlStyle(getInsertTime()),
+								getState().getName(),
+								getSubject());
 	}
 
 }

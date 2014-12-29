@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+ul {
+  
+  &.bordered {
+    border: 1px solid $base-tag-default-border-color; 
+  }
+  
+  &.radius {
+    border-radius: $base-tag-default-border-radius;
+    
+    > li {
+      &:first-child {
+        border-radius: $base-tag-default-border-radius $base-tag-default-border-radius 0 0;
+      }
+      
+      &:last-child {
+        border-radius: 0 0 $base-tag-default-border-radius $base-tag-default-border-radius;
+      }
+    }
+    
+  } // &.radius
+  
+}

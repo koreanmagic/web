@@ -1,0 +1,29 @@
+
+★ style.scss 파일이 변경될 때마다 자동으로 style.css파일로 변환해주는 명령
+sass --watch style.scss:style.css
+
+stylesheets/sass 디렉토리에 있는 모든 sass 파일을 CSS로 변환한 후에 stylesheets/compiled 디렉토리로 이동하는 명령
+sass --watch target/.:../css
+sass --watch -E -utf-8 target/.:../css
+
+
+
+
+## function 함수
+@function func($name:'기본값') {
+	@return value;
+}
+
+$argument
+기본값 없이 파라미터만 선언해도 된다. (순서로 파라미터가 적용된다. 혹은 메서드 호출시 직접 변수로 할당할 수 있다. meghod($var:값) )
+파라미터값 중 어느것에 기본값을 지정하면 나머지도 반드시 기본값이 지정되어야 한다.
+여러가지 값이 있는 속성을 넣을때는 따옴표로 감싸준다. "'돋움', Dotum, serif"
+
+
+@return 값으로는 속성값을 반환할 수 있다.
+컬러, 숫자, 1px solid #333 등..
+
+
+type-of(변수) ==> string, number, bool, null
+
+#{변수}  ==> 문자열일 경우 queot를 벗겨준다.

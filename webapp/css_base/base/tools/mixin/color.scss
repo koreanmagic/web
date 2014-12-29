@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+
+
+/* 그라데이션 */
+@mixin bg-gradation($start, $end) {
+    background-image: linear-gradient(to bottom, $start, $end);
+    background-image: -moz-linear-gradient(top, $start, $end);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from($start), to($end));
+    background-image: -webkit-linear-gradient(top, $start, $end);
+    background-image: -o-linear-gradient(top, $start, $end);
+}
+
+@mixin bg-gradation-gray() {
+  @include bg-gradation(rgb(200,200,200), rgb(110,110,110));
+}
+
+@mixin bg-gradation-primary() {
+  @include bg-gradation(#0088cc, #0044cc);
+}
+@mixin bg-gradation-info() {
+  @include bg-gradation(#5bc0de, #2f96b4);
+}
+@mixin bg-gradation-success() {
+  @include bg-gradation(#62c462, #51a351);
+}
+@mixin bg-gradation-warning() {
+  @include bg-gradation(#fbb450, #f89406);
+}
+@mixin bg-gradation-danger() {
+  @include bg-gradation(#ee5f5b, #bd362f);
+}
+@mixin bg-gradation-inverse() {
+  @include bg-gradation(#444444, #222222);
+}
+
+
+
+// 모든 박스 모들의 상단 header 부분의 컬러를 결정하낟.
+@mixin box-top-default-bg($add:null) {
+  @if $add {
+    @include bg-gradation( 
+        darken(lighten($base-tag-default-border-color, 60%), $add),
+        darken(lighten($base-tag-default-border-color, 15%), $add)
+        )
+  }
+  @else {
+    @include bg-gradation(lighten($base-tag-default-border-color, 60%), lighten($base-tag-default-border-color, 15%));
+  }
+}
+

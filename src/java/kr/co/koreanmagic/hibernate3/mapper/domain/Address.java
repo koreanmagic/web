@@ -4,11 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.ZipCode;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.ZipCode;
 
 @Entity
 @Table(name="addresses")
@@ -22,15 +21,6 @@ public class Address {
 	
 	private Partner partner;
 	
-	
-	@ManyToOne
-	@JoinColumn(name="partner")
-	public Partner getPartner() {
-		return partner;
-	}
-	public void setPartner(Partner partner) {
-		this.partner = partner;
-	}
 	
 	public Address() {}
 	public Address(ZipCode zipCode, String address, String detail) {
@@ -47,12 +37,21 @@ public class Address {
 	}
 	
 	
+	
 	@Id @GeneratedValue
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	@ManyToOne
+	public Partner getPartner() {
+		return partner;
+	}
+	public void setPartner(Partner partner) {
+		this.partner = partner;
 	}
 	
 	public ZipCode getZipCode() {
@@ -83,7 +82,7 @@ public class Address {
 	public String toString() {
 		String zipCode = getZipCode().toString();
 		zipCode = zipCode.length() == 0 ? zipCode : "[" + zipCode + "] "; 
-		return zipCode + getAddress();
+		return zipCode + getAddress() + " " +getDetail();
 	}
 
 }

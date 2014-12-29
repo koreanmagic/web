@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+/*
+ * hoff (horizontal offset) : 그림자 오른쪽(양수) 또는 왼쪽(음수) 길이. 
+    voff (vertical offset) : 그림자가 아래쪽(양수) 또는 위쪽(음수) 길이.
+    bd (blur distance) : 그림자의 가장자리를 흐리게 만드는 길이.
+    sd (spread distance) : 그림자가 사방으로 넓어지거나(양수) 줄어드는(음수) 길이. 쓰지 않아도 된다.
+    color: 그림자 빛깔
+    inset : 상자 안에 그림자를 만든다. 쓰지 않으면 바깥에 만든다.
+ */
+@mixin box-shodow($hoff: 1px, $voff: 1px, $bd: 5px, $sd: 1px, $color: rgba(45,45,45,.7), $inset: null) {
+  box-shadow:$hoff $voff $bd $sd $color $inset;
+  -moz-box-shadow:$hoff $voff $bd $sd $color $inset;
+  -webkit-box-shadow:$hoff $voff $bd $sd $color $inset;
+}
+
+
+/*
+ * 버튼 클릭시 색깔변화
+ */
+@mixin btn-color-action($start: rgb(255,255,255), $end: rgb(200,200,200)) {
+  @include bg-gradation($start, $end);
+  cursor: pointer;
+  &:hover {
+    @include bg-gradation(darken($start, 4%), $end);
+  }
+  &:active {
+    @include bg-gradation(darken($start, 4%), darken($end, 6%));
+  }
+  
+  &.active {
+    cursor: default;
+    @include bg-gradation(lighten($start, 5%), darken($end, 10%));
+  }
+}

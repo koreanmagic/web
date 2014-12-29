@@ -1,0 +1,12 @@
+@charset "UTF-8";
+table {
+  &.work {
+    > thead, > tbody {
+      > tr {
+        > th, > td {
+          width: (100 / 7 * 1%);
+        }
+      }
+    }
+  }
+}

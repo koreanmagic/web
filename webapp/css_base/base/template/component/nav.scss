@@ -1,0 +1,153 @@
+@charset "UTF-8";
+
+// 횡대 메뉴
+ul {
+  
+  /*
+   * 가로형 세로형, 레이아웃만 잡아준다.
+   */
+  
+  &.nav-col, &.nav-row {
+    
+    /*
+     * non-float 엘리먼트 하위에 float가 있을 경우에는
+     * 아래와 같은 가상 엘리먼트를 끝에 추가해주어야 한다.
+     * float된 엘리먼트는 normal-flow에서 제외되기때문에, 부모 엘리먼트는 자식 엘리먼트의 높이를 감지할 수 없다.
+     * 때문에 after로 마지막에 엘리먼트를 추가해준다. 이 엘리먼트는 block으로 앞에 있는 float 엘리먼트를 인식하고 자신의 위치를 잡는다.
+     * 부모 엘리먼트는 자식 엘리먼트 높이를 가늠할 수 있다.
+     */    
+    &:after {
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+    
+    
+    & > li {
+      display: inline-block;
+      height: inherit;
+      width: inherit;
+      
+      & > a {
+        width: inherit;
+        cursor: pointer;
+      }
+    }
+  }
+  
+    
+    /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 가로형 메뉴  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+    &.nav-col {
+      width: auto;
+      height: inherit;
+      
+      > li {
+        display: table-cell;
+        
+        > a {
+          display: table-cell;  // table-cell은 부모의 크기 값을 상속받지 못한다.
+          text-align: center;
+          vertical-align: middle;
+        }
+      }
+    }
+    
+    
+    
+    
+    /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 세로형 메뉴  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+    &.nav-row {
+      
+      // 상단 메뉴 그라데이션
+      $layout-nav-row-l-menu-gr-start: rgb(95,95,95);
+      $layout-nav-row-l-menu-gr-end: rgb(84,84,84);
+      
+      width: inherit;
+      border-top: 1px solid #222;
+      
+      /* 공통속성 */
+      > li {
+        display: none; // nav-row. + .active인 것만 부가 메뉴가 보이게 한다.
+        
+        > a {
+          padding: .5em 1em;
+          display: block;
+        }
+        
+        // 선택되지 않은 대제목 바
+        &.header {
+          display: block;
+          border-top: 1px solid rgb(134, 134, 134);
+          border-bottom: 1px solid rgb(20, 20, 20);
+          > a {
+            color: rgb(255, 255, 255);
+            @include bg-gradation($layout-nav-row-l-menu-gr-start, $layout-nav-row-l-menu-gr-end);
+            &:hover {
+              @include bg-gradation(darken($layout-nav-row-l-menu-gr-start, 15%), darken($layout-nav-row-l-menu-gr-end, 15%));
+            }
+          }
+        } // &.header
+      } // > li
+      
+      
+      /* 활성화된 메뉴바 설정 */
+      // [selected] <ul class="nav-row active">
+      &.active {
+        
+        > li {
+          
+          display: block;
+          border-top: 1px solid rgb(214,214,214);
+          border-bottom: 1px solid white;
+          @include box-top-default-bg();
+        
+          // [selected] 선택된 대제목 바
+          &.header {
+            border-top: none;
+            > a {
+              cursor: default;
+              color: rgb(168,168,168);  // 선택된 대제목 글씨 색
+              
+              &:before {
+                content: "▼ ";
+                font-size: .8em;
+                color: #999;
+              }
+              
+              &:hover {
+                @include bg-gradation($layout-nav-row-l-menu-gr-start, $layout-nav-row-l-menu-gr-end);
+              }
+            }
+          }
+        
+          // [selected] 현재 선택된 상세메뉴 설정  
+          &.active {  // <li class="active">
+            > a {
+              cursor: default;
+              color: rgb(130,130,130);  // 선택된 상세메뉴 글씨 색
+              &:after {
+                content: " ◀";
+                font-size: .8em;
+                color: #999;
+              }
+              // 선택 된 상세 메뉴 mouseOver
+              &:hover {
+               @include box-top-default-bg();
+              }
+            } // > a
+          } // &.active
+          
+          // 선택되지 않은 나머지 상세 메뉴
+          & {
+            > a:hover {
+              @include box-top-default-bg($add:15%);
+            }
+          }
+          
+        } // > li
+      } // &.active
+    } // &.nav-row
+}
+

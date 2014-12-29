@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+
+.bg-gradation {
+
+  &.gray {
+    @include bg-gradation(rgb(252, 252, 252), rgb(231, 231, 231)); // rgb(0, 136, 204), rgb(0, 68, 204), 
+  }
+    
+  &.primary {
+    @include bg-gradation(#0088cc, #0044cc); // rgb(0, 136, 204), rgb(0, 68, 204), 
+    &.bg-border {
+      border: 1px solid #0044cc;
+    }
+  }
+  &.info {
+    @include bg-gradation(#5bc0de, #2f96b4); // rgb(91, 192, 222), rgb(47, 150, 180),
+    &.bg-border {
+      border: 1px solid #2f96b4;
+    } 
+  }
+  &.success {
+    @include bg-gradation(#62c462, #51a351); // rgb(98, 196, 98), rgb(81, 163, 81),
+    &.bg-border {
+      border: 1px solid #51a351;
+    }
+  }
+  &.warning {
+    @include bg-gradation(#fbb450, #f89406); // rgb(251, 180, 80), rgb(248, 148, 6),
+    &.bg-border {
+      border: 1px solid #f89406;
+    }
+  }
+  &.danger {
+    @include bg-gradation(#ee5f5b, #bd362f); // rgb(238, 95, 91), rgb(189, 54, 47),
+    &.bg-border {
+      border: 1px solid #bd362f;
+    }
+  }
+  &.inverse {
+    @include bg-gradation(#444444, #222222); // rgb(80, 80, 80), rgb(34, 34, 34),
+    &.bg-border {
+      border: 1px solid #2f96b4;
+    }
+  }
+}

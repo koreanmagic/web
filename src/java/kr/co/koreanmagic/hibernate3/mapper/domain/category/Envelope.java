@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 @Entity
 public class Envelope extends ItemCategory implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public String categoryName() {
 		return "봉투";

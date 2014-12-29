@@ -1,0 +1,7 @@
+._work-num > ._total {
+  text-align: center;
+  font-size: 3em;
+  font-weight: bold;
+  padding: .5em; }
+._work-num > ._today {
+  border-top: 1px solid #c3c3c3; }

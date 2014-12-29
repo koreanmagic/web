@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+
+@mixin icons-position($name, $width, $height, $x, $y) {
+  .#{$name} {
+    display: inline-block;
+    border: 0;
+    width: $width;
+    height: $height;
+    background: url('/img/koreanmagic-icons.png') no-repeat $x + px $y + px;
+  }
+}
+
+/* 파일 확장자  */
+$file-type-list: (
+default,
+(zip, alz, arj, egg, lzh, rar, zoo),
+pdf,
+(xls, xlt, xlsx),
+txt,
+ai,
+eps,
+hwp,
+(jpg, png, gif),
+draft,
+(pptx)
+);
+
+$position_x: 0;
+
+@each $name in $file-type-list {
+  @if($name == default) {
+    @include icons-position(file-type, 30px, 30px, 0, 0);
+  }
+  @else {
+    @each $value in $name {
+      @include icons-position(file-type-#{$value}, 30px, 30px, $position_x, 0);
+    }
+  }
+   $position_x: $position_x - 30; 
+} 

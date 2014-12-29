@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  
+    "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+    "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<!-- definition의 name은 콘트롤러가 돌려주는 view에 매핑하는 값이다.
+	tiles에서 가장 중요한 것은 바로 template 어트리뷰트이다.
+	어떤 name(url)에 매핑되든 결국 template 파일을 찾아 올라가게 된다.
+	그리고 그 template 파일을 읽어온 후, 상속구조 등을 통해 정의된 put-attribute를 채워나가게 된다.
+	이때 definition에 등록되었다 하더라도,  template 파일내에 tiles:insertAttribute로 설정되지 않으면 무시된다.
+-->
+
+<tiles-definitions>
+
+    
+    <!-- 관리자  templateType="freemarker" -->
+    <definition name="tiles3.admin.*.*" template="/WEB-INF/view/ftl/admin/template.ftl">
+        <put-attribute name="css" value="{2}" />
+        <put-attribute name="top" value="/WEB-INF/view/ftl/admin/top.ftl" />
+        <put-attribute name="context" value="/WEB-INF/view/ftl/admin/context.ftl" />
+        <put-attribute name="left" value="/WEB-INF/view/ftl/admin/left.ftl" />
+        <put-attribute name="body" value="/WEB-INF/view/ftl/admin/{1}/{2}.ftl" />
+    </definition>
+    
+    <!-- 관리자  templateType="freemarker" -->
+    <definition name="tiles3.test" template="/WEB-INF/view/ftl/test/template.ftl">
+        <put-attribute name="header" value="/WEB-INF/view/ftl/test/header.ftl" />
+        <put-attribute name="body" value="/WEB-INF/view/ftl/test/body.ftl" />
+        <put-attribute name="footer" value="/WEB-INF/view/ftl/test/footer.ftl" />
+    </definition>
+    
+
+
+    
+</tiles-definitions>
+
+

@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+/*
+ * boolean 값으로 캐스팅
+ */
+@function to-bool($value) {
+  @if not $value or $value == "" or $value == 0 {
+    @return false;
+  }
+  @return true;
+}

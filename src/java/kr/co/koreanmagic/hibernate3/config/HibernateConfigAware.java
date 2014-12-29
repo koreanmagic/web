@@ -4,11 +4,16 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import kr.co.koreanmagic.context.support.convert.IntegerToWorkStateConverter;
+
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
+import org.springframework.context.support.ConversionServiceFactoryBean;
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotationMetadata;
@@ -33,6 +38,10 @@ public class HibernateConfigAware implements ImportAware {
 		return sessionFactory;
 	}
 	
+	
+	
+	
+	
 	@Bean
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
@@ -42,8 +51,7 @@ public class HibernateConfigAware implements ImportAware {
 	
 	@Override
 	public void setImportMetadata(AnnotationMetadata importMetadata) {
-		Map<String, Object> elements = importMetadata.getAnnotationAttributes(HibernateConfig.class.getName());
-		logger.debug(elements.get("name"));
+		Map<String, Object> elements = importMetadata.getAnnotationAttributes(EnableHibernate3.class.getName());
 	}
 	
 }

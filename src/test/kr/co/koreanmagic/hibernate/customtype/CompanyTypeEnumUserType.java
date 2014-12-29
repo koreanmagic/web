@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import kr.co.koreanmagic.commons.KoUtils;
-import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.CompanyType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.CompanyType;
 
 import org.hibernate.HibernateException;
 import org.hibernate.type.StringType;

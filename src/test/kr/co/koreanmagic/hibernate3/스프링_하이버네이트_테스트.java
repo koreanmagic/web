@@ -1,68 +1,79 @@
 package kr.co.koreanmagic.hibernate3;
 
-import kr.co.koreanmagic.hibernate3.config.SpringConfiguration;
-import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
-import kr.co.koreanmagic.hibernate3.mapper.test.TestTable;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
+import kr.co.koreanmagic.dao.GenericDao;
+import kr.co.koreanmagic.hibernate3.config.EnableHibernate3;
+import kr.co.koreanmagic.hibernate3.mapper.domain.WorkGroup;
+import kr.co.koreanmagic.service.GenericService;
+import kr.co.koreanmagic.service.WorkGroupService;
+
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
+
+
+
+@Configuration
+@EnableAspectJAutoProxy
+@EnableHibernate3
+@ComponentScan({
+	"kr.co.koreanmagic.dao",
+	"kr.co.koreanmagic.service",
+})
+@EnableTransactionManagement(proxyTargetClass=true)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={SpringConfiguration.class})
+@ContextConfiguration(classes={스프링_하이버네이트_테스트.class})
 public class 스프링_하이버네이트_테스트 extends HibernateTestDao {
 
-	private Logger logger = Logger.getLogger(getClass());
-	@Autowired SessionFactory sessionFactory;
-	@Autowired PlatformTransactionManager transactionManager;
+	@Autowired SessionFactory factory;
 	
-	private TransactionTemplate transactionTemplate;
+	@Autowired List<? extends GenericDao<?, ? extends Serializable>> daoList;
+	@Autowired List<? extends GenericService<?, ? extends Serializable>> serviceList;
+	
+	static Connection con;
 	
 	@Test
-	public void test() {
+	@Transactional
+	public void test() throws Exception {
 		
+		WorkGroupService gSrvice = findService(WorkGroup.class);
 		
-		get(Customer.class, 1l);
-
-		/*TransactionDefinition definition = null;
-		Session session = null;
-		TransactionStatus status = null;
-		
-		definition = new DefaultTransactionDefinition();
-		status = transactionManager.getTransaction(definition);
-		
-		session = sessionFactory.getCurrentSession();
-		session.save(new TestTable("원래"));
-		printValues(session.createSQLQuery("SELECT * FROM testTable LIMIT 0,1").uniqueResult());
-		transaction1(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED), session);
-		
-		transactionManager.rollback(status);*/
 	}
 	
-	private void transaction1(TransactionDefinition definition, Session otherSession) {
-		Session session = null;
-		TransactionStatus status = transactionManager.getTransaction(definition);
-		session = sessionFactory.getCurrentSession();
-		printValues(session.createSQLQuery("SELECT * FROM testTable LIMIT 0,1").uniqueResult());
-		session.save(new TestTable("새로운 트랜잭션"));
-		same(session, otherSession);
-		equals(session, otherSession);
-		transactionManager.commit(status);
-	}
 	
+	private void printStatus(TransactionStatus status) {
+		log("hasSavepoint", status.hasSavepoint());
+		log("isCompleted", status.isCompleted());
+		log("isNewTransaction", status.isNewTransaction());
+		log("isRollbackOnly", status.isRollbackOnly());
+		transactionManager.rollback(status);
+		log("hasSavepoint", status.hasSavepoint());
+		log("isCompleted", status.isCompleted());
+		log("isNewTransaction", status.isNewTransaction());
+		log("isRollbackOnly", status.isRollbackOnly());
+	}
 	
 	private void printValues(Object value) {
 		log(joinObjectValues(value));
+	}
+	
+	private void l(Iterable<Object> p ){
+		
 	}
 	
 	private String joinObjectValues(Object value) {
@@ -95,4 +106,26 @@ public class 스프링_하이버네이트_테스트 extends HibernateTestDao {
 		log(log.substring(0, log.length() - separater.length()));
 	}
 
+	@SuppressWarnings("unchecked")
+	private<V extends GenericService<?, ? extends Serializable>, T, P extends Serializable> V findService(T entity) {
+		for(GenericService<?, ? extends Serializable> service : serviceList) {
+			if(service.getServiceClass().equals(entity))
+				return (V)service;
+		}
+		throw new RuntimeException(entity + "에 해당하는 service가 없습니다.");
+	}
+	
+	@SuppressWarnings("unchecked")
+	private<V extends GenericDao<?, ? extends Serializable>, T, P extends Serializable> V findDao(T entity) {
+		for(GenericDao<?, ? extends Serializable> dao : daoList) {
+			if(dao.getPersistentClass().equals(entity))
+				return (V)dao;
+		}
+		throw new RuntimeException(entity + "에 해당하는 dao가 없습니다.");
+	}
+	
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer pspc() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
 }

@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+/* 
+※ Font 축약형을 쓸때에 다음과 같은 이슈가 있어, 축약형 보다는 풀어서 쓰는 것을 권장한다.
+폰트 축약형을 쓰면 기존 element 의 속성이 지워질수도 있다.
+폰트 축약형이 모두 적용되어 기존 속성을 가지고 오지 못한다.
+폰트축약형을 쓸때에 font 속성중 지정안된 것들을 기본값으로 불러서 렌더링 하게 되어 불필요한 성능 낭비가 된다.
+
+아래는 폰트 믹신이다
+*/
+
+
+/*
+  font-style:italic; (폰트 기울기, normal:일반, italic:이탤릭체, oblique:기울기)
+  font-variant:small-caps; (폰트 변형, normal:일반, small-caps:작은대문자)
+  font-weight:bold; (폰트 굵기, normal:일반, bold:굵게)
+  font-size:12px; (폰트 크기)
+  line-height:14px; (줄 간격)
+  font-family:gulim; (폰트 서체)
+  
+  
+}
+ */
+
+ @mixin font($syle:normal, $variant:normal, $weight:normal, $size:12px, $height:null, $family:Gulim) {
+  @if($height == null) {$height:$size};
+  font-style:$syle; //(폰트 기울기, normal:일반, italic:이탤릭체, oblique:기울기)
+  font-variant:$variant; // (폰트 변형, normal:일반, small-caps:작은대문자)
+  font-weight:$weight; // (폰트 굵기, normal:일반, bold:굵게)
+  font-size:$size; // (폰트 크기)
+  line-height:$height; // (줄 간격)
+  font-family:$family; // (폰트 서체)
+  }

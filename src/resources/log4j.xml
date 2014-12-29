@@ -31,17 +31,10 @@
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
 		<!-- 패턴 레이아웃 설정.. -->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%p %C.%M>>  %m%n" />
+			<param name="ConversionPattern" value="%p %C.%M>> %m%n" />
 		</layout>
 	</appender>
 	
-	<!-- 콘솔 로그 -->
-	<appender name="stdout-short" class="org.apache.log4j.ConsoleAppender">
-		<!-- 패턴 레이아웃 설정.. -->
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%M>>  %m%n" />
-		</layout>
-	</appender>
 
 	<!-- 날짜별 로그 -->
 	<appender name="webLog" class="org.apache.log4j.DailyRollingFileAppender">
@@ -71,40 +64,43 @@
 	
 	
 	<!-- kr.co.koreanmagic.web 로거 -->
-	<logger name="kr.co.koreanmagic.web" additivity="false">
+	<logger name="kr.co.koreanmagic" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="stdout" />
 	</logger>
 	
-	<!-- kr.co.koreanmagic.hibernate 로거 -->
-	<logger name="kr.co.koreanmagic.hibernate" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="stdout" />
-	</logger>
-
 	<!-- 테스트 로거 -->
 	<logger name="test" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="stdout" />
 	</logger>
+	
+	<!-- 3rdparty Loggers -->
+    <logger name="org.springframework.core">
+        <level value="info" />
+        <appender-ref ref="stdout" />
+    </logger>
 
-	<!-- 하이버네이트 로거 -->
-	<logger name="org.hibernate" additivity="false">
-		<level value="WARN" />
-		<appender-ref ref="stdout-short" />
-	</logger>
-	
-	
-	<!-- 웹 로거 -->
-	<logger name="webLog" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="webLog" />
-		<appender-ref ref="stdout" />
-	</logger>
+    <logger name="org.springframework.beans">
+        <level value="info" />
+        <appender-ref ref="stdout" />
+    </logger>
+    
+    <logger name="org.springframework.context">
+        <level value="info" />
+        <appender-ref ref="stdout" />
+    </logger>
+
+    <logger name="org.springframework.web">
+        <level value="info" />
+        <appender-ref ref="stdout" />
+    </logger>
+
+
 	
 	<!-- root 로거 기본 설정 -->
 	<root>
-		<level value="FATAL" />
+		<level value="WARN" />
 		<appender-ref ref="stdout" />
 	</root>
 	

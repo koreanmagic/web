@@ -4,7 +4,6 @@
         PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"
         >
-
 <hibernate-configuration>
 	
     <session-factory>
@@ -46,10 +45,11 @@
         	* 
         	* 이걸 thread로 놔두면 getCurrentSession()이 제대로 동작하지 않는다.
         	* 이걸 thread로 하면 getCurrentSession()시 수동으로 Transaction을 시작해줘야 한다. 안그러면 아웃
-        	* 
+       	 
         <property name="hibernate.current_session_context_class">thread</property>
-        -->
-
+        <property name="hibernate.query_factory_class">org.hibernate.hql.ast.ASTQueryTranslatorFactory</property>
+       -->
+       
 
 		<!-- SCHEMA CREATER -->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -58,9 +58,9 @@
         <property name="hibernate.connection.datasource">java:/comp/env/jdbc/test</property> -->
         
 		
-        <!-- SQL to stdout logging -->
+        <!-- SQL to stdout logging-->
         <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
+        <property name="format_sql">true</property> 
         <!-- <property name="use_sql_comments">true</property> -->
         
 		
@@ -70,12 +70,11 @@
        	<!-- <mapping class="kr.co.koreanmagic.hibernate.mapper.User" />
        	<mapping class="kr.co.koreanmagic.hibernate.mapper.Address" /> -->
        	
-       	
        	<!-- ENTITTY registry
 		<mapping class="&package;.Subcontractor" />
 		<mapping class="&package;.Customer" />
-
 		<mapping package="kr.co.koreanmagic.hibernate.mapper" /> -->
+		<mapping resource="hibernate.mapping.xml"/> 
 		
     </session-factory>
     

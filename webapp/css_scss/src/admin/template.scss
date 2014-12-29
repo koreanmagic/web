@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+body.admin {
+  
+  & > div {
+    
+    &#top {
+      background-color: rgb(41,41,41);
+      border-bottom: 1px solid rgb(18, 18, 18);
+      
+      $layout-admin-top-line-height: 30px;
+      
+      > #top-line {
+        min-width: 100%;
+        height: $layout-admin-top-line-height;
+        border-bottom: 1px solid rgb(18,18,18);
+      }
+      
+      > #context-line {
+        min-width: 100%;
+        height: $layout-admin-top-height - $layout-admin-top-line-height - 3;
+        border-top: 1px solid rgb(89,89,89);
+        border-bottom: 1px solid rgb(18,18,18);
+        @include bg-gradation(rgb(65,65,65), rgb(50,50,50));
+      }
+      
+    }
+    
+    &#left {
+      width: 194px;
+      border-right: 6px solid rgb(48,48,48);
+      background-color: rgb(48,48,48);
+      //background-image: url('/css/img/left-menu-bg-pattern.gif');
+    }
+    
+    &#body {
+      
+    }
+    
+  } // & > div
+  
+  
+  
+} // body.admin
+
+

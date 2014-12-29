@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▼ 그리드 계산 ▼  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+
+
+@mixin grid($parent:1170px, $margin:15px, $grid-col-len:12) {
+  
+  $parent: sprit-units( $parent );
+  $margin: sprit-units( $margin );
+  
+  $margin-total:      $margin * $grid-col-len;
+  $grid-total:        $parent - $margin-total;
+
+  $margin-one-width:  ( $margin / $parent ) * 100%;
+  $grid-one-width:    ( ( $grid-total / $grid-col-len ) / $parent ) * 100%;
+  
+  .grid-#{$grid-col-len} {
+    
+    margin-left: -$margin-one-width;
+    margin-bottom: $margin-one-width;
+    height: inherit;
+    
+    /* grid 위에 float가 올라갈 때를 대비한 */
+    &:after {
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+    
+    /* span-넘버 계산 */
+    @for $i from 1 through $grid-col-len {
+      
+      $other: ( $grid-col-len + 1 ) - $i;
+      
+      > .span-#{$other} {
+          float: left;
+          width: ( ($margin-one-width * $other) + ($grid-one-width * $other) ) - $margin-one-width;
+          margin-left: $margin-one-width;
+          height: inherit;
+        }
+      
+    }// @for $i 1 through 12
+    /* span-넘버 계산 */
+   
+   
+  } // &.row 
+  
+}
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▲ 그리드 계산 ▲  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+
+
+/* 일반 div용 */
+@include grid($parent:$container-min-width, $margin:$container-layout-margin);
+@include grid($parent:$container-min-width, $margin:$container-layout-margin, $grid-col-len:10);
+  
+
+
+
+/*
+ * 100%를 기준으로 분할 수 만큼 나누어서 %를 산출한다.
+ * 
+ * 이 믹신은 기본적으로 테이블을 위해 작성되었다.
+ * 100%폭의 테이블의 셀을 균등하게 나누기 위함이다.
+ 
+ * * 테이블 태그는 내용크기에 따라 그 가로폭이 유동적으로 적용되는데,
+ * 이 소스로 인해 적정한 비율에 따라 테이블 셀의 규격을 미리 지정해놓을 수 있게 된다.
+ */
+@mixin gridBy100($len) {
+
+  $bite: ( 100 / $len ) * 1%;
+  
+  @for $i from 1 through $len {
+      
+      $other: ( $len + 1 ) - $i;
+      
+      &.span-#{$other} {
+          width: $bite * $other;
+          height: inherit;
+        }
+      
+    }
+  
+}
+
+
+
+/* table 용 */
+table {
+  
+  &.grid-12 {
+    
+    min-width: $container-min-width;
+    
+    > thead, > tbody {
+      > tr {
+        
+        > th, > td {
+          @include gridBy100(12); 
+        }
+        
+      } // > tr
+    } // > thead, > tbody
+  } // &.grid
+}
+
+table {
+  
+  &.grid-24 {
+    
+    min-width: $container-min-width;
+    
+    > thead, > tbody {
+      > tr {
+        
+        > th, > td {
+          @include gridBy100(24); 
+        }
+        
+      } // > tr
+    } // > thead, > tbody
+  } // &.grid
+}

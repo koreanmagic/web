@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+input {
+  
+  &:focus, &:blur {
+    outline: 0;
+  }
+  
+}

@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+/*
+ * 글씨 아이콘
+ */
+
+[class^=_text-icon-] {
+  
+  &:before {
+    position: relative;
+    top: -2px;
+    
+    padding: 0px 3px 3px;
+    margin-left: 4px;
+    margin-left: 8px;
+    
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    font-family: tahoma '돋움';
+    font-style: normal;
+    font-weight: bold;
+    
+    color: white;
+    border-radius: 3px;
+  }
+}
+
+/*
+ * before 선택자로 글씨 아이콘을 만들어준다.
+ * 글래스 이름은 _text-icon-설정값
+ */
+$_text-icon-values: (
+  // 클래스이름(className), 실제 나타날 텍스트(content), 배경색상(bgcolor)
+  (new, new, rgb(242, 149, 43)),
+  (update, update, rgb(59, 124, 226)),
+  (emergency, 긴급, rgb(216, 0, 0)),
+
+);
+
+// native Function --> nth(list, n)  :: 리스트 값 꺼내오는 함수 
+._text-icon {
+
+  @each $value in $_text-icon-values {
+    
+    &-#{nth($value, 1)}:before {
+      content: '#{nth($value, 2)}';
+      background-color: nth($value, 3);
+      border: 1px solid darken(nth($value, 3), 10%);
+    }
+  }
+}

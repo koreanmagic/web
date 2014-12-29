@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+/*
+ * 100 * 1% = 100% 를 이용한다.
+ * 숫자로 계산한 후 단위를 곱해(붙여서) 내보낸다.
+ */
+@function grid-percent($parent, $target) {
+  
+  /* 단순 계산 */
+  $target: sprit-units($target);
+  $parent: sprit-units($parent);
+  
+  @return ($target / $parent) * 100%;
+  
+}
+
+

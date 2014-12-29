@@ -1,13 +1,13 @@
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -15,24 +15,27 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
-import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Email;
-import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.CompanyType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.code.BizClass;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Email;
+import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.CompanyType;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorOptions(force=true)
+//@DiscriminatorOptions(force=true)
 public abstract class Partner {
 	
+	
 	private Long id;
+	private Long version;
 	
 	private CompanyType companyType;		// 사업자 종류
 	private ThreeNumber bizNum;				// 사업자번호
@@ -62,8 +65,16 @@ public abstract class Partner {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	
+	@Version
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
+	@Column(name="company_type", nullable=true)
 	public CompanyType getCompanyType() {
 		return companyType;
 	}
@@ -77,7 +88,7 @@ public abstract class Partner {
 			@Column(name="biz_num2", nullable=true),
 			@Column(name="biz_num3", nullable=true),
 	})
-	@Type(type="kr.co.koreanmagic.hibernate.customtype.BusinessNumberCompositeUserType")
+	@Type(type="kr.co.koreanmagic.hibernate3.mapper.customtype.BusinessNumberCompositeUserType")
 	public ThreeNumber getBizNum() {
 		return bizNum;
 	}
@@ -85,9 +96,10 @@ public abstract class Partner {
 		this.bizNum = bizNum;
 	}
 
+	/* 업태 */
 	@Index(name="biz_class_index")
-	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 	@JoinColumn(name="biz_class")
+	@ManyToOne(optional=true)
 	public BizClass getBizClass() {
 		//if(bizClass == null) bizClass = new BizClass();
 		return bizClass;
@@ -96,7 +108,8 @@ public abstract class Partner {
 		this.bizClass = bizClass;
 	}
 
-	@Column(name="biz_types")
+	/* 종목 */
+	@Column(name="biz_types", nullable=true)
 	public String getBizTypes() {
 		return bizTypes;
 	}
@@ -126,7 +139,7 @@ public abstract class Partner {
 			@Column(name="mobile_num2", nullable=true),
 			@Column(name="mobile_num3", nullable=true),
 	})
-	@Type(type="kr.co.koreanmagic.hibernate.customtype.BusinessNumberCompositeUserType")
+	@Type(type="kr.co.koreanmagic.hibernate3.mapper.customtype.BusinessNumberCompositeUserType")
 	public ThreeNumber getMobile() {
 		return mobile;
 	}
@@ -140,7 +153,7 @@ public abstract class Partner {
 			@Column(name="tel_num2", nullable=true),
 			@Column(name="tel_num3", nullable=true),
 	})
-	@Type(type="kr.co.koreanmagic.hibernate.customtype.BusinessNumberCompositeUserType")
+	@Type(type="kr.co.koreanmagic.hibernate3.mapper.customtype.BusinessNumberCompositeUserType")
 	public ThreeNumber getTel() {
 		return tel;
 	}
@@ -154,7 +167,7 @@ public abstract class Partner {
 			@Column(name="fax_num2", nullable=true),
 			@Column(name="fax_num3", nullable=true),
 	})
-	@Type(type="kr.co.koreanmagic.hibernate.customtype.BusinessNumberCompositeUserType")
+	@Type(type="kr.co.koreanmagic.hibernate3.mapper.customtype.BusinessNumberCompositeUserType")
 	public ThreeNumber getFax() {
 		return fax;
 	}
@@ -192,8 +205,9 @@ public abstract class Partner {
 		this.updateTime = updateTime;
 	}
 	
-	@Column(name="insert_time") 
+	@Column(name="insert_time", nullable=false) 
 	public Date getInsertTime() {
+		if(insertTime == null) insertTime = Date.from(Instant.now());
 		return insertTime;
 	}
 	public void setInsertTime(Date insertTime) {

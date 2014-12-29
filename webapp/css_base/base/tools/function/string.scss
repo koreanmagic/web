@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+/*
+ * 숫자든 뭐든 들어오는 인자값을 string 타입으로 캐스팅해준다.
+ */
+@function to-string($value) {
+  @return inspect($value);
+}

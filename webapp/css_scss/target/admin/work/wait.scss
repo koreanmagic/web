@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+._work-num {
+  
+  > ._total {
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    padding: .5em;
+  }
+  
+  > ._today {
+    border-top: 1px solid rgb(195,195,195);
+  }
+  
+  
+}

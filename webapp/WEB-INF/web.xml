@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		id="WebApp_ID" version="3.0">
+		
+
+	<display-name>hancome web 2.0</display-name>
+	
+	
+	<!--
+	루트 애플리케이션의 디폴트 클래스는 XML를 사용하는 XmlWebApplicationContext다.
+	이를 @Configuration 클래스를 설정정보로 사용하도록 만들어진 AnnotationConfigWebApplicationContext를 사용하도록 변경한다.
+	이를 통해 applicationContext.xml 대신 @Configuration이 붙은 클래스를 설정정보로 활용하게 된다. 
+	-->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>kr.co.koreanmagic.web2.config.ApplicationStartUp</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	 
+	 
+	 <!-- 
+	 	자동으로 패키지 스캔해서 @Configuration 클래스에서 빈생성
+	 	DispatcherServlet 등록
+	 	원래 스프링은 Servlet을 개발하는 형태였다. 이것이 MappingMethod 형태로 바뀌면서 스프링 자체적으로
+	 	DispatcherServlet을 제공하기 시작했다.
+	 	이것만 등록하고 나머지는 Resolver를 통해 해결한다.
+	-->
+	<servlet>
+		<servlet-name>web2</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		
+		<init-param>
+			<param-name>contextClass</param-name>
+			<param-value>
+				org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+			</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				kr.co.koreanmagic.web.config.ApplicationStartUp
+			</param-value>
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+		 
+	</servlet>
+	
+	
+	<servlet-mapping>
+		<servlet-name>web2</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	<!-- 스프링이 지원하는 Encoding 필터 -->
+	<filter>
+		<filter-name>encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	
+	<!-- 
+		스프링 ResourceHandler를 통제 하기 위한 필터
+		스프링의  ResourceHandler는 인터셉터를 통과하지 않는 듯 싶다.. 이유는 모르겠다.
+		아무튼 ResourceHandler가 반환하는 파일의 파일명을 수정하는것이 이 필터의 목적이다.
+		response.setHeader("Content-Disposition", "attachment; filename=sdf.txt");
+		를 통해 클라이언트에 다운로드 되는 파일명을 서버가 지정할 수 있다.
+	 -->
+	<filter>
+		<filter-name>resource</filter-name>
+		<filter-class>kr.co.koreanmagic.web2.servlet.filter.ResourceFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>resource</filter-name>
+		<url-pattern>/resource/*</url-pattern>
+	</filter-mapping>
+	
+	<!--  <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class> -->
+	<!-- FREEMARKER Template ENGINE -->
+	<servlet>
+		<servlet-name>freemarker</servlet-name>
+		
+		<servlet-class>org.apache.tiles.request.freemarker.servlet.SharedVariableLoaderFreemarkerServlet</servlet-class>
+
+		<init-param>
+			<param-name>TemplatePath</param-name>
+			<param-value>/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>NoCache</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ContentType</param-name>
+			<param-value>text/html</param-value>
+		</init-param>
+	
+		<init-param>
+			<param-name>template_update_delay</param-name>
+			<param-value>0</param-value> 
+		</init-param>
+		
+		<init-param>
+			<param-name>default_encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>number_format</param-name>
+			<param-value>#,###</param-value>
+		</init-param>
+	
+		<load-on-startup>1</load-on-startup>
+ 	</servlet>
+ 
+	<servlet-mapping>
+		<servlet-name>freemarker</servlet-name>
+		<url-pattern>*.ftl</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+
+	<!-- ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▼ 보안 선언 ▼ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ -->
+	
+	<!-- 인가 방식은 베이직으로 할꺼야^^  
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+	-->
+	
+	<!-- 내가 정한 인증멤버는 아래와 같아  
+	<security-role>
+		<role-name>Admin</role-name>
+		<role-name>Guest</role-name>
+	</security-role>
+	-->
+	
+	<!-- 위의 인증멤버들에게 주는 특별한 페이지 열람권에 대한 정보  
+	<security-constraint>
+		
+		<web-resource-collection>
+			<web-resource-name>Magic Unit</web-resource-name>
+			<url-pattern>/security</url-pattern>
+			
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		
+		<auth-constraint>
+			<role-name>Admin</role-name>
+		</auth-constraint>
+		
+	</security-constraint>
+	-->
+	<!-- ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▲ 보안 선언 ▲ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ -->
+			
+</web-app>

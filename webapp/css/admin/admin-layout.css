@@ -485,23 +485,23 @@ a:visited {
 
 .h1 {
   color: inherit;
-  font-size: 2.3em; }
+  font-size: 1.52em; }
 
 .h2 {
   color: inherit;
-  font-size: 2.05em; }
+  font-size: 1.41em; }
 
 .h3 {
   color: inherit;
-  font-size: 1.8em; }
+  font-size: 1.31em; }
 
 .h4 {
   color: inherit;
-  font-size: 1.5em; }
+  font-size: 1.2em; }
 
 .h5 {
   color: inherit;
-  font-size: 1.3em; }
+  font-size: 1.1em; }
 
 /* ************  각종 i  *********** */
 i.separator:before {
@@ -1580,8 +1580,10 @@ body.admin > div#top {
     background-image: -o-linear-gradient(top, #414141, #323232); }
 body.admin > div#left {
   width: 194px;
-  border-right: 6px solid #303030;
+  border-right: 1px solid #121212;
   background-color: #303030; }
+body.admin > div#body {
+  background: #303030; }
 
 div.context-search {
   height: 31px;

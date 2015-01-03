@@ -1,87 +1,75 @@
 
 
-
-<br />
-<br />
 <#assign values = ["new", "update", "emergency"]>
-<#list 1..3 as i>
-<ul class="ui-item-container bordered radius">
+<div class="ui-item-container">
 	
 	<!-- *CSS* abstract-stretch-line TEMPLATE -->
-	<li class="ui-item-header fluid-line">
-		<div class="_command-btns">
-			<i class="fa fa-chevron-circle-down ui-item-btn-toggle-open cursor-pointer"></i>
-			<i class="fa fa-chevron-circle-up ui-item-btn-toggle-close cursor-pointer"></i>
-			<i class="fa fa-floppy-o ui-item-btn-add cursor-pointer"></i>
-			<i class="fa fa-times ui-item-btn-delete cursor-pointer"></i>
-		</div>
-		
+	<div class="ui-item-header fluid-line">
 		
 		<!-- 리스트 왼쪽 공간 -->
 		<div class="left">
 		
-			<!-- 번호 DB #primary -->
-			<div class="_no">
-				no.<span class="_id text-num text-bold h3">3320</span>
-			</div>
+			<select class="_highlight-customer">
+				<option value="reset">거래처</option>
+			</select>
 			
-			<div class="_work-state">
-				<div class="select-btn">
-					<button class="btn">작업중</button>
-					<button class="toggle"></button>
-					<ul class="option">
-                  		<li><a href="#">대기</a></li>
-                  		<li><a href="#">제작대기</a></li>
-                  		<li><a href="#">인쇄완료</a></li>
-                  		<li class="divider"></li>
-                  		<li><a href="#">납품</a></li>
-                  		<li><a href="#">완료</a></li>
-                	</ul>
-				</div>
-			</div>
+			<select class="_sort">
+				<option value="reset">정렬기준</option>
+			</select>
 			
-			<div class="_insert-date">
-				<span class="text-num text-bold h5">2014-11-09</span>
-				<span>(월)</span><BR />
-				<span class="_time text-num">(11:32:89)</span>
-			</div>
 			
 		</div>
 		
 		<!-- 리스트 오른쪽 공간 -->
 		<div class="right">
-		
-			<div class="_work-count">
-				<span class="_work-done text-num h3 text-bold">1</span>
-				<span class="_work-separator">/</span>
-				<span class="ui-item-length text-num h1 text-bold">2</span>
-			</div>
-		
+
+		<span class="ui-item-btn-add">추가</span>
 		</div>
 			
 			
 		<!-- 유동적으로 가로사이즈가 조정되는 부분 -->
 		<div class="center">
 		
-			<div class="_customer-icon"><img width="30" height="30" src="/img/customer-who.gif"/></div>
-			<div class="_customer">
-				<span class="_customer h4 text-bold"><a href="#">무한유통</a></span>
-			</div>
-		
-			
-			<div class="_subject">
-				<span class="_subject h3 text-bold">엘마트가 없는 금지스티커</span><i class="_text-icon-${values[i-1]}"></i>
-			</div>
-			
 		</div>
 			
-	</li>
-	
-	
+	</div>
+	<!-- 
+	<div style="
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 30px;
+    left: 250px;
+    background: white;
+    border: 2px solid red;
+    z-index: 1001;
+    box-shadow: 5px 5px 5px rgb(170, 170, 170);
+	"></div>
+	<div class="test" style="
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 300px;
+    left: 400px;
+    background: white;
+    border: 2px solid red;
+    z-index: 1000;
+    box-shadow: 5px 5px 5px rgb(170, 170, 170);
+	"></div>
+	<div class="test" style="
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 302px;
+    left: 402px;
+    background: white;
+    z-index: 1002;
+	"></div> -->
 	<!-- ######## 세부 리스트 아이템 ######## -->
-	<li class="ui-item-body grid-10">
+	<div class="ui-item-body grid-10">
+	
 			
-			<#list 1..4 as i>
+			<#list data as v>
 			<div class="ui-item-item span-2">
 				
 				<!-- 작업 정보 컨테이너 -->
@@ -92,26 +80,40 @@
 					<div class="_item-btns">
 						
 						<div class="_notice-panel text-num">
-							<span class="ui-item-index"></span>
-							<span class="_notice"></span>
+							<span class="_item-index text-num text-bold h5"></span>
+							<span class="_work_state">완료</span>
 						</div>
 						
+						<i class="fa fa-bus" title="배송"></i>
 						<i class="fa fa-pencil" title="메모"></i>
 						<i class="fa fa-folder-open-o" title="파일업로드"></i>
-						<i class="fa fa-wrench modify" title="수정"></i>
 						<i class="fa fa-trash-o ui-item-delete delete" title="삭제"></i>
 					</div>
 					
 					<!-- 각종 에디터 -->
 					<div class="_panel">
-						<img src="/img/test.jpg">
+						<div class="_screen"><img src="/img/test.jpg"></div>
+						<div class="_control fluid-line">
+							<div class="right">
+								<i class="fa fa-chevron-circle-left"></i> <i class="fa fa-chevron-circle-right"></i>
+								<i class="fa fa-minus-square"></i> <i class="fa fa-plus-square"></i>
+							</div>
+						</div>
 					</div>
 					
+					
 					<!-- 작성시간 / 업데이트 시간 -->
-					<div class="_item-time text-num">
-						2014-12-19 09:00:00
+					<div class="_item-label fluid-line">
+						<img src="/img/customer-who.gif">
+						<span class="_customer h4 text-bold">${v.customer}</span>
 					</div>
-					<!-- <div class="_item-subject">${i}) 이거슨 제목</div>  -->
+					
+					<div class="_item-date">
+						<i class="fa fa-wrench modify" title="수정"></i>
+						<span class="_date text-num">
+							${v.date}
+						</span>
+					</div>
 					
 					
 					<!-- 작업 정보 -->
@@ -119,32 +121,37 @@
 						
 						<div class="_data-cell fluid-line">
 							<span class="_label left">품목</span>
-							<div data-name="item" class="_value center" data-transform="input">전단지 ${i}</div>
+							<div data-name="item" class="_value center _item" data-transform="input">${v.item}</div>
 						</div>
 						
 						<div class="_data-cell fluid-line">
 							<span class="_label left">상세</span>
-							<div data-name="memo" class="_value center" data-transform="input">아트</div>
+							<div data-name="memo" class="_value center _memo" data-transform="input">${v.memo}</div>
 						</div>
 
-						<div class="_data-cell _half fluid-line">
-							<span class="_label left">재단</span>
-							<div data-name="bleed" class="_value center" data-transform="input">210-297</div>
+						<div class="_data-cell fluid-line">
+							<span class="_label left">사이즈</span>
+							<div data-name="bleed" class="_value center _size" data-transform="input">${v.size}</div>
 						</div>
 						
-						<div class="_data-cell _half float-right fluid-line">
-							<span class="_label left">작업</span>
-							<div data-name="size" class="_value center" data-transform="input">212-299</div>
-						</div>
-					
-						<div class="_data-cell _half fluid-line">
+						<div class="_data-cell fluid-line">
 							<span class="_label left">수량</span>
-							<div data-name="count" class="_value center" data-transform="input">4000</div>
+							<div data-name="count" class="_value center _count" data-transform="input">${v.count}</div>
 						</div>
 						
-						<div class="_data-cell _half float-right fluid-line">
+						<div class="_data-cell fluid-line _half">
+								<span class="_label left">제작단가</span>
+								<div data-name="contractor" class="_value center _cost" data-transform="input">${v.cost}</div>
+						</div>
+						
+						<div class="_data-cell fluid-line _half float-right">
+							<span class="_label left">공급단가</span>
+							<div data-name="contractor" class="_value center _price" data-transform="input">${v.price}</div>
+						</div>
+						
+						<div class="_data-cell fluid-line">
 							<span class="_label left">하청</span>
-							<div data-name="contractor" class="_value center" data-transform="input">중앙에스엠</div>
+							<div data-name="contractor" class="_value center _constructor" data-transform="input">${v.constructor}</div>
 						</div>
 					</div>
 					
@@ -165,13 +172,12 @@
 			</div>
 			</#list>
 			
-	</li>
+	</div>
 	
-</ul>
+</div>
 <br />
 <br />
 <br />
-</#list>
 
 
 
@@ -257,11 +263,20 @@
 				
 			</div>
 			
-			
+
+<div id="new2015">
+	<div class="div-1">꿍따</div>
+	<div class="div-2">리</div>
+	<div class="div-3">샤바</div>
+	<div class="div-4">라</div>
+	빠빠빠
+</div>
+
 <script src="/js/component/ui.input-transform.js"></script>
 <script src="/js/component/ui.selectBtn.js"></script>
+
 <script src="/js/component/ui.itemContainer.js"></script>
-<script src="/js/component/ui.workList.js"></script>
+<script src="/js/component/ui.itemContainerDetail.js"></script>
 <script>
 	$(".select-btn").selectBtn();
 </script>

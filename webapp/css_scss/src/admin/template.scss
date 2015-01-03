@@ -16,6 +16,7 @@ body.admin {
         border-bottom: 1px solid rgb(18,18,18);
       }
       
+      
       > #context-line {
         min-width: 100%;
         height: $layout-admin-top-height - $layout-admin-top-line-height - 3;
@@ -28,13 +29,13 @@ body.admin {
     
     &#left {
       width: 194px;
-      border-right: 6px solid rgb(48,48,48);
+      border-right: 1px solid rgb(18,18,18);
       background-color: rgb(48,48,48);
       //background-image: url('/css/img/left-menu-bg-pattern.gif');
     }
     
     &#body {
-      
+      background: rgb(48, 48, 48);
     }
     
   } // & > div

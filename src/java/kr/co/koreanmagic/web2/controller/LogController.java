@@ -2,10 +2,15 @@ package kr.co.koreanmagic.web2.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +49,7 @@ public class LogController {
 		logger.debug("nav : " + nav.hashCode());
 		nav.reflesh(req);
 		model.put("nav", nav);
+		model.put("data", getDummyData());
 		
 		return "admin." + dir + "." + file;
 	}
@@ -161,6 +167,29 @@ public class LogController {
 	private<T> T log(T t) {
 		System.out.println(t);
 		return t;
+	}
+	
+	private List<Map<String, Object>> getDummyData() throws Exception {
+		
+		Path path = Paths.get("g:/data.txt");
+		
+		List<Map<String, Object>> result = new ArrayList<>();
+		List<String> lines = Files.readAllLines(path, Charset.forName("euc-kr"));
+		
+		String[] s = null, labels = {"date", "customer", "item", "memo", "size", "count", "cost", "price", "constructor"};
+		
+		int i=0, len = labels.length;
+		Map<String, Object> model = null;
+		for(String l : lines) {
+			s = l.split(",");
+			model = new HashMap<>();
+			for(i=0;i<len;i++) {
+				model.put(labels[i], s[i]);
+			}
+			result.add(model);
+		}
+		
+		return result;
 	}
 	
 

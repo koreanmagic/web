@@ -3,18 +3,8 @@
  *
  * 한컴기획 업무테이블을 만들기 위한 특별 위젯
  * 
- * 1) <UL class="ui-item-container">가 전체박스가 된다.
- * 2) 그 하위에는 <LI class="ui-item-header">가 컨트롤 박스이자, 기본 인터페이스가 된다. (이를 통해 열기/닫기 구현)
- * 3) 그리고 그 다음 <LI class="ui-item-body">
- * 
+ * 이 js 파일에서는 구조적인 컨트롤만 제어한다.
  *  
- * btn-toggle-open	 	:: 컨테이너 열기 버튼
- * btn-toggle-close		:: 컨데이터 닫기 버튼
- * btn-delete			:: 리스트 아예 삭제
- * btn-add				:: 컨테이터 추가
- * header 				:: 컨트롤 키 있는 엘리먼트
- * body					:: 컨테이너 엘리먼트들의 직속 부모
- * length				:: 컨테이너 갯수를 적어두는 엘리먼트
  */
 (function($) {
 
@@ -22,13 +12,10 @@
 	// 전역 변수
 	// 현재 활성화된 widget 객체가 여기에 등록된다.
 	var activeList = [],
-		prefix = ".ui-item-";
+		prefix = ".ui-item-",
+		expando = new Date() * 1
+		;
 		
-	// 해당 엘리먼트가 열려있는지 확인
-	// activeList는 클로저 전역변수이며, 열려있는 엘리먼트만을 원소로 가진다.
-	function isOpen( instance ) {
-		return !!(activeList.indexOf(instance) != -1);
-	};
 
 	// widget 코드 시작
 	var selectBtn = $.widget("ui.itemContainer", {
@@ -45,12 +32,16 @@
 			
 			waitingImg: "/img/waiting.gif",
 			
-			
 			/* *********** Item Container 관련 *********** */
 			// 모든 this는 widget 객체
 			
+			
+			// 극초반 호출되는 함수
+			preInit: $.noop,
 			// 새로 생성된 아이템이 들어온다.
-			initItem: function( $item ) { },
+			initItem: $.noop,
+			// 위젯 시작할때
+			createWidget: $.noop,
 			
 			//Item 객체의 변화를 감지하는 이벤트
 			itemRemoveBefore: function( removeElement ) { },
@@ -61,7 +52,8 @@
 				return $("<div>");
 			},
 			
-			itemClickHandler: function( e, $item ) { },
+			bodyClickHandler: $.noop,
+			bodyOverHandler: $.noop,
 			
 		},
 		
@@ -69,27 +61,20 @@
 		// Constructor
 		_create: function() {
 			
+			this.option("preInit").call(this);
+			
 			var self = this,
 				element = this.element,		// ui-item-container
-				selects = ["btn-toggle-open", "btn-toggle-close", "btn-delete", "btn-add",
-							"header", "body", "length"
-						  ],
-				firstHide = ["body", "btn-toggle-close"];
+				selectors = ["body", "header"];
 			
+			$.each(selectors, function(i, v) {
+				self[v] = self._find( prefix + v );
+			});
+
+			// 아이템 객체를 생성하기 전에, Item 클래스의 prototype객체를 확장할 포인트를 제공한다.
+			Item.fn.extend( this.option("extendOfItem") );
 			
-			// Register
-			$.each(selects ,function(i, v) {
-					self[ v ] = self._find(prefix +  v);
-					
-					// 아이템 목록이 있는 li나 클로즈 버튼은 바로 감추어 놓는다.
-					if( firstHide.indexOf( v ) != -1 ) {
-						self[ v ].hide();
-					} 
-				});
-			
-			
-			this.items = new Item( this );	// 아이템박스 수집
-			
+			this.items = new ItemManager( this );	// 아이템매니저 생성 :: Item객체들을 관리하는 객체
 			
 			// 위젯이 제공하는 이벤트를 사용하면 handler의 컨텍스트가 나 자신이 된다.
 			this._on({"click": function( event ) {
@@ -98,19 +83,12 @@
 				event.stopPropagation();
 				
 				// 컨테이너 박스 추가
-				if ( target.hasClass("ui-item-btn-add") ) {
+				if ( target.hasClass("ui-item-btn-add") )
 					self._addItem();
-				}
-				// 리스트 삭제
-				else if ( target.hasClass("ui-item-btn-delete") ) {
-					self.destroy();
-				}
-				// 컨테이너 BODY 열기 닫기 ::: ㅡheadline이나 오픈/닫기 버튼을 클릭했을때
-				else if( (jQuery.contains(this["header"][0], event.target) && !isOpen(self))
-						|| target.is("[class*=ui-item-btn-toggle-]")) {
-					self.toggle();
-				} 
+					
 			}});
+			
+			this.option("createWidget").call( this );
 			
 		},
 		
@@ -119,55 +97,8 @@
 			return $(selector, context || this.element);
 		},
 		
-		// body 엘리먼트의 토글 버튼
-		toggle: function() {
-			if(isOpen(this)) {
-				this.close();
-			} else {
-				if(this.toggleType()) // 토글타입이고 현재 열려진 리스트가 있으면
-					this.closeAll();
-				this.open();
-			}
-		},
 		
-		// toggle = true 이면, A가 열린 상태라 할때 B를 클릭하면 A가 자동으로 닫힌다.
-		// false 이면, 제한없이 모두 열린다.  
-		toggleType: function() {
-			return this.options.toggle;
-		},
-		
-		open: function() {
-			if(isOpen(this))
-				return;
-			
-			this["body"].show();
-			this["btn-toggle-open"].hide();		// 열기 아이콘을 비활성화시키고
-			this["btn-toggle-close"].show();		// 닫기 아이콘을 활성화시킨다.
-			this.element.addClass("active");
-			
-			activeList.push(this);						// 전역 배열에 추가한다.
-		},
-		
-		close: function() {
-			if(!isOpen(this))
-				return;
-				
-			this["body"].hide();
-			this["btn-toggle-close"].hide();
-			this["btn-toggle-open"].show();
-			this.element.removeClass("active");
-			
-			if(activeList.length)
-				activeList.splice(activeList.indexOf(this), 1);
-		},
-		
-		closeAll: function() {
-			if(activeList.length) {
-				$.each(activeList, function() { this.close(); } );
-			}
-		},
-		
-		// item container 관련
+		// 아이템 생성 -> 추가
 		_addItem: function() {
 			var child = this.option("createItem")();	// 콜백함수에 새로운 컨테이너 엘리먼트를 요청한다.
 			this.items.add( child );
@@ -188,7 +119,7 @@
 		
 		// 모두 삭제
 		_destroy: function() {
-			var items = this.items.get(), item = null,
+			var items = this.items.getItem(), item = null,
 				len = items.length;
 			
 			while( item = items.pop() ) {
@@ -200,34 +131,17 @@
 		},
 		
 		_reflesh: function() {
-			this._workCount();
 		},
 		
-		// 작업 갯수 산정
-		_workCount: function() {
-			var boxies = this._find(".ui-item-item", this.element);	// 모든 아이템 컨테이너 찾기
-			
-			var i=0, done=0;
-			while(boxies[i++])	// 다 끝난 작업물 확인
-				if(boxies.hasClass("_state-confirm")) done++;
-			
-			this["length"].text(boxies.length);
-		},
 	});
 
 
-	/*
-	 * 아이템 컨테이너 관리 객체.
-	 * 내부 배열에 아이템 컨테이너들을 담고 있다.
-	 * 기본적으로 삭제할 수 있는 버튼을 제공한다.
-	 * 
-	 */
-	var propClass = ["index"];
-	
-	// context :: widget 객체
-	function Item( widget ) {
 
-		var self = this,
+
+	/* ************************* ITEM MANAGER CLASS ************************* */
+	function ItemManager( widget ) {
+
+		var self = this, item,
 			items = $( prefix + "item", widget.widget() )		// 복수의 컨테이너 엘리먼트를 찾는다. 
 			;
 		
@@ -238,21 +152,15 @@
 		this["items"] = [];
 		this["uuid"] = 1;
 		
-		var item;
 		// 각 아이템의 jQuery 객체를 배열로 등록한다.
 		for(var i=0, l=items.length; i<l; i++) {
-			item = items[i];
-			self.add( item );
+			item = new Item( items[i] );
+			item["manager"] = this;				// 매니저를 prop로 입력
+			item.access("_item-index", i + 1);	// index 기입
+			self.register( item );
 		}
 		
 		this.init();
-	};
-	
-	// prototype에 등록되는 메서드들을 감추기 위한 Object.defineProperty에 쓰일 옵션값들
-	var defineOption = {
-		writable: false,
-		enumerable: false,
-		configurable: false
 	};
 	
 	/*
@@ -261,42 +169,101 @@
 	 */
 	$.each({
 		
-		// prefix : &- :: 각 아이템 원소 jQuery 객체가 컨텍스트가 되는 함수 
-		$push: function() {
-			console.log(this);
+		// 여러가지 상태정보를 저장한다.
+		status: function( key, value ) {
+			
+			var status = this["status"] || {};
+			if( value !== undefined ) {
+				status[key] = value;
+				return this;
+			}
+			
+			return key ? status[key] : status;
 		},
 		
-		notice: function() {
+		
+		// 모든 아이템에 클래스 일괄 등록/해제
+		setClass: function( className, fn ) {
 			
+			var value;
+			if( !fn && $.isFunction( className ) ) {
+				fn = className;
+				className = false;
+			}
+			
+			$.each( this.items, function() {
+				
+				// setClass( 콜백함수 )
+				// 첫번쨰 인자로 함수가 들어오면, 콜백함수로 컨트롤한다.
+				// 콜백함수가 문자열을 리턴할때만 클래스로 등록한다. 이외는 모두 패스
+				if(!className) {
+					value = fn.call(this);
+					if(typeof value === 'string') this.addClass( value );
+					return;
+				}
+				
+				// setClass( 문자열, 콜백함수 or Boolean )
+				// 콜백함수의 경우, 정확하게 false를 리턴하는 경우에만 해당 className을 삭제한다.
+				if( ($.isFunction(fn) && fn.apply(this) === false) || fn === false) {	// 함수가 있으면 그에 따라 바꾼다.
+					 this.removeClass( className );
+					 return;
+				}
+				this.addClass( className );
+			});
+		},
+		
+		// Item객체의 access를 통해 접근할 수 있는 value를 기준으로 정렬한다.
+		sort: function( valueName ) {
+			
+			if( this.status("sort") === valueName)	// 상태 확인
+				return;
+			
+			var objArray = this.items, target,
+			i=0, len = objArray.length,
+			sorts = new Array(len),
+			rresult = /\s(\d+)$/;
+		
+			for(;i<len;i++) {
+				sorts[i] = objArray[i].access(valueName) + " " + i;	 // objArray[i]는 Item 객체
+			}
+		
+			sorts.sort();	// 정렬
+			
+			this.body.empty();	// 모든 엘리먼트 삭제
+			
+			for(i=0;i<len;i++) {
+				sorts[i] = objArray[ rresult.exec( sorts[i] )[1] ];
+				this.body.append( sorts[i] );	// 바로 붙인다.
+				sorts[i].access("_item-index", i + 1);
+			}
+			
+			this.items = sorts;
+			this.status("sort", valueName);
+			return this;
 		},
 		
 		// 아이템 반환
-		get: function(pos) {
-			return pos !== undefined ? this.items[pos] : this.items;
+		getItem: function(pos) {
+			return pos !== undefined ? this.items[ this.index( pos) ] : this.items;
 		},
 		
-		// 들어오는건 
-		add: function( ele ) {
+		// 새로 등록되는 item은 무조건 이 메서드를 지나게 된다. 여기서 초기화를 시키면 된다.
+		register: function( ele ) {
 			
-			var self = this,
-				length = self.length(),
-				item = this.items[ length ] = $( ele )
-				;
+			var item = this.items[ this.length() ] = ele;
 			
-			// 관리해야할 엘리먼트 등록
-			$.each( propClass, function(i, v) {
-				item[ v ] = $( prefix + v, item ).text( self.uuid++ );
-			});
-			
-			if( !$.contains( this["body"], item ) )	// 없다면
+			if( !$.contains( this["body"], item ) )	// 아직 DOM에 적용되지 않았으면, 바로 적용한다. 
 				this["body"].append( item );
 			
 			this.option("initItem").call(this.widget, item);
 		},
 		
+		
 		// 엘리먼트 삭제 :: 인덱스 || Dom Element
 		remove: function(pos) {
-			pos = this.index(pos);
+			console.log(this.items);
+			
+			pos = this.index( pos );
 			var removeElement = this.items[ pos ],
 				agree = this.option("itemRemoveBefore").call( this,  removeElement );
 			
@@ -305,7 +272,6 @@
 				this.widget._itemRemoveHandler.call( this.widget, removeElement );
 				this.option("itemRemoveAfter").call( this,  removeElement );
 			}
-			
 		},
 		
 		mode: function(mode, pos) {
@@ -340,51 +306,96 @@
 			return this.items.length;
 		},
 		
+		
 		init: function() {
 			
 			var self = this;
+				// 이벤트 타겟을 통해, Item객체를 찾아내는 함수
+				catcher = function( target ) {
+					target = $(target);
+					target = target.hasClass("ui-item-item") ?
+							target :
+							target.closest(".ui-item-item");
+					return self.getItem( target );
+				};
 			
-			this["body"].on("click", function(e) {
+			
+			// EVENT REGISTER
+			this["body"]
+			.on("click", function(e) {
 				
 				if( self.body[0] === e.target ) return;				
+				// 클릭이벤트가 생긴 아이템 객체를 찾아낸다.
+				var item = catcher(e.target);
 				
-				var $target = $(e.target),
-					item = $target.hasClass("ui-item-item") ?
-									$target :
-									$target.closest(".ui-item-item");
-				
-				if($target.hasClass("ui-item-delete")) {
+				// 아이템 삭제
+				if(item.hasClass("ui-item-delete")) {
 					self.remove(item);
 					return;
 				}
 				
 				// 콜백 함수 호출
-				if( self.option("itemClickHandler").call( self.widget, e, item ) === false )
+				if( self.option("bodyClickHandler").call( self.widget, e, item ) === false ||
+					item.clickHandler.call( item, e ) === false )
 					e.stopPropagation();
-					
+				
+			})
+			.on("mouseover", function(e) {
+				if( self.body[0] === e.target ) return;
+				
+				var item = catcher(e.target);
+				
+				if( self.option("bodyOverHandler").call( self.widget, e, item ) === false ||
+					item.overHandler.call( item, e ) === false)
+					e.stopPropagation();
 			});
 		},
 		
 	}, function(name, fn) {
 		
-		// 접두어 $로 시작하는건 jQuery.each의 프록시가 되야 하므로 판정한다. 또한 메서드 이름은 접두사를 빼고 등록된다. 
-		var childs = /^\$.+/.test(name);
-		name = childs ? name.slice(1) : name;	// 접두사를 뺀다.
+		ItemManager.prototype[name] = fn;
 		
-		var proxyFn = function() {
-			var args = arguments;
-			
-			if(childs)
-				return $.each(this.items, function() { fn.apply(this, args); });
-			else
-				return fn.apply(this, args);
-		};
-		
-		Object.defineProperty(Item.prototype, name,
-								$.extend({}, defineOption, {value: proxyFn})
-							);
 	});
 	
+	
+	
+	/* ************************* ITEM CLASS ************************* */
+	/*
+	 * Item 객체는 각 작업 게시물 하나를 뜻한다.
+	 * 이는 jQuery를 상속한 객체이므로, jQuery를 이용하는 것과 동일하게 작업하면 된다.
+	 */
+	function Item( element ) {
+		this[0] = element.nodeType === 1 ? element : element[0];
+		this.length = 1;
+		this.context = this[0].parentNode;
+	}
+	
+	Item.fn = Item.prototype = $();		// jQuery 객체를 상속한다.
+	
+	
+	Item.fn.extend({
+		
+		// 데이터 접근
+		// '_'로 시작하는 key는 클래스이름으로 간주하고 해당 엘리먼트의 text값을 불러온다.
+		access: function( key, value ) {
+			
+			// 실제 엘리먼트일 경우
+			if(key[0] === "_") {
+				key = this.find("." + key);
+				return value === undefined
+					? $.trim( key.text() )
+					: key.text( value );
+			};	
+			
+			key = expando + key;
+			return value === undefined ?
+				( value = this.data( key )) ? value : key
+				: this.data( key, value ) && value;		// 값을 입력한 후, 값을 내보내준다.
+		},
+		
+		clickHandler: $.noop,
+		overHandler: $.noop,
+	});
 	
 })(jQuery);
 

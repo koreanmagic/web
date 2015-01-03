@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+@mixin rotate($num) {
+  -webkit-transform: rotate(#{$num + 'deg'}); 
+  -moz-transform: rotate(#{$num + 'deg'}); 
+  -o-transform: rotate(#{$num + 'deg'});
+  -ms-transform: rotate(#{$num + 'deg'});
+  transform: rotate(#{$num + 'deg'});
+}

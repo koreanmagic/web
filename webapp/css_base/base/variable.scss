@@ -4,8 +4,8 @@
 /*
  * 아래 기본값을 바꾸면 템플릿을 변경할 수 있다.
  */
-$standard-color-value: $base-tag-body-color;
-$template-border-lighten-color: lighten($base-tag-default-border-color, 10%);
+$standard-color-value: #333;
+$template-border-lighten-color: lighten(#aaa, 10%);
 
 
 /* *******************  COLOR  ******************* */

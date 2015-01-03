@@ -1,219 +1,229 @@
 @charset "UTF-8";
 /*
+ * 아래 기본값을 바꾸면 템플릿을 변경할 수 있다.
+ */
+/* *******************  COLOR  ******************* */
+/*
+ * gray 스케일
+ * 다른 scss 소스에서 사용할 그레이 스케일을 10% 단위로 미리 정의해둔다.
+ * 
+ */
+/*
+ * a 태그 링크시 설정
+ */
+/* bagic 함수 */
+/*
+ * 각종 단위를 없애고 숫자만 돌려준다.
+ * SASS에서 단위는 숫자뒤에 있는 문자열을 뜻한다.
+ * 0을 곱하면 0px, 0% 등 단위만 남는다. 여기에 1을 더하면 1px, 1%가 된다.
+ * 본래값에서 1단위를 나누면 정수로 된 몫이 남는다.
+ * 그걸 돌려주면 결국 숫자값만 남게 되는것이다. 
+ */
+/*
+ * 100%를 숫자로 나눈 값.
+ */
+/*
+ * 숫자든 뭐든 들어오는 인자값을 string 타입으로 캐스팅해준다.
+ */
+/*
+ * boolean 값으로 캐스팅
+ */
+/*
+ * 100 * 1% = 100% 를 이용한다.
+ * 숫자로 계산한 후 단위를 곱해(붙여서) 내보낸다.
+ */
+/* 그라데이션 */
+/* 
+※ Font 축약형을 쓸때에 다음과 같은 이슈가 있어, 축약형 보다는 풀어서 쓰는 것을 권장한다.
+폰트 축약형을 쓰면 기존 element 의 속성이 지워질수도 있다.
+폰트 축약형이 모두 적용되어 기존 속성을 가지고 오지 못한다.
+폰트축약형을 쓸때에 font 속성중 지정안된 것들을 기본값으로 불러서 렌더링 하게 되어 불필요한 성능 낭비가 된다.
+
+아래는 폰트 믹신이다
+*/
+/*
+  font-style:italic; (폰트 기울기, normal:일반, italic:이탤릭체, oblique:기울기)
+  font-variant:small-caps; (폰트 변형, normal:일반, small-caps:작은대문자)
+  font-weight:bold; (폰트 굵기, normal:일반, bold:굵게)
+  font-size:12px; (폰트 크기)
+  line-height:14px; (줄 간격)
+  font-family:gulim; (폰트 서체)
+  
+  
+}
+ */
+/*
+ * hoff (horizontal offset) : 그림자 오른쪽(양수) 또는 왼쪽(음수) 길이. 
+    voff (vertical offset) : 그림자가 아래쪽(양수) 또는 위쪽(음수) 길이.
+    bd (blur distance) : 그림자의 가장자리를 흐리게 만드는 길이.
+    sd (spread distance) : 그림자가 사방으로 넓어지거나(양수) 줄어드는(음수) 길이. 쓰지 않아도 된다.
+    color: 그림자 빛깔
+    inset : 상자 안에 그림자를 만든다. 쓰지 않으면 바깥에 만든다.
+ */
+/*
+ * 버튼 클릭시 색깔변화
+ */
+.ui-item-item {
+  position: relative;
+  margin-top: 1em;
+  /* 수정 시 */
+  /* 안보이게 */ }
+  .ui-item-item.modify.ui-invisible {
+    opacity: 1; }
+  .ui-item-item.modify ._item-data ._value {
+    border: 1px solid #afafaf;
+    background: #fcfcfc; }
+    .ui-item-item.modify ._item-data ._value input {
+      border: 0;
+      padding: 0.05em 0 0 .3em;
+      font-size: 1em;
+      color: #b2490e; }
+  .ui-item-item.modify ._item-data ._label {
+    background: #f0dbc8;
+    border: 1px solid #b38671; }
+  .ui-item-item.ui-invisible {
+    opacity: .6; }
+
+/*
  * 사용자 요구에 따라 리스트를 펼치는 위젯
  * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
  */
-ul.ui-item-container {
+.ui-item-container {
   position: relative;
   width: inherit;
   height: auto;
-  background-color: white;
   overflow: hidden;
-  /* Active 리스트가 열려있을 때 */ }
-  ul.ui-item-container > li {
-    position: relative;
-    border-top: 1px solid #aaaaaa;
-    min-height: 30px; }
-    ul.ui-item-container > li:last-child {
-      border-bottom: none; }
-  ul.ui-item-container > li.ui-item-header {
-    display: block;
-    width: inherit;
-    height: 4em;
-    background-color: #d9d9d9;
-    border-top: none; }
-    ul.ui-item-container > li.ui-item-header:hover {
-      cursor: pointer;
-      background-color: #d2d2d2; }
-  ul.ui-item-container.active > li.ui-item-header {
-    background-color: #d2d2d2; }
-    ul.ui-item-container.active > li.ui-item-header:hover {
-      cursor: default; }
-  ul.ui-item-container.active span._customer, ul.ui-item-container.active span._subject, ul.ui-item-container.active span._date, ul.ui-item-container.active span._delivery-limit {
-    font-weight: bold; }
-  ul.ui-item-container [class*=select-list-] {
-    font-size: 1.4em;
-    position: relative;
-    top: 15px; }
-
-/*
-* headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
-* 이는 vertical-align을 middle로 설정하기 위한 것이다.
-*/
-li.ui-item-header div[class^=_] {
-  display: table-cell;
-  height: inherit;
-  vertical-align: middle; }
-li.ui-item-header ._no {
-  width: 130px;
-  text-align: center; }
-li.ui-item-header ._work-state {
-  width: 120px;
   /*
-   * ui에 해당하는 클래스다.
-   * 원래 ui 클래스 속성을 직접 바꾸는건 지양해야할 기술이지만, 이번에는 예외로 한다.
-   * JS를 통해 버튼값을 바꾸는데, 글자수가 다르기때문에 그때마다 버튼 사이즈가 같이 바뀌게 된다.
-   * 이를 방지하기 위해 width값을 강제로 지정한다.
-   */ }
-  li.ui-item-header ._work-state .btn {
-    width: 75px; }
-li.ui-item-header ._command-btns {
-  float: right;
-  height: inherit;
-  margin-left: 22px;
-  padding-right: 6px;
-  padding-left: 8px;
-  border-left: 1px solid #aaaaaa; }
-li.ui-item-header ._insert-date {
-  width: 150px;
-  text-align: center; }
-li.ui-item-header ._customer-icon > img {
-  border-radius: 4px;
-  position: relative;
-  top: 2px; }
-li.ui-item-header ._customer {
-  width: 130px;
-  text-align: left;
-  text-indent: 3px; }
-
-._list-item-container {
-  position: relative;
-  padding: 1em;
-  margin-top: 1em;
-  border: 1px solid #d6d6d6;
-  border-bottom: 1px solid #b8b8b8;
-  min-height: 200px;
-  overflow: hidden;
-  background: white; }
-  ._list-item-container.input {
-    border: 1px solid #3e6299;
-    outline: 1px solid #3e6299; }
-    ._list-item-container.input ._data {
-      border-bottom: 1px solid rgba(255, 255, 255, 0);
-      border-radius: 3px; }
-    ._list-item-container.input ._value {
-      border: 1px solid #aaa; }
-  ._list-item-container:hover {
-    outline: 1px solid #919191;
-    border: 1px solid #919191; }
-
-/* 글씨 속성 */
-span {
-  line-height: 1.2em; }
-  span._subject, span._customer {
-    font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
-    letter-spacing: -0.15em;
-    color: #4a4a4a;
-    text-shadow: 1px 1px 1px white; }
-  span._work-done, span._work-separator, span._delivery-limit, span._time {
-    position: relative; }
-  span._time {
-    left: -5px; }
-  span._delivery-limit {
-    left: 20px; }
-  span._work-done {
-    top: -1.5px; }
-  span._work-separator {
-    top: -2px;
-    left: -2px; }
-
-.ui-item-body {
-  padding: 1em;
-  padding-top: 0;
-  margin-bottom: 0; }
-  .ui-item-body ._item-btns, .ui-item-body ._item-resource {
-    text-align: right;
-    font-size: 1.16em; }
-
-/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
-._notice-panel {
-  position: absolute;
-  width: 100px;
-  padding: .13em;
-  border: 1px solid #b8b8b8;
-  border-radius: 1em;
-  background: #efefef;
-  text-align: left;
-  color: #616161;
-  text-shadow: 1px 1px 0px white; }
-
-._panel {
-  overflow: hidden;
-  height: 150px;
-  margin-bottom: .6em;
-  outline: 1px solid #cdcdcd;
-  background: #e6e6e6;
-  text-align: center; }
-  ._panel > img {
-    max-height: 150px; }
-
-._item-btns {
-  margin-bottom: 0.6em;
-  margin-top: -.3em; }
-  ._item-btns i {
-    padding: .15em;
-    margin-left: -.15em;
-    border: 1px solid white;
-    border-radius: 2px;
-    cursor: pointer;
-    color: #505050; }
-    ._item-btns i:hover {
-      border: 1px solid #aaa;
-      background: #f3f3f3;
-      text-shadow: 1px 1px 1px white;
-      color: #323232; }
-  ._item-btns > a:hover {
-    color: #b51f1f; }
-
-._item-time {
-  margin-top: .9em;
-  margin-bottom: .2em;
-  text-align: right; }
-
-._item-data {
-  overflow: hidden;
-  font-family: 돋움;
-  letter-spacing: 0em; }
-  ._item-data ._label {
-    padding: .15em .3em;
-    margin-right: 5px;
-    border: 1px solid #646464;
-    border-radius: 2px;
+  * headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
+  * 이는 vertical-align을 middle로 설정하기 위한 것이다.
+  */
+  /* 글씨 속성 */
+  /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */ }
+  .ui-item-container .ui-item-header {
+    height: 4em;
+    background-color: #f8f8f8;
+    border: 1px solid #aaaaaa; }
+  .ui-item-container ._list-item-container {
+    position: relative;
+    padding: 1em;
+    border: 1px solid #d6d6d6;
+    border-bottom: 1px solid #b8b8b8;
+    min-height: 200px;
+    overflow: hidden;
+    background: #f8f8f8; }
+    .ui-item-container ._list-item-container:hover {
+      outline: 1px solid #919191;
+      border: 1px solid #919191; }
+  .ui-item-container span {
+    line-height: 1.2em; }
+    .ui-item-container span._customer {
+      font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
+      letter-spacing: -0.05em;
+      color: #4a4a4a;
+      text-shadow: 1px 1px 1px white; }
+    .ui-item-container span._work-done, .ui-item-container span._work-separator, .ui-item-container span._delivery-limit, .ui-item-container span._time {
+      position: relative; }
+    .ui-item-container span._time {
+      left: -5px; }
+    .ui-item-container span._delivery-limit {
+      left: 20px; }
+    .ui-item-container span._work-done {
+      top: -1.5px; }
+    .ui-item-container span._work-separator {
+      top: -2px;
+      left: -2px; }
+  .ui-item-container .ui-item-body {
+    margin-bottom: 0; }
+    .ui-item-container .ui-item-body ._item-btns, .ui-item-container .ui-item-body ._item-resource {
+      text-align: right;
+      font-size: 1.16em; }
+  .ui-item-container ._item-index:before {
+    content: "no.";
+    color: #8c8c8c;
+    font-size: .65em;
+    font-weight: normal; }
+  .ui-item-container ._item-index:after {
+    position: relative;
+    top: -.2em;
+    content: " | ";
+    color: #8c8c8c;
+    font-size: .6em;
+    font-weight: normal; }
+  .ui-item-container ._work_state {
+    font-weight: bold; }
+  .ui-item-container ._notice-panel {
+    position: absolute;
+    width: 100px;
+    padding: .13em;
+    text-align: left;
+    color: #616161;
+    text-shadow: 1px 1px 0px white; }
+  .ui-item-container ._panel {
+    overflow: hidden;
+    height: 150px;
+    margin-bottom: .6em;
+    outline: 1px solid #cdcdcd;
+    background: #e6e6e6;
+    text-align: center; }
+    .ui-item-container ._panel ._screen > img {
+      max-height: 130px; }
+    .ui-item-container ._panel .control {
+      height: 20px; }
+  .ui-item-container ._item-btns {
+    margin-bottom: 0.6em;
+    margin-top: -.3em; }
+    .ui-item-container ._item-btns i {
+      padding: .15em;
+      margin-left: -.15em;
+      border: 1px solid #f8f8f8;
+      border-radius: 2px;
+      cursor: pointer;
+      color: #505050; }
+      .ui-item-container ._item-btns i:hover {
+        border: 1px solid #aaa;
+        background: #f3f3f3;
+        text-shadow: 1px 1px 1px white;
+        color: #323232; }
+    .ui-item-container ._item-btns > a:hover {
+      color: #b51f1f; }
+  .ui-item-container ._item-label, .ui-item-container ._item-date, .ui-item-container ._item-data {
+    vertical-align: middle; }
+    .ui-item-container ._item-label:after, .ui-item-container ._item-date:after, .ui-item-container ._item-data:after {
+      content: "";
+      display: block;
+      clear: both; }
+  .ui-item-container ._item-label img {
+    width: 30px;
+    height: 30px;
+    float: left; }
+  .ui-item-container ._item-date > i, .ui-item-container ._item-date > span {
+    float: right;
+    margin-left: .4em; }
+  .ui-item-container ._item-data {
     font-family: 돋움;
-    letter-spacing: -0.05em;
-    background: #9e9e9e;
-    color: white; }
-  ._item-data ._data-cell {
-    float: left;
-    width: 100%;
-    margin-top: .3em;
-    padding-bottom: .3em;
-    border-bottom: 1px solid #f0f0f0; }
-    ._item-data ._data-cell._half {
-      width: 49%; }
-      ._item-data ._data-cell._half.float-right {
-        float: right; }
-    ._item-data ._data-cell ._value {
-      float: none;
-      overflow: hidden;
-      padding: .15em .3em;
-      border: 1px solid rgba(255, 255, 255, 0); }
-
-._item-resource {
-  margin-top: .7em;
-  /* border-top: 1px solid rgb(214, 214, 214); */
-  padding-top: .5em; }
-
-/* 상태값 :: 수정  */
-.ui-item-item {
-  /* 수정 시 */ }
-  .ui-item-item.modify ._value {
-    border: 1px solid #afafaf;
-    background: #fcfcfc; }
-    .ui-item-item.modify ._value input {
+    letter-spacing: 0em; }
+    .ui-item-container ._item-data ._label, .ui-item-container ._item-data ._value {
+      padding: .3em 0 .1em 0;
+      min-height: 1.35em;
+      border: 1px solid #f8f8f8; }
+    .ui-item-container ._item-data ._label {
+      margin-right: 5px;
+      width: 55px;
+      border: 1px solid #cdcdcd;
+      background: #ebebeb;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: -0.05em; }
+    .ui-item-container ._item-data ._data-cell {
       width: 100%;
-      border: 0;
-      font-family: 돋움;
-      font-size: .9em;
-      color: #3b619b;
-      background: #fafafa; }
+      border-bottom: 1px solid #e2e2e2;
+      float: left; }
+      .ui-item-container ._item-data ._data-cell:last-child {
+        border-bottom: none; }
+      .ui-item-container ._item-data ._data-cell._half {
+        width: 49%; }
+      .ui-item-container ._item-data ._data-cell.float-right {
+        float: right; }
+  .ui-item-container ._item-resource {
+    margin-top: .7em;
+    padding-top: .5em; }

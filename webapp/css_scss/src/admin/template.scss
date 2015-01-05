@@ -1,47 +1,47 @@
 @charset "UTF-8";
 
-body.admin {
-  
-  & > div {
-    
-    &#top {
-      background-color: rgb(41,41,41);
-      border-bottom: 1px solid rgb(18, 18, 18);
-      
-      $layout-admin-top-line-height: 30px;
-      
-      > #top-line {
-        min-width: 100%;
-        height: $layout-admin-top-line-height;
-        border-bottom: 1px solid rgb(18,18,18);
-      }
-      
-      
-      > #context-line {
-        min-width: 100%;
-        height: $layout-admin-top-height - $layout-admin-top-line-height - 3;
-        border-top: 1px solid rgb(89,89,89);
-        border-bottom: 1px solid rgb(18,18,18);
-        @include bg-gradation(rgb(65,65,65), rgb(50,50,50));
-      }
-      
-    }
-    
-    &#left {
-      width: 194px;
-      border-right: 1px solid rgb(18,18,18);
-      background-color: rgb(48,48,48);
-      //background-image: url('/css/img/left-menu-bg-pattern.gif');
-    }
-    
-    &#body {
-      background: rgb(48, 48, 48);
-    }
-    
-  } // & > div
-  
-  
-  
-} // body.admin
 
+#header {
+  
+  position: fixed;
+  margin-bottom: 3em;
+  z-index: 1000;
+
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid rgb(35,35,35);
+  background: rgb(50,50,50);
+  
+}
+
+#topLine, #contextLine {
+  & > .content {
+    margin: 0 auto;
+    width: $container-min-width;
+    height: 100%;
+  }
+}
+
+#topLine {
+  height: 31px;
+  border-bottom: 1px solid rgb(25,25,25);
+}
+
+#contextLine {
+  height: 64px;
+  border-top: 1px solid rgb(80,80,80);
+}
+
+#bodyContainer {
+  padding-top: 97px + 30px;
+  margin: 0 auto; 
+  width: $container-min-width;
+  background: rgb(244, 244, 244);
+}
+
+
+#bodyContent {
+
+  width: $container-min-width;
+}
 

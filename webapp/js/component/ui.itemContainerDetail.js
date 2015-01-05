@@ -13,7 +13,9 @@
 				"하청업체": "_constructor"
 				},
 		highlightList = ["_customer", "_constructor"],
-		highlightLock = false
+		highlightLock = false,
+		widgetFullName, widgetClassPrefix,
+		s = $(".dummy").detach()
 		;
 		
 		
@@ -45,23 +47,23 @@
 		// 콘트롤 센터의 셀렉터그룹이 이를 잠글 수 있다.
 		if(highlightLock) return;
 		
-		var manager = this, old;
+		var manager = this, old, setClassName = widgetFullName + "-highlight";
 		
-		// highlight( false ) => All Reset!!
+		// highlight( false ) => 전부 없앤다.
 		if( className === false ) {
-			manager.setClass( "ui-invisible", false );
-			manager.status( "highlight", false );
+			manager.setClass( setClassName, false );
+			manager.status( "highlight", false );		// 상황판에 기입
 			return;
 		}
 		
 		if( old = manager.status( "highlight" ) ) {
 			if( old.className === className && old.value === value ) return;
-			else manager.setClass( "ui-invisible", false );	// 같은 이름이 아니면 전부 리셋한다.
+			else manager.setClass( setClassName, false );	// 같은 이름이 아니면 전부 리셋한다.
 		}
 			
 		manager.setClass( function(){
-			if( this.access( className ) !== value )		// 값이 다른 것만 감춘다.
-				return "ui-invisible";
+			if( this.access( className ) === value )
+				return setClassName;
 		});
 		
 		manager.status( "highlight", {"className": className, "value": value} );	// 현재 하이라트 중인 것 표시
@@ -105,7 +107,9 @@
 			var i = highlightList.length, target = $(e.target), value;
 			
 			while(i--) {
-			
+				
+				// 마우스오버된 엘리먼트가 하이라이트 기능에 적용받는 것이라면, 엘리먼트 문자값을 추출해 낸 후,
+				// 같은 엘리먼트에 같은 문자열을 가진 아이템들에 특정 클래스명을 부여한다.
 				if( target.hasClass( highlightList[i] ) ) {
 					value = this.access( highlightList[i] );
 					highlight.call( this.manager, highlightList[i], value );
@@ -119,19 +123,22 @@
 	};
 	
 	
-	/* ************** Widget create ************** */
-	$(".ui-item-container").itemContainer({
+	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  Widget create  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+	$(".ui-itemContainer-container").itemContainer({
 		
 		// 극초반에 호출되는 함수. 미리 해두어야할 로직을 한다.
 		preInit: function() {
-			var obj;
+			
+			widgetClassPrefix = this.widgetClassPrefix; 
+			widgetFullName = this.widgetFullName;
+			
+			var obj, controller = this["controller"];
 			// customerSelect :: 회사명 이름을 기준으로 하이라이트 설정하는 셀렉터 엘리먼트 
 			obj = setSelect[VALUE["거래처"]] = { "list": [] };
-			obj["select"] = this._find("._highlight-customer");
-			
+			obj["select"] = controller.find("._highlight-customer");
 			
 			// 정렬기준 설정
-			obj = setSelect["sort"] = { "list": [], "select": this._find("._sort") };
+			obj = setSelect["sort"] = { "list": [], "select": controller.find("._sort") };
 			$.each(VALUE, function(i, v) {
 				setSelect( "sort", i, { "value": v } );
 			});
@@ -214,7 +221,6 @@
 			 */
 			if( hasClass("modify") ) {
 				btnControl( item, "modify" );
-				panel( item, "editor" );
 			}
 			// 전송
 			else if( hasClass("update") ) {
@@ -223,7 +229,6 @@
 			// 
 			else if( hasClass("cancle") ) {
 				btnControl( item );
-				panel( item );
 			}
 			// 이미지 업로드 버튼 ==> ※※ 버튼 바로 앞에 input 엘리먼트가 위치하고 있어야 한다.
 			else if ( hasClass("imgfile-upload") ) {

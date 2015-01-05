@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+button {
+  
+  border: 1px solid $base-tag-default-border-color;
+  
+  &.radius {
+    border-radius: $base-tag-default-border-radius;
+  }
+  
+  &.gray {
+    @include btn-color-action();
+  }
+  
+  
+}

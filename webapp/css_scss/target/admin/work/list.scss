@@ -1,90 +1,57 @@
 @charset "UTF-8";
 
 @import "../../../../css_base/base/tools";
-  
-  
-.ui-item-item {
-  position: relative;   // 오버레이 등을 사용하기 위한 설정
-  margin-top: 1em;      // 각 아이템별 사이 간격
-  
-  /* 수정 시 */
-  &.modify {
-    
-    &.ui-invisible {  // 수정중일때는 하이라이트 기능을 끈다
-      opacity: 1;
-    }
-    
-    ._item-data {
-      ._value {   // 데이터 값을 싸고있는 엘리먼트
-      
-        border: 1px solid rgb(175,175,175);
-        background: rgb(252, 252, 252);
-        
-        input {
-          border: 0;
-          padding: 0.05em 0 0 .3em;
-          font-size: 1em;
-          color: rgb(178, 73, 14);
-        }
-        
-      }
-      
-      ._label {
-        background: rgb(240, 219, 200);
-        border: 1px solid rgb(179, 134, 113);
-      }
-    } // ._item-data
-  } // --&.modify
-
-  /* 안보이게 */
- &.ui-invisible {
-   opacity: .6;
- }
-} // .ui-item-item
-  
-/*
- * 사용자 요구에 따라 리스트를 펼치는 위젯
- * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
- */
-.ui-item-container {  // UL
-  
-  $ui-item-bgcolor: rgb(248,248,248);
-  
-  position: relative;
-  width: inherit;
-  height: auto;
-  overflow: hidden;
-  
+ 
+ 
+ 
+$ui-item-bgcolor: rgb(248,248,248);
 
 /*
 * headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
 * 이는 vertical-align을 middle로 설정하기 위한 것이다.
 */
-.ui-item-header {
+.ui-itemContainer-controller {
   
   height: 4em;
-  background-color: $ui-item-bgcolor;
-  border: 1px solid rgb(170, 170, 170);
-    
+  background-color: #333;
   
 } // li.ui-item-header
 
 
-._list-item-container {
+//아이템 엘리먼트에 마우스 올렸을때 선 변화 
+$ui-itemContainer-container-hover: 1px solid rgb(79, 122, 146);
+
+/*
+ * 사용자 요구에 따라 리스트를 펼치는 위젯
+ * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
+ */
+.ui-itemContainer-container {  // UL
   
   position: relative;
-  padding: 1em;
+  width: inherit;
+  height: auto;
+  
+  white-space: nowrap;
+  letter-spacing: -1px;
+
+._item-container {
+  
+  > div { // 각 패널
+    padding: 0 1em;
+  }
+  
+  position: relative;
       
   border: 1px solid rgb(214, 214, 214);
   border-bottom: 1px solid rgb(184, 184, 184);
   min-height: 200px;
       
   overflow: hidden;
-  background: $ui-item-bgcolor;
+  background: rgb(255, 255, 255);
     
   &:hover {
-    outline: 1px solid rgb(145, 145, 145);
-    border: 1px solid rgb(145, 145, 145);
+    border: $ui-itemContainer-container-hover;
+    outline: $ui-itemContainer-container-hover;
   }
     
 }// ._list-item-container
@@ -95,14 +62,6 @@
 span {
     
   line-height: 1.2em;
-    
-  // 한글폰트
-  &._customer {
-    font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
-    letter-spacing: -0.05em;
-    color: rgb(74, 74, 74);
-    text-shadow: 1px 1px 1px rgb(255, 255, 255);
-  }
     
   // 위치 미세 조정
   &._work-done, &._work-separator, &._delivery-limit, &._time {
@@ -127,20 +86,12 @@ span {
     left: -2px;
   }
 } // span
-  
 
 
-// 세부 리스트
-.ui-item-body {
-    
-  margin-bottom: 0;
-    
-  ._item-btns, ._item-resource {
-    text-align: right;
-    font-size: 1.16em;
-  }
-} // ._list-grid
-
+._item-edit, ._item-resource {
+  text-align: right;
+  font-size: 1.16em;
+}
 
 ._item-index {
   &:before {
@@ -163,6 +114,7 @@ span {
   font-weight: bold;
 }
 
+
 /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
 // 상황판
 ._notice-panel {
@@ -177,7 +129,7 @@ span {
 }
 
 // 에디터
-._panel {
+._item-panel {
   overflow: hidden;
   height: 150px;
   margin-bottom: .6em;
@@ -190,22 +142,20 @@ span {
     max-height: 130px;
   }
   
-  .control {
+  ._control {
     height: 20px;
   }
 } // ._panel
 
 
 
-
 // 각종 정보를 제공하는 버튼
-._item-btns {
-  margin-bottom: 0.6em;
-  margin-top: -.3em;
+._item-edit {
+  
+  margin: 0.15em 0 0.45em;
         
   // 추가 삭제 등 에디터 버튼
   i {
-    
     padding: .15em;
     margin-left: -.15em;
     border: 1px solid $ui-item-bgcolor;
@@ -228,7 +178,7 @@ span {
       color: rgb(181, 31, 31);;
     }
   }
-} // > ._item-btns
+} // > ._item-edit
 
 
 
@@ -245,24 +195,54 @@ span {
 // 거래처 아이콘, 거래처, 등록시간, 
 ._item-label {
   
+  margin-bottom: .6em;
+  
   img {
-    width: 30px;
-    height: 30px;
     float: left;
+    margin-right: .8em;
+    width: 40px;
+    height: 40px;
   }
+  
+  ._btn-modify {
+    position: absolute;
+    top: 50%;
+    right: 1em;
+  }
+  
+  ._customer {
+    padding: .2em 0 .5em;
+
+    color: rgb(74, 74, 74);
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+  }
+  
+  ._date {
+    
+    color: rgb(129, 129, 129);
+    
+    &.new {
+      &:after {
+        position: relative;
+        top: -.1em;
+        padding: 0 .3em .2em .3em;
+        margin-left: .3em;
+        width: 50px;
+        
+        border-radius: .2em;
+        content: 'new';
+        color: rgb(255, 255, 255);
+        font-size: .7em;
+        font-family: tahoma;
+        background: rgb(214, 48, 48);
+      } 
+    } // &.new
+    
+  }
+  
 }
 
-// 아이템
-
-._item-date {
-  > i, > span {
-    float: right;
-    margin-left: .4em;
-  }
-}
-     
       
-$_item-data-font-family: 돋움;
 
 // 아이템 세부 정보
 ._item-data {
@@ -270,34 +250,32 @@ $_item-data-font-family: 돋움;
   // 라벨 배경 색상
   $ui-itm-label-bgcolor: rgb(226, 226, 226);
   
-  font-family: $_item-data-font-family;
-  letter-spacing: 0em; 
+  position: relative;
   
   ._label, ._value {
     padding: .3em 0 .1em 0;
     min-height: 1.35em;
-    border: 1px solid $ui-item-bgcolor;
+    border: 1px solid white;
+  }
+  
+  ._value {
+    font-weight: bold;
+    color: rgb(90, 90, 90);
   }
   
   // item-data의 메뉴글씨
   ._label {
     
     margin-right: 5px;
-    width: 55px;
+    width: 43px;
     
-    border: 1px solid rgb(205, 205, 205);
-    background: rgb(235, 235, 235);
-    //border: 1px solid $ui-itm-label-bgcolor;
-    //background: $ui-itm-label-bgcolor;
-    font-weight: bold;
-    text-align: center;
-    letter-spacing: -0.05em;
+    font-size: .9em;
+    color: rgb(150,150,150);
   }
   
   ._data-cell {     // 세로로 쌓이는 데이터 Div
-    width: 100%;
-    border-bottom: 1px solid $ui-itm-label-bgcolor;
     float: left;
+    width: 100%;
     
     &:last-child {
       border-bottom: none;
@@ -310,8 +288,13 @@ $_item-data-font-family: 돋움;
     &.float-right {
       float: right;
     }
-    
   } // ._data-cell
+  
+  ._modify-confirm {
+    display: none;
+  }
+  
+  
 } // > ._item-data
 
 
@@ -319,8 +302,75 @@ $_item-data-font-family: 돋움;
 ._item-resource {
   margin-top: .7em;
   padding-top: .5em;
+  margin-bottom: .6em;
 } // ._item-resource
 
 
 } // > ._item-resource
 
+
+
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  자바스크립트 제어 클래스  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+
+
+.ui-itemContainer-item {
+  
+position: relative;   // 오버레이 등을 사용하기 위한 설정
+margin-top: 1em;      // 각 아이템별 사이 간격
+  
+/* 수정 시 */
+&.modify {
+    
+  ._item-data {
+      
+  ._value {   // 데이터 값을 싸고있는 엘리먼트
+      
+    border: 1px solid rgb(175,175,175);
+    background: rgb(252, 252, 252);
+        
+    input {
+      padding: 0.05em 0 0 .3em;
+      width: 100%;
+      border: 0;
+      font-size: 1em;
+      color: rgb(178, 73, 14);
+      }
+  } // ._value 
+      
+    ._label {
+      background: inherit;
+    }
+      
+    ._modify-confirm {
+      display: block;
+      position: absolute;
+      top: 101%;
+      right: 0;
+      z-index: 90;
+      height: 2.5em;
+      width: 150px;
+      border: 1px solid rgb(163, 163, 163);
+        
+      background: rgb(255, 255, 255);
+      box-shadow: 2px 2px 2px rgb(170, 170, 170);
+        
+      button {
+        float: left;
+        padding: .2em 0;
+        width: 4em;
+      } // button
+    } // ._modify-confirm
+  } // ._item-data
+} // --&.modify
+
+  
+  /* 안보이게 */
+&.ui-itemContainer-highlight {
+  ._item-container {
+    border: $ui-itemContainer-container-hover;
+  }
+} // ui-itemContainer-highlight
+  
+  
+} // .ui-item-item

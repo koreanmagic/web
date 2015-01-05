@@ -25,25 +25,28 @@
     	<!-- <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>  -->
     </head>
 	
-	<body class="admin">
+	<body>
 	
-	<div id="top">
-		<div id="top-line">
-			<@tiles.insertAttribute name="top"/>
-		</div>
+	<div id="header">
 		
-		<div id="context-line">
+		<!-- 최상위 컨트롤러 :: 전 사이트에 걸쳐 필요한 전역 설정 -->
+		<div id="topLine"><div class="content">
+			<@tiles.insertAttribute name="top"/>
+		</div></div>
+		
+		<!-- 각 페이지별로 변하는 컨텍스트 메뉴 -->
+		<div id="contextLine"><div class="content">
 			<@tiles.insertAttribute name="context"/>
-		</div>
+		</div></div>
 	</div>
-	
-	<div id="left"><div id="left-container">
-		<@tiles.insertAttribute name="left"/>
-	</div></div>
  	
  	<div id="body">
- 		<div id="body-container">
- 			<@tiles.insertAttribute name="body"/>
+ 		<div id="bodyContainer">
+ 			
+ 			<div id="bodyContent">
+ 				<@tiles.insertAttribute name="body"/>
+ 			</div>
+ 			
  		</div>
  	</div>
  		

@@ -12,7 +12,8 @@
 	// 전역 변수
 	// 현재 활성화된 widget 객체가 여기에 등록된다.
 	var activeList = [],
-		prefix = ".ui-item-",
+		widgetClassPrefix,
+		widgetFullName,
 		expando = new Date() * 1
 		;
 		
@@ -61,20 +62,28 @@
 		// Constructor
 		_create: function() {
 			
-			this.option("preInit").call(this);
-			
+			// 전역 변수 설정
+			widgetFullName = this.widgetFullName;
+			widgetClassPrefix = this["widgetClassPrefix"] = "." + widgetFullName + "-";
+
 			var self = this,
 				element = this.element,		// ui-item-container
-				selectors = ["body", "header"];
+				selectors = {
+					"body": element,
+					"controller": document,
+				};
 			
-			$.each(selectors, function(i, v) {
-				self[v] = self._find( prefix + v );
+			$.each(selectors, function( selector, context ) {
+				self[selector] = $( widgetClassPrefix + selector, context );
 			});
-
+			
+			
+			this.option("preInit").call(this);
+			
 			// 아이템 객체를 생성하기 전에, Item 클래스의 prototype객체를 확장할 포인트를 제공한다.
 			Item.fn.extend( this.option("extendOfItem") );
-			
 			this.items = new ItemManager( this );	// 아이템매니저 생성 :: Item객체들을 관리하는 객체
+			
 			
 			// 위젯이 제공하는 이벤트를 사용하면 handler의 컨텍스트가 나 자신이 된다.
 			this._on({"click": function( event ) {
@@ -82,16 +91,24 @@
 				var target = $(event.target);
 				event.stopPropagation();
 				
-				// 컨테이너 박스 추가
-				if ( target.hasClass("ui-item-btn-add") )
-					self._addItem();
-					
 			}});
+			
+			this.controller.on("click", function() { 
+											console.log("asa");
+											self._controllerClickHandler.apply(self, arguments);
+										});
 			
 			this.option("createWidget").call( this );
 			
 		},
 		
+		
+		_controllerClickHandler: function( e ) {
+			var target = $(event.target);
+			if( target.hasClass( widgetFullName + "-btn-add") ) {
+				this._addItem();
+			}
+		},
 		
 		_find: function(selector, context) {
 			return $(selector, context || this.element);
@@ -100,8 +117,8 @@
 		
 		// 아이템 생성 -> 추가
 		_addItem: function() {
-			var child = this.option("createItem")();	// 콜백함수에 새로운 컨테이너 엘리먼트를 요청한다.
-			this.items.add( child );
+			var child = new Item(this.option("createItem")()[0]);	// 콜백함수에 새로운 컨테이너 엘리먼트를 요청한다.
+			this.items.unshift( child );
 			this._reflesh();
 		}, 
 		
@@ -131,6 +148,7 @@
 		},
 		
 		_reflesh: function() {
+		
 		},
 		
 	});
@@ -142,15 +160,20 @@
 	function ItemManager( widget ) {
 
 		var self = this, item,
-			items = $( prefix + "item", widget.widget() )		// 복수의 컨테이너 엘리먼트를 찾는다. 
+			items = $( widgetClassPrefix + "item", widget.widget() )		// 복수의 컨테이너 엘리먼트를 찾는다.
 			;
 		
-		this["widget"] = widget;
-		// 위젯의 옵션은 Item에서도 그대로 사용하게 된다.
-		this["option"] = function() { return widget.option.apply( widget, arguments ); };
-		this["body"] = widget.body;
-		this["items"] = [];
-		this["uuid"] = 1;
+		$.each({
+			"widget" : widget,
+			"option" : function() { return widget.option.apply( widget, arguments ); },
+			"body" : widget.body,
+			"uuid" : 1,
+			"length": 1,	// ★★★★ each 메서드는 희한하게 값 부분에 0이 들어가면 에러가 난다. ㅜㅜ
+		}, function(n, v){
+			self.addProp(n, v);
+		});
+		
+		this.length = 0;
 		
 		// 각 아이템의 jQuery 객체를 배열로 등록한다.
 		for(var i=0, l=items.length; i<l; i++) {
@@ -169,10 +192,29 @@
 	 */
 	$.each({
 		
+		push: function( ) { return Array.prototype.push.apply(this, arguments); },
+		concat: function( ) { return Array.prototype.concat.apply(this, arguments); },
+		join: function( e ) { return Array.prototype.join.apply( this, arguments ); },
+		splice: function( ) { return Array.prototype.splice.apply( this, arguments); },
+		slice: function( ) { return Array.prototype.slice.apply( this, arguments); },
+		unshift: function( item ) {
+			this[0].before( item );
+			var returnValue = Array.prototype.unshift.apply( this, item);
+			console.log(this);
+		},
+		
+		data: function( elem, name, data ) {
+			return $.data( elem, name, data );
+		},
+		
+		addProp: function( propName, value ) {
+			Object.defineProperty( this, propName, { "value": value, writable: true, configurable: true } );
+		},
+		
 		// 여러가지 상태정보를 저장한다.
 		status: function( key, value ) {
 			
-			var status = this["status"] || {};
+			var status = this["_status"] = this["_status"] || {};
 			if( value !== undefined ) {
 				status[key] = value;
 				return this;
@@ -191,7 +233,7 @@
 				className = false;
 			}
 			
-			$.each( this.items, function() {
+			$.each( this, function() {
 				
 				// setClass( 콜백함수 )
 				// 첫번쨰 인자로 함수가 들어오면, 콜백함수로 컨트롤한다.
@@ -218,40 +260,36 @@
 			if( this.status("sort") === valueName)	// 상태 확인
 				return;
 			
-			var objArray = this.items, target,
+			var objArray = this.getItem(), target,
 			i=0, len = objArray.length,
 			sorts = new Array(len),
 			rresult = /\s(\d+)$/;
-		
+			
 			for(;i<len;i++) {
 				sorts[i] = objArray[i].access(valueName) + " " + i;	 // objArray[i]는 Item 객체
 			}
 		
 			sorts.sort();	// 정렬
 			
-			this.body.empty();	// 모든 엘리먼트 삭제
-			
 			for(i=0;i<len;i++) {
-				sorts[i] = objArray[ rresult.exec( sorts[i] )[1] ];
-				this.body.append( sorts[i] );	// 바로 붙인다.
-				sorts[i].access("_item-index", i + 1);
+				this[i] = objArray[ rresult.exec( sorts[i] )[1] ];
+				this.body.append( this[i] );	// 바로 붙인다.
+				this[i].access("_item-index", i + 1);
 			}
 			
-			this.items = sorts;
 			this.status("sort", valueName);
 			return this;
 		},
 		
 		// 아이템 반환
 		getItem: function(pos) {
-			return pos !== undefined ? this.items[ this.index( pos) ] : this.items;
+			return pos !== undefined ? this[ this.indexOf( pos) ] : this.slice(0);
 		},
 		
 		// 새로 등록되는 item은 무조건 이 메서드를 지나게 된다. 여기서 초기화를 시키면 된다.
-		register: function( ele ) {
+		register: function( item ) {
 			
-			var item = this.items[ this.length() ] = ele;
-			
+			this.push(item);
 			if( !$.contains( this["body"], item ) )	// 아직 DOM에 적용되지 않았으면, 바로 적용한다. 
 				this["body"].append( item );
 			
@@ -261,14 +299,13 @@
 		
 		// 엘리먼트 삭제 :: 인덱스 || Dom Element
 		remove: function(pos) {
-			console.log(this.items);
 			
-			pos = this.index( pos );
-			var removeElement = this.items[ pos ],
+			pos = this.indexOf( pos );
+			var removeElement = this[ pos ],
 				agree = this.option("itemRemoveBefore").call( this,  removeElement );
 			
 			if( agree !== false ) {
-				removeElement = this.items.splice( pos , 1)[0].remove();
+				removeElement = this.splice( pos , 1)[0].remove();
 				this.widget._itemRemoveHandler.call( this.widget, removeElement );
 				this.option("itemRemoveAfter").call( this,  removeElement );
 			}
@@ -279,11 +316,10 @@
 		},
 		
 		destroy: function() {
-			delete this.items;
 		},
 		
 		// Dom Node로 해당 아이템 위치 찾기
-		index: function(elem) {
+		indexOf: function(elem) {
 			
 			if(typeof elem === 'number')
 				return elem;
@@ -291,7 +327,7 @@
 			elem = elem.nodeType ? elem : elem[0];
 			
 			var ret = -1, i = 0;
-			$.each(this.items, function() {
+			$.each(this, function() {
 				if(this[0] === elem) {
 					ret = i;
 					return false;
@@ -301,21 +337,15 @@
 			return ret;
 		},
 		
-		// 엘리먼트 갯수
-		length: function() {
-			return this.items.length;
-		},
-		
-		
 		init: function() {
 			
 			var self = this;
 				// 이벤트 타겟을 통해, Item객체를 찾아내는 함수
 				catcher = function( target ) {
 					target = $(target);
-					target = target.hasClass("ui-item-item") ?
+					target = target.hasClass( widgetFullName + "item" ) ?
 							target :
-							target.closest(".ui-item-item");
+							target.closest( widgetClassPrefix + "item" );
 					return self.getItem( target );
 				};
 			
@@ -327,9 +357,8 @@
 				if( self.body[0] === e.target ) return;				
 				// 클릭이벤트가 생긴 아이템 객체를 찾아낸다.
 				var item = catcher(e.target);
-				
 				// 아이템 삭제
-				if(item.hasClass("ui-item-delete")) {
+				if(item.hasClass( widgetFullName + "delete")) {
 					self.remove(item);
 					return;
 				}
@@ -353,11 +382,14 @@
 		
 	}, function(name, fn) {
 		
-		ItemManager.prototype[name] = fn;
+		Object.defineProperty(ItemManager.prototype, name, {value: fn});
 		
 	});
 	
 	
+	var defineOption = {
+		
+	};
 	
 	/* ************************* ITEM CLASS ************************* */
 	/*
@@ -380,7 +412,7 @@
 		access: function( key, value ) {
 			
 			// 실제 엘리먼트일 경우
-			if(key[0] === "_") {
+			if(key[0] === this.accessPrefix) {
 				key = this.find("." + key);
 				return value === undefined
 					? $.trim( key.text() )
@@ -393,6 +425,7 @@
 				: this.data( key, value ) && value;		// 값을 입력한 후, 값을 내보내준다.
 		},
 		
+		accessPrefix: "_",	// Item객체의 access메서드로 읽고 쓸 수 있는 엘리먼트(클래스)
 		clickHandler: $.noop,
 		overHandler: $.noop,
 	});

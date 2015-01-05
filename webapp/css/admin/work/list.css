@@ -63,167 +63,198 @@
 /*
  * 버튼 클릭시 색깔변화
  */
-.ui-item-item {
-  position: relative;
-  margin-top: 1em;
-  /* 수정 시 */
-  /* 안보이게 */ }
-  .ui-item-item.modify.ui-invisible {
-    opacity: 1; }
-  .ui-item-item.modify ._item-data ._value {
-    border: 1px solid #afafaf;
-    background: #fcfcfc; }
-    .ui-item-item.modify ._item-data ._value input {
-      border: 0;
-      padding: 0.05em 0 0 .3em;
-      font-size: 1em;
-      color: #b2490e; }
-  .ui-item-item.modify ._item-data ._label {
-    background: #f0dbc8;
-    border: 1px solid #b38671; }
-  .ui-item-item.ui-invisible {
-    opacity: .6; }
+/*
+* headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
+* 이는 vertical-align을 middle로 설정하기 위한 것이다.
+*/
+.ui-itemContainer-controller {
+  height: 4em;
+  background-color: #333; }
 
 /*
  * 사용자 요구에 따라 리스트를 펼치는 위젯
  * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
  */
-.ui-item-container {
+.ui-itemContainer-container {
   position: relative;
   width: inherit;
   height: auto;
-  overflow: hidden;
-  /*
-  * headline에 있는 모든 커스텀 div의 display를 table-cell로 설정한다.
-  * 이는 vertical-align을 middle로 설정하기 위한 것이다.
-  */
+  white-space: nowrap;
+  letter-spacing: -1px;
   /* 글씨 속성 */
   /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 사용자 인터페이스 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */ }
-  .ui-item-container .ui-item-header {
-    height: 4em;
-    background-color: #f8f8f8;
-    border: 1px solid #aaaaaa; }
-  .ui-item-container ._list-item-container {
+  .ui-itemContainer-container ._item-container {
     position: relative;
-    padding: 1em;
     border: 1px solid #d6d6d6;
     border-bottom: 1px solid #b8b8b8;
     min-height: 200px;
     overflow: hidden;
-    background: #f8f8f8; }
-    .ui-item-container ._list-item-container:hover {
-      outline: 1px solid #919191;
-      border: 1px solid #919191; }
-  .ui-item-container span {
+    background: white; }
+    .ui-itemContainer-container ._item-container > div {
+      padding: 0 1em; }
+    .ui-itemContainer-container ._item-container:hover {
+      border: 1px solid #4f7a92;
+      outline: 1px solid #4f7a92; }
+  .ui-itemContainer-container span {
     line-height: 1.2em; }
-    .ui-item-container span._customer {
-      font-family: 'Malgun Gothic','맑은 고딕',"돋움",dotum,sans-serif;
-      letter-spacing: -0.05em;
-      color: #4a4a4a;
-      text-shadow: 1px 1px 1px white; }
-    .ui-item-container span._work-done, .ui-item-container span._work-separator, .ui-item-container span._delivery-limit, .ui-item-container span._time {
+    .ui-itemContainer-container span._work-done, .ui-itemContainer-container span._work-separator, .ui-itemContainer-container span._delivery-limit, .ui-itemContainer-container span._time {
       position: relative; }
-    .ui-item-container span._time {
+    .ui-itemContainer-container span._time {
       left: -5px; }
-    .ui-item-container span._delivery-limit {
+    .ui-itemContainer-container span._delivery-limit {
       left: 20px; }
-    .ui-item-container span._work-done {
+    .ui-itemContainer-container span._work-done {
       top: -1.5px; }
-    .ui-item-container span._work-separator {
+    .ui-itemContainer-container span._work-separator {
       top: -2px;
       left: -2px; }
-  .ui-item-container .ui-item-body {
-    margin-bottom: 0; }
-    .ui-item-container .ui-item-body ._item-btns, .ui-item-container .ui-item-body ._item-resource {
-      text-align: right;
-      font-size: 1.16em; }
-  .ui-item-container ._item-index:before {
+  .ui-itemContainer-container ._item-edit, .ui-itemContainer-container ._item-resource {
+    text-align: right;
+    font-size: 1.16em; }
+  .ui-itemContainer-container ._item-index:before {
     content: "no.";
     color: #8c8c8c;
     font-size: .65em;
     font-weight: normal; }
-  .ui-item-container ._item-index:after {
+  .ui-itemContainer-container ._item-index:after {
     position: relative;
     top: -.2em;
     content: " | ";
     color: #8c8c8c;
     font-size: .6em;
     font-weight: normal; }
-  .ui-item-container ._work_state {
+  .ui-itemContainer-container ._work_state {
     font-weight: bold; }
-  .ui-item-container ._notice-panel {
+  .ui-itemContainer-container ._notice-panel {
     position: absolute;
     width: 100px;
     padding: .13em;
     text-align: left;
     color: #616161;
     text-shadow: 1px 1px 0px white; }
-  .ui-item-container ._panel {
+  .ui-itemContainer-container ._item-panel {
     overflow: hidden;
     height: 150px;
     margin-bottom: .6em;
     outline: 1px solid #cdcdcd;
     background: #e6e6e6;
     text-align: center; }
-    .ui-item-container ._panel ._screen > img {
+    .ui-itemContainer-container ._item-panel ._screen > img {
       max-height: 130px; }
-    .ui-item-container ._panel .control {
+    .ui-itemContainer-container ._item-panel ._control {
       height: 20px; }
-  .ui-item-container ._item-btns {
-    margin-bottom: 0.6em;
-    margin-top: -.3em; }
-    .ui-item-container ._item-btns i {
+  .ui-itemContainer-container ._item-edit {
+    margin: 0.15em 0 0.45em; }
+    .ui-itemContainer-container ._item-edit i {
       padding: .15em;
       margin-left: -.15em;
       border: 1px solid #f8f8f8;
       border-radius: 2px;
       cursor: pointer;
       color: #505050; }
-      .ui-item-container ._item-btns i:hover {
+      .ui-itemContainer-container ._item-edit i:hover {
         border: 1px solid #aaa;
         background: #f3f3f3;
         text-shadow: 1px 1px 1px white;
         color: #323232; }
-    .ui-item-container ._item-btns > a:hover {
+    .ui-itemContainer-container ._item-edit > a:hover {
       color: #b51f1f; }
-  .ui-item-container ._item-label, .ui-item-container ._item-date, .ui-item-container ._item-data {
+  .ui-itemContainer-container ._item-label, .ui-itemContainer-container ._item-date, .ui-itemContainer-container ._item-data {
     vertical-align: middle; }
-    .ui-item-container ._item-label:after, .ui-item-container ._item-date:after, .ui-item-container ._item-data:after {
+    .ui-itemContainer-container ._item-label:after, .ui-itemContainer-container ._item-date:after, .ui-itemContainer-container ._item-data:after {
       content: "";
       display: block;
       clear: both; }
-  .ui-item-container ._item-label img {
-    width: 30px;
-    height: 30px;
-    float: left; }
-  .ui-item-container ._item-date > i, .ui-item-container ._item-date > span {
-    float: right;
-    margin-left: .4em; }
-  .ui-item-container ._item-data {
-    font-family: 돋움;
-    letter-spacing: 0em; }
-    .ui-item-container ._item-data ._label, .ui-item-container ._item-data ._value {
+  .ui-itemContainer-container ._item-label {
+    margin-bottom: .6em; }
+    .ui-itemContainer-container ._item-label img {
+      float: left;
+      margin-right: .8em;
+      width: 40px;
+      height: 40px; }
+    .ui-itemContainer-container ._item-label ._btn-modify {
+      position: absolute;
+      top: 50%;
+      right: 1em; }
+    .ui-itemContainer-container ._item-label ._customer {
+      padding: .2em 0 .5em;
+      color: #4a4a4a;
+      text-shadow: 1px 1px 1px white; }
+    .ui-itemContainer-container ._item-label ._date {
+      color: #818181; }
+      .ui-itemContainer-container ._item-label ._date.new:after {
+        position: relative;
+        top: -.1em;
+        padding: 0 .3em .2em .3em;
+        margin-left: .3em;
+        width: 50px;
+        border-radius: .2em;
+        content: 'new';
+        color: white;
+        font-size: .7em;
+        font-family: tahoma;
+        background: #d63030; }
+  .ui-itemContainer-container ._item-data {
+    position: relative; }
+    .ui-itemContainer-container ._item-data ._label, .ui-itemContainer-container ._item-data ._value {
       padding: .3em 0 .1em 0;
       min-height: 1.35em;
-      border: 1px solid #f8f8f8; }
-    .ui-item-container ._item-data ._label {
-      margin-right: 5px;
-      width: 55px;
-      border: 1px solid #cdcdcd;
-      background: #ebebeb;
+      border: 1px solid white; }
+    .ui-itemContainer-container ._item-data ._value {
       font-weight: bold;
-      text-align: center;
-      letter-spacing: -0.05em; }
-    .ui-item-container ._item-data ._data-cell {
-      width: 100%;
-      border-bottom: 1px solid #e2e2e2;
-      float: left; }
-      .ui-item-container ._item-data ._data-cell:last-child {
+      color: #5a5a5a; }
+    .ui-itemContainer-container ._item-data ._label {
+      margin-right: 5px;
+      width: 43px;
+      font-size: .9em;
+      color: #969696; }
+    .ui-itemContainer-container ._item-data ._data-cell {
+      float: left;
+      width: 100%; }
+      .ui-itemContainer-container ._item-data ._data-cell:last-child {
         border-bottom: none; }
-      .ui-item-container ._item-data ._data-cell._half {
+      .ui-itemContainer-container ._item-data ._data-cell._half {
         width: 49%; }
-      .ui-item-container ._item-data ._data-cell.float-right {
+      .ui-itemContainer-container ._item-data ._data-cell.float-right {
         float: right; }
-  .ui-item-container ._item-resource {
+    .ui-itemContainer-container ._item-data ._modify-confirm {
+      display: none; }
+  .ui-itemContainer-container ._item-resource {
     margin-top: .7em;
-    padding-top: .5em; }
+    padding-top: .5em;
+    margin-bottom: .6em; }
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  자바스크립트 제어 클래스  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+.ui-itemContainer-item {
+  position: relative;
+  margin-top: 1em;
+  /* 수정 시 */
+  /* 안보이게 */ }
+  .ui-itemContainer-item.modify ._item-data ._value {
+    border: 1px solid #afafaf;
+    background: #fcfcfc; }
+    .ui-itemContainer-item.modify ._item-data ._value input {
+      padding: 0.05em 0 0 .3em;
+      width: 100%;
+      border: 0;
+      font-size: 1em;
+      color: #b2490e; }
+  .ui-itemContainer-item.modify ._item-data ._label {
+    background: inherit; }
+  .ui-itemContainer-item.modify ._item-data ._modify-confirm {
+    display: block;
+    position: absolute;
+    top: 101%;
+    right: 0;
+    z-index: 90;
+    height: 2.5em;
+    width: 150px;
+    border: 1px solid #a3a3a3;
+    background: white;
+    box-shadow: 2px 2px 2px #aaaaaa; }
+    .ui-itemContainer-item.modify ._item-data ._modify-confirm button {
+      float: left;
+      padding: .2em 0;
+      width: 4em; }
+  .ui-itemContainer-item.ui-itemContainer-highlight ._item-container {
+    border: 1px solid #4f7a92; }

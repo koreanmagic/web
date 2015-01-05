@@ -1,10 +1,8 @@
 
 
-<#assign values = ["new", "update", "emergency"]>
-<div class="ui-item-container">
-	
-	<!-- *CSS* abstract-stretch-line TEMPLATE -->
-	<div class="ui-item-header fluid-line">
+
+<!-- *CSS* abstract-stretch-line TEMPLATE -->
+	<div class="ui-itemContainer-controller fluid-line">
 		
 		<!-- 리스트 왼쪽 공간 -->
 		<div class="left">
@@ -16,14 +14,12 @@
 			<select class="_sort">
 				<option value="reset">정렬기준</option>
 			</select>
-			
-			
 		</div>
 		
 		<!-- 리스트 오른쪽 공간 -->
 		<div class="right">
 
-		<span class="ui-item-btn-add">추가</span>
+		<span class="ui-itemContainer-btn-add">추가</span>
 		</div>
 			
 			
@@ -33,53 +29,26 @@
 		</div>
 			
 	</div>
-	<!-- 
-	<div style="
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 30px;
-    left: 250px;
-    background: white;
-    border: 2px solid red;
-    z-index: 1001;
-    box-shadow: 5px 5px 5px rgb(170, 170, 170);
-	"></div>
-	<div class="test" style="
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 300px;
-    left: 400px;
-    background: white;
-    border: 2px solid red;
-    z-index: 1000;
-    box-shadow: 5px 5px 5px rgb(170, 170, 170);
-	"></div>
-	<div class="test" style="
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 302px;
-    left: 402px;
-    background: white;
-    z-index: 1002;
-	"></div> -->
+	
+
+<#assign values = ["new", "update", "emergency"]>
+<div class="ui-itemContainer-container">
+	
 	<!-- ######## 세부 리스트 아이템 ######## -->
-	<div class="ui-item-body grid-10">
+	<div class="ui-itemContainer-body grid-10">
 	
 			
 			<#list data as v>
-			<div class="ui-item-item span-2">
+			<div class="ui-itemContainer-item span-2">
 				
 				<!-- 작업 정보 컨테이너 -->
-				<div class="_list-item-container">
+				<div class="_item-container">
 					
 					
 					<!-- 컨트롤 버튼 -->
-					<div class="_item-btns">
+					<div class="_item-edit ui-itemContainer-panel-control">
 						
-						<div class="_notice-panel text-num">
+						<div class="_notice-panel">
 							<span class="_item-index text-num text-bold h5"></span>
 							<span class="_work_state">완료</span>
 						</div>
@@ -87,12 +56,12 @@
 						<i class="fa fa-bus" title="배송"></i>
 						<i class="fa fa-pencil" title="메모"></i>
 						<i class="fa fa-folder-open-o" title="파일업로드"></i>
-						<i class="fa fa-trash-o ui-item-delete delete" title="삭제"></i>
+						<i class="fa fa-trash-o ui-itemContainer-delete delete" title="삭제"></i>
 					</div>
 					
 					<!-- 각종 에디터 -->
-					<div class="_panel">
-						<div class="_screen"><img src="/img/test.jpg"></div>
+					<div class="_item-panel ui-itemContainer-panel-view">
+						<div class="_screen"></div>
 						<div class="_control fluid-line">
 							<div class="right">
 								<i class="fa fa-chevron-circle-left"></i> <i class="fa fa-chevron-circle-right"></i>
@@ -102,22 +71,16 @@
 					</div>
 					
 					
-					<!-- 작성시간 / 업데이트 시간 -->
-					<div class="_item-label fluid-line">
+					<!-- 거래처명, 작성시간 등 -->
+					<div class="_item-label fluid-line ui-itemContainer-panel-headline">
 						<img src="/img/customer-who.gif">
-						<span class="_customer h4 text-bold">${v.customer}</span>
+						<div class="_customer h3 text-bold">${v.customer}</div>
+						<div class="_date text-num new">${v.date}</div>
+						<div class="_btn-modify"><i class="fa fa-wrench modify" title="수정"></i></div>
 					</div>
-					
-					<div class="_item-date">
-						<i class="fa fa-wrench modify" title="수정"></i>
-						<span class="_date text-num">
-							${v.date}
-						</span>
-					</div>
-					
 					
 					<!-- 작업 정보 -->
-					<div class="_item-data">
+					<div class="_item-data ui-itemContainer-panel-data">
 						
 						<div class="_data-cell fluid-line">
 							<span class="_label left">품목</span>
@@ -153,11 +116,18 @@
 							<span class="_label left">하청</span>
 							<div data-name="contractor" class="_value center _constructor" data-transform="input">${v.constructor}</div>
 						</div>
+						
+						<!-- 컴펌 -->
+						<div class="_modify-confirm">
+							<button class="_calcle">취소</button>
+							<button class="_submit">수정</button>
+						</div>
+						
 					</div>
 					
 					
 					<!-- 작업 부가 정보 -->
-					<div class="_item-resource">
+					<div class="_item-resource ui-itemContainer-panel-option">
 					
 						<a><i class="fa fa-comments"></i></a>
 						<i class="separator"></i>
@@ -180,10 +150,7 @@
 <br />
 
 
-
-
-
-<div id="testtest" class="ui-item-item span-2 _list-box">
+<div id="testtest" class="ui-itemContainer-item span-2 _list-box">
 				
 				<!-- 작업 정보 컨테이너 -->
 				<div class="_list-item-container _state-confirm">
@@ -191,7 +158,7 @@
 					
 					<div class="_item-btns">
 					
-						<div class="ui-item-container-index _index text-num"></div>
+						<div class="ui-itemContainer-container-index _index text-num"></div>
 						
 						<!-- 이미지 올리기 -->
 						<i class="fa fa-file-image-o"></i>
@@ -264,13 +231,107 @@
 			</div>
 			
 
-<div id="new2015">
-	<div class="div-1">꿍따</div>
-	<div class="div-2">리</div>
-	<div class="div-3">샤바</div>
-	<div class="div-4">라</div>
-	빠빠빠
-</div>
+<div class="ui-itemContainer-item span-2 dummy">
+				
+				<!-- 작업 정보 컨테이너 -->
+				<div class="_item-container">
+					
+					
+					<!-- 컨트롤 버튼 -->
+					<div class="_item-edit ui-itemContainer-panel-control">
+						
+						<div class="_notice-panel">
+							<span class="_item-index text-num text-bold h5"></span>
+							<span class="_work_state">완료</span>
+						</div>
+						
+						<i class="fa fa-bus" title="배송"></i>
+						<i class="fa fa-pencil" title="메모"></i>
+						<i class="fa fa-folder-open-o" title="파일업로드"></i>
+						<i class="fa fa-trash-o ui-itemContainer-delete delete" title="삭제"></i>
+					</div>
+					
+					<!-- 각종 에디터 -->
+					<div class="_item-panel ui-itemContainer-panel-view">
+						<div class="_screen"></div>
+						<div class="_control fluid-line">
+							<div class="right">
+								<i class="fa fa-chevron-circle-left"></i> <i class="fa fa-chevron-circle-right"></i>
+								<i class="fa fa-minus-square"></i> <i class="fa fa-plus-square"></i>
+							</div>
+						</div>
+					</div>
+					
+					
+					<!-- 거래처명, 작성시간 등 -->
+					<div class="_item-label fluid-line ui-itemContainer-panel-headline">
+						<img src="/img/customer-who.gif">
+						<div class="_customer h3 text-bold"></div>
+						<div class="_date text-num new"></div>
+						<div class="_btn-modify"><i class="fa fa-wrench modify" title="수정"></i></div>
+					</div>
+					
+					<!-- 작업 정보 -->
+					<div class="_item-data ui-itemContainer-panel-data">
+						
+						<div class="_data-cell fluid-line">
+							<span class="_label left">품목</span>
+							<div data-name="item" class="_value center _item" data-transform="input"></div>
+						</div>
+						
+						<div class="_data-cell fluid-line">
+							<span class="_label left">상세</span>
+							<div data-name="memo" class="_value center _memo" data-transform="input"></div>
+						</div>
+
+						<div class="_data-cell fluid-line">
+							<span class="_label left">사이즈</span>
+							<div data-name="bleed" class="_value center _size" data-transform="input"></div>
+						</div>
+						
+						<div class="_data-cell fluid-line">
+							<span class="_label left">수량</span>
+							<div data-name="count" class="_value center _count" data-transform="input"></div>
+						</div>
+						
+						<div class="_data-cell fluid-line _half">
+								<span class="_label left">제작단가</span>
+								<div data-name="contractor" class="_value center _cost" data-transform="input"></div>
+						</div>
+						
+						<div class="_data-cell fluid-line _half float-right">
+							<span class="_label left">공급단가</span>
+							<div data-name="contractor" class="_value center _price" data-transform="input"></div>
+						</div>
+						
+						<div class="_data-cell fluid-line">
+							<span class="_label left">하청</span>
+							<div data-name="contractor" class="_value center _constructor" data-transform="input"></div>
+						</div>
+						
+						<!-- 컴펌 -->
+						<div class="_modify-confirm">
+							<button class="_calcle">취소</button>
+							<button class="_submit">수정</button>
+						</div>
+						
+					</div>
+					
+					
+					<!-- 작업 부가 정보 -->
+					<div class="_item-resource ui-itemContainer-panel-option">
+					
+						<a><i class="fa fa-comments"></i></a>
+						<i class="separator"></i>
+						
+						<!-- 인쇄파일 올리기 -->
+						<a><i class="fa fa-file-text-o"></i></a>
+						<i class="separator"></i>
+						
+					</div>
+				</div>
+				
+			</div>
 
 <script src="/js/component/ui.input-transform.js"></script>
 <script src="/js/component/ui.selectBtn.js"></script>

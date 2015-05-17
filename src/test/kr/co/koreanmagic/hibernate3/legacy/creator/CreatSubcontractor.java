@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import kr.co.koreanmagic.hibernate3.legacy.support.AbstractPersistentCreator;
 import kr.co.koreanmagic.hibernate3.legacy.support.PersistenceList;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Address;
+import kr.co.koreanmagic.hibernate3.mapper.domain.Bank;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Subcontractor;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.BankName;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Bank;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Email;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Website;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.CompanyType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Email;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Website;
+import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.CompanyType;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 @Component

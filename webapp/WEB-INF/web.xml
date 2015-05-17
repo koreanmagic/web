@@ -132,10 +132,12 @@
 			<param-name>default_encoding</param-name>
 			<param-value>UTF-8</param-value>
 		</init-param>
+		<!--
 		<init-param>
 			<param-name>number_format</param-name>
 			<param-value>#,###</param-value>
 		</init-param>
+		-->
 	
 		<load-on-startup>1</load-on-startup>
  	</servlet>

@@ -1,0 +1,2 @@
+define(["jquery","component/FormValidate","src/common/listTable"],function(a,b,c){var d={"change [name='delivery']":function(b){0!=b.target.value?a.getJSON("/admin/address/list/customer/"+this.getForm().getAttribute("data-customer-id")).success(function(a){addressTable._init().addList(a).enable()}):(addressHidden.val(""),addressTable.disable())},"click #extend":function(a){a.target.checked}},e={init:function(a){},beforeCommit:function(a){return!0},rules:{},globalRules:{required:["#name"]}},f=b(a("#command"),e);f.addEvent(d)});
+//# sourceMappingURL=insert.js.map

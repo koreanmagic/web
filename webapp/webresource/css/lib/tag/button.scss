@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+
+
+%button {
+  $height: 27px;
+  
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0;
+  
+  min-width: $height; 
+  height: $height;
+  
+  border: 1px solid rgb(134, 134, 134);
+  border-radius: $default-border-radius;
+  box-sizing: border-box;
+    
+  color: rgb(100, 100, 100);
+  font-size: $body-font-size;
+  
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  
+  cursor: pointer;
+  background: rgb(255, 255, 255);
+  
+  &:hover {
+    background: rgb(245,245,245);
+  }
+  // 클릭시 테두리 점선 없애기
+  &.active {
+    border: 1px solid darken(rgb(46, 105, 182), 15%);
+    color: white;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.4);
+    background: rgb(46, 105, 182);
+  }
+  
+  &.disable {
+    color: rgb(200, 200, 200);
+    cursor: no-drop;
+  }
+  
+}
+
+
+%button_small {
+  $height: 16px;
+  
+  min-height: $height;
+  height: $height;
+  
+  font-size: 11px;
+}
+
+
+/* 버튼
+ * 버튼은 font 속성을 상속받지 않는다!
+ */ 
+button {
+  @extend %button;
+  
+  &.small {
+    @extend %button_small;
+  }
+}

@@ -1,0 +1,223 @@
+@charset "UTF-8";
+
+
+.scroll-table {
+  
+  $removable-width: 50px;
+  
+  $border-outer-color: rgb(180,180,180);
+  $border-inner-color: rgb(210,210,210);
+  $list-separater-color: rgb(230,230,230);
+  $border-radius: 5px;
+  $line-height: 28px;
+  $list-height: ( $line-height + 1 ) * 5 - 1;
+  $background: rgb(242, 242, 242);
+  
+  position: relative;
+  font-size: 11px;
+  font-family: '돋움' Dotum;  
+  
+  
+  &.removable {
+    .header, .select, .list >ul {
+      position: relative;
+      padding-left: $removable-width; // 삭제버튼 자리
+    }
+    .header span.removable, .list >ul div.delete {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: $removable-width;
+      height: $line-height;
+      
+      text-align: center;
+      line-height: $line-height
+    }
+  }
+
+  .header span.removable {
+    display: none;
+  }
+
+  // ▒▒▒▒▒▒▒▒▒▒▒▒  리스트 양식 공통 설정  ▒▒▒▒▒▒▒▒▒▒▒▒
+  .header, .list, .select, .list >ul {
+    box-sizing: border-box;
+  } 
+  
+  .header, .list-wrap, .select {
+    overflow: hidden;
+    border-width: 1px;
+    border-style: solid;
+  }
+  
+  .header, .list, .select {
+    
+    > ul {
+      li {
+        overflow: hidden;   // text-nowrap을 위한 설정
+        //display: inline-block;
+        float: left;
+        height: $line-height;
+        
+        text-align: center;
+        line-height: $line-height;
+        
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        
+      } // li
+    } // ul
+  } // .header, .list
+  
+  .header, .select {
+    border-color: $border-outer-color;
+    font-size: 12px;
+    font-weight: bold;
+     > ul {
+      // scroll을 강제로 만들게 한다. 이를 통해 리스트 오른쪽 간격을 같게 맞춘다.
+      overflow-y: scroll;
+      
+      // 스크롤바를 안 보이게 하기 위한 임시책
+      // 가로 사이즈를 overflow밖으로 늘린 후, 늘린만큼 padding값을 주어서 내용을 안으로 당긴다.
+      width: 120%;
+      padding-right: 20%;
+      box-sizing: border-box;
+      
+      &.checked {
+        background: rgb(240, 240, 240);
+        font-weight: bold;
+      }
+    }
+  }  
+  // ▒▒▒▒▒▒▒▒▒▒▒▒  타이틀 부분  ▒▒▒▒▒▒▒▒▒▒▒▒
+  .header {
+    height: $line-height;
+    border-radius: $border-radius $border-radius 0 0;
+    @include bg-gradation(rgb(251,251,251), rgb(240,240,240));
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+    // 타이틀 부분
+    > ul {
+      // ★ 파이어폭스에서는 세로 길이가 충분하지 않으면 scroll이 생기지 않는다.
+      // ★ 따라서 세로 길이가 스크롤바 사이즈만큼 늘어날 수 있게 auto를 지정하거나, 기본값 그대로 둔다.
+      height: auto; 
+      color: rgb(85,85,85);
+      
+      li {
+        //margin-left: -1px;
+        //border-left: 1px solid $border-inner-color;
+      }
+    }
+  }
+  
+  .select {
+    border-top: 0;
+    color: rgb(44, 98, 169);
+    background: rgb(245, 245, 245);
+    &+.select {
+      border-top: 1px solid $border-inner-color;
+    }
+    
+  }
+  
+  
+  
+  
+  // ▒▒▒▒▒▒▒▒▒▒▒▒  리스트 부분  ▒▒▒▒▒▒▒▒▒▒▒▒
+  .list-wrap {
+    //border-radius: 0 0 $border-radius $border-radius;
+    border-color: $border-outer-color;
+    border-top: 0;
+    
+    background: white;
+  }
+  
+  .list {
+    overflow-y: scroll;
+    height: $list-height;
+    
+    color: rgb(139, 139, 139);
+    
+    ul {
+      float: left;
+      margin-top: -1px;
+      
+      width: 100%;
+      border-top: 1px solid $list-separater-color;
+      
+      &:last-child {
+        border-bottom: 1px solid $list-separater-color;
+      }
+      
+      // 선택용 리스트
+      &.select-list {
+        cursor: pointer;
+
+        &.selected {
+          font-weight: bold;
+          color: rgb(105, 105, 105);
+          background: rgb(245,245,245);
+        }
+      }
+      
+    }
+    ul:hover {
+      > li {
+        color: #333;
+      }
+      background: rgb(245,245,245);
+    }
+  }
+  
+  // 리스트 사이즈 결정
+  $t: 10;
+  @for $i from 1 through $t {
+    .list.line-#{$i} {
+      height: $line-height * $i;
+    }
+  }
+  
+  .modify, .upload, .view {
+    //margin-top: 13px;
+    border-top: 0;
+  } 
+   
+  // 콘트롤러 부
+  .controller {
+    height: 22px;
+    
+    text-align: right;
+    line-height: 22px;
+    
+    a {
+      color: rgb(140,140,140);
+      &:hover {
+        color: rgb(100,100,100);
+      }
+    }
+    
+    dd {
+      float: left;
+      &.right {
+        float: right;
+      }
+    }
+    
+  }
+  
+
+}
+
+.ui-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  
+  text-align: center;
+  background: transparent;
+  z-index: 1;
+  
+  >* {
+    position: relative;
+  }
+}

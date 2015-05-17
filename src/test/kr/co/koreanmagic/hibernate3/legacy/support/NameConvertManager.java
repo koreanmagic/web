@@ -89,7 +89,7 @@ public class NameConvertManager {
 	
 	
 	
-	public static NameConvertor get(Class<?> key) {
+	public static NameConvertor get(String key) {
 		return cache.get(key);
 	}
 	

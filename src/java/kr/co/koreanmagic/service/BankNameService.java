@@ -18,7 +18,7 @@ public class BankNameService extends GenericService<BankName, Long> {
 	}
 	
 	public BankName findByName(String name) {
-		return getDao().eq(false, "name", name);
+		return getDao().eq(true, "name", name);
 	}
 
 }

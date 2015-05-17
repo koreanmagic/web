@@ -10,7 +10,6 @@ import kr.co.koreanmagic.web.support.nav.Navigator;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component

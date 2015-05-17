@@ -6,8 +6,8 @@ import kr.co.koreanmagic.hibernate3.legacy.support.AbstractPersistentCreator;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Address;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.BizClass;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Email;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.CompanyType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Email;
+import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.CompanyType;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.springframework.context.annotation.Scope;

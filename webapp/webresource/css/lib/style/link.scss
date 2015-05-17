@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+
+
+/* 링크 */
+a {
+  
+  &:link, &:hover, &:active, &:visited, &:focus {
+    outline: none;
+    outline-style: none;
+  }
+  
+  &:link  {
+     color: $a-link-color;
+     text-decoration: none;
+  }
+  &:hover {
+    color: $a-hover-color;
+    text-decoration: none;
+  }
+  &:active {
+    color: $a-active-color;
+  }
+  
+  &:visited {
+    color: $a-visited-color;
+    text-decoration: none;
+  }
+}
+
+
+

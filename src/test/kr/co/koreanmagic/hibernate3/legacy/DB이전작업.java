@@ -42,14 +42,15 @@ import kr.co.koreanmagic.service.SubcontractorService;
 
 import org.hibernate.PropertyValueException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,8 +81,39 @@ public class DB이전작업 extends AbstarctDB이전작업 {
 	//@Rollback(false)
 	public void 리스트입력() throws Exception {
 		
+		Session session = session();
+		SQLQuery query = session.createSQLQuery("select customer, update_time, id from hancome_work");
+		List<Object[]> works = query.addScalar("customer").addScalar("update_time").addScalar("id").list();
+		NameConvertor convert = NameConvertManager.get(Customer.class);
+		
+		query = session.createSQLQuery("update hancome_work set customer = :c, update_time = :u WHERE id = :i");
+		
+		for(Object[] work : works) {
+			try {
+				log(work[0]);
+				log(convert.convert(work[0].toString()));
+				query.setParameter("c", convert.convert(work[0].toString())).setParameter("u", work[1]).setParameter("i", work[2]);
+				log(query.executeUpdate());
+			} catch ( NoSuchMasterNameException e ) {
+				log(e.getName());
+			}
+		}
+		
+		
 	}
 	
+	private void 이름리스트확인(Class<?> clazz, String path) throws Exception {
+		NameConvertor convert = NameConvertManager.get(clazz);
+		List<String> list = Files.readAllLines(Paths.get(path));
+		for(String name : list) {
+			try {
+				convert.convert(name);
+			} catch (NoSuchMasterNameException e) {
+				log(e.getName());
+			}
+			
+		}
+	}
 	
 	
 	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 파일 관리 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */

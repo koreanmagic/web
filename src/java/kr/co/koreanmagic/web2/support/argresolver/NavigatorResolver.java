@@ -1,5 +1,7 @@
 package kr.co.koreanmagic.web2.support.argresolver;
 
+import static kr.co.koreanmagic.web2.support.argresolver.Utils.cast;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -18,16 +20,11 @@ public class NavigatorResolver implements HandlerMethodArgumentResolver {
 	
 	Logger logger = Logger.getLogger(getClass());
 	
-	public NavigatorResolver() {
-		logger.debug("NavigatorResolver()");
-	}
-	
 	/*
 	 * 메소드의 파라미터를 검사해서 지원여부를 확인한다.
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		logger.debug(parameter.getParameterType());
 		return parameter.getParameterType().isAssignableFrom(Navigator.class);
 	}
 
@@ -39,7 +36,7 @@ public class NavigatorResolver implements HandlerMethodArgumentResolver {
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 									NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		
-		HttpServletRequest req  = (HttpServletRequest)webRequest.getNativeRequest();
+		HttpServletRequest req  = cast(webRequest);
 		HttpSession session = req.getSession();
 		return session.getAttribute("kr.co.koreanmagic.web.support.nav.Navigator");
 	}

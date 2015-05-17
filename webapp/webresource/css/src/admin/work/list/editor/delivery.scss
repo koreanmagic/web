@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+[class*='_delivery-'] {
+  
+  display: block;
+  
+  dt, dd {
+    display: inline-block;
+  }
+  
+  dt {
+    font-size: 11px;
+    margin-right: 6px;
+  }
+}
+
+._delivery-data {
+  
+  dd {
+    font-size: 15px;
+    font-weight: bold;
+    font-family: $special-font-family;
+  }
+  
+}
+
+.add-list {
+  
+  .before {
+    color: rgb(152, 152, 152);
+  }
+  
+  td {
+    padding: .5em 0;
+    
+    &+td {
+      text-align: right;
+    }
+  }
+}

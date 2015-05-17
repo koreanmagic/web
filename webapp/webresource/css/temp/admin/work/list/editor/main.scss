@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+
+  
+//에디터 위치설정을 위한 전체 덮개
+
+  
+#editor {
+  width: $editor-width + ($editor-container-padding-left-right * 2);
+  height: $editor-container-height + $tab-height + ($editor-container-padding-top-bottom * 2);
+
+  //border-radius: 10px;
+  border: 1px solid #222;
+  border-radius: $editor-border-radius;
+  background: $editor-bgcolor;
+  
+  
+  [id*="tabs"] {
+    position: relative;
+    padding: $editor-container-padding-top-bottom $editor-container-padding-left-right;
+    height: $editor-container-height;
+  }
+
+  
+  // 탭
+  > ul {
+  
+  $border-color: rgb(172, 172, 172);
+  
+  height: $tab-height;
+  
+  border-top-left-radius: $editor-border-radius;
+  border-top-right-radius: $editor-border-radius;
+  background: $tab-normal-bgcolor;
+  
+  li {
+    float: left;
+    width: 100px;
+    height: $tab-height;  
+    
+    color: rgb(226, 226, 226);
+    background: $tab-normal-bgcolor;
+    
+    &:first-child {
+      border-top-left-radius: $editor-border-radius;
+    }
+    
+    > a {
+      display: block;
+      height: $tab-height;
+      
+      color: inherit;
+      text-align: center;
+      line-height: $tab-height;
+    }
+    
+    &:hover {
+      background: $tab-hover-bgcolor;
+      color: rgb(240,240,240);
+    }
+    
+    
+    &.ui-simpleTabs-disable, &.ui-simpleTabs-active{
+       a {
+        cursor: default; 
+      }
+    }
+    
+    // 비활성화 탭
+    &.ui-simpleTabs-disable {
+      color: rgb(164, 164, 164);
+      &:hover {
+        background: inherit;
+      }
+    }
+    
+    // 현재 활성화된 탭
+    &.ui-simpleTabs-active {
+      background: $tab-active-bgcolor;
+      font-weight: bold;
+      color: rgb(50,50,50);
+    }
+  }
+
+} // > ul
+
+
+  // 선택테이블
+  .choice-list {
+    
+    .title {
+      font-size: 12px;
+      color: rgb(160,160,160);
+    }
+    
+    .current, .selected {
+      margin-right: 3px;
+      font-family: 'Dotum';
+      font-weight: bold;
+      letter-spacing: -1px;
+    }
+    
+    .current {
+      font-size: 16px;
+    }
+    
+    .selected {
+      font-size: 13px;
+    }
+    
+    dt {
+      height: 30px;
+      line-height: 30px;
+    }
+    
+    dd {
+      height: 20px;
+      line-height: 20px;
+    }
+    
+  }
+
+
+} // #editor
+
+

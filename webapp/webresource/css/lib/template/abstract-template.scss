@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+/*
+ * 다양한 추상화된 배치 모델
+ */
+
+
+/*
+ * 아마존 상단 검색바를 따온 모델
+ * - 선행 지식
+ * ① float된 엘리먼트는 자신의 앞에 있는 unFloat 엘리먼트를 인식한다.
+ * ② unFloat된 엘리먼트는 자신의 앞에 있는 float된 엘리먼트를 인식하지 못하고, 그 밑으로 들어가버린다.
+ * ③ ★★★ unFloat된 엘리먼트에 overflow:hidden을 주면, 앞에 있는 float 엘리먼트의 가로사이즈만큼 width값이 줄어든다.
+ * 
+ * 이를 이용하면 양 사이드에 엘리먼트를 둔 상태에서, 중간에 있는 엘리먼트만 반응형이 될 수 있다.
+ * 
+<div class="abstract-stretch-line">
+    <div class="left"></div>
+    <div class="right"></div>
+    <div class="center">
+      <!-- width 100% Value -->
+    </div>
+</div>
+ *
+ * */
+.fluid-line {
+  display: block;
+  @extend %float-extend;
+  //height: inherit;  // 자식엘리먼트를 위해 height 속성을 상속해준다.
+  
+  > .left, > .right, > .center {
+    height: inherit;  // 자식엘리먼트를 위해 height 속성을 상속해준다.  
+  }
+  
+  > .left {
+    float: left;
+  }
+  
+  > .right {
+    float: right;
+  }
+  
+  > .center {
+    overflow: hidden;
+  }
+  
+}

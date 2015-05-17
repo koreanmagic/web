@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+
+#searchCustomer {
+  display: none;
+  overflow: hidden;
+  width: 800px;
+  height: 500px;
+  
+  border-radius: 10px;
+  letter-spacing: -1px;
+  background: white;
+  
+  ._search {
+    padding: 25px 0;
+    
+    background: rgb(99, 124, 157);
+    text-align: center;
+    
+    input {
+      height: 40px;
+      
+      border: 0;
+      font-family: $special-font-family;
+      font-size: 15px;
+      font-weight: bold;
+      text-indent: 10px;
+    }
+    
+  }
+  
+  ._result {
+    overflow: auto;
+    padding: 0 30px 30px 30px;
+    height: 320px;
+  }
+  
+  .scroll-table {
+    margin: 0 4em;
+  }
+    
+}

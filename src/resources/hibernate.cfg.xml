@@ -49,7 +49,6 @@
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.query_factory_class">org.hibernate.hql.ast.ASTQueryTranslatorFactory</property>
        -->
-       
 
 		<!-- SCHEMA CREATER -->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -58,7 +57,7 @@
         <property name="hibernate.connection.datasource">java:/comp/env/jdbc/test</property> -->
         
 		
-        <!-- SQL to stdout logging-->
+        <!-- SQL to stdout logging --> 
         <property name="show_sql">true</property>
         <property name="format_sql">true</property> 
         <!-- <property name="use_sql_comments">true</property> -->

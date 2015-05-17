@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+#topLine {
+  
+  ._home {
+    
+    float: left;
+    
+    span {
+    
+      float: left;
+      margin: ($top-line-height - 12px) / 2 0px; 
+      
+      width: 112px;
+      height: 12px;
+      background: url('/img/global-static-img.png') 0 0;
+      
+      &:hover {
+        background: url('/img/global-static-img.png') 0 -12px;
+      } 
+    }
+  } // ._home
+  
+  
+  
+  
+  ._btns {
+    
+    $btn-width: 80px;
+    
+    float: right;
+    border-left: 1px solid rgb(25, 25, 25);
+    border-right: 1px solid rgb(25, 25, 25);
+    
+    // 선 겹치기
+    &+._btns {
+      margin-left: -1px;
+    }
+    
+    > a {
+      float: left;
+      width:  $btn-width;
+      height: $top-line-height;
+      
+      color: #aaa;
+      text-align: center;
+      line-height: $top-line-height;
+
+    } // > a
+    
+    // 서브메뉴
+    &:hover {
+      ._sub {
+        display: block;
+      }
+    }
+    // 서브메뉴
+    ._sub {
+      display: none;
+      position: absolute;
+      overflow: hidden;
+      top: $top-line-height - 7;
+      z-index: 99;
+      
+      border: 1px solid rgb(25, 25, 25);
+      border-radius: 4px;
+      box-shadow: 5px 2px 5px rgb(34, 34, 34);
+      
+      width: $btn-width - 2;
+      background: white;
+      
+      > a {
+        display: block;
+        width: inherit;
+        height: 27px;
+        
+        text-align: center;
+        line-height: 27px;
+        
+        &+a {
+          border-top: 1px solid rgb(190,190,190);
+        }
+        
+        &:hover {
+          background: rgb(235,235,235);
+        }
+      }
+      
+    }
+  } // ._btns
+}

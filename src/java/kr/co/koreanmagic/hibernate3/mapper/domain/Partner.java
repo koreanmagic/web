@@ -3,60 +3,81 @@ package kr.co.koreanmagic.hibernate3.mapper.domain;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Version;
 
-import kr.co.koreanmagic.hibernate3.mapper.domain.code.BizClass;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Email;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.CompanyType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Email;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Webhard;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Website;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
+
+
+@JsonAutoDetect(fieldVisibility=Visibility.NONE, 
+				getterVisibility = Visibility.NONE, 
+				setterVisibility = Visibility.NONE)
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-//@DiscriminatorOptions(force=true)
+@Table(name="partners")
 public abstract class Partner {
 	
 	
-	private Long id;
-	private Long version;
+	@JsonProperty private Long id;
+	@JsonProperty private Long version;
 	
-	private CompanyType companyType;		// 사업자 종류
-	private ThreeNumber bizNum;				// 사업자번호
-	private BizClass bizClass;				// # 업태
-	private String bizTypes;				// 종목
+	@JsonProperty private ThreeNumber bizNum;				// 사업자번호
+	@JsonProperty private String bizCondition;			// 업태
+	@JsonProperty private String bizTypes;				// 종목
 	
-	private String name;				// 회사 이름
-	private String ceoName;					// 사업주 이름
-	private ThreeNumber mobile;				// 사업주 핸드폰
-	private ThreeNumber tel;				// 대표전화
-	private ThreeNumber fax;				// 대표팩스
-	private Email email;					// 대표 이메일
+	@JsonProperty private String name;					// 회사 이름
+	@JsonProperty private String otherName;				// 다른 이름
 	
-	private Collection<Address> address
-					= new ArrayList<>();	// # 주소
+	@JsonProperty private String ceoName;					// 사업주 이름
+	@JsonProperty private ThreeNumber mobile;				// 사업주 핸드폰
+	@JsonProperty private ThreeNumber tel;				// 대표전화
+	@JsonProperty private ThreeNumber fax;				// 대표팩스
+	@JsonProperty private Email email;					// 대표 이메일
 	
-	private String memo;					// 메모
+	private List<Manager> manager;			// 담당자들
 	
-	private Timestamp updateTime;
-	private Date insertTime;
-
+	@JsonProperty private Website web;					// 홈페이지
+	@JsonProperty private Webhard webhard;				// 웹하드
+	
+	private List<Address> address;			// 주소
+	private List<Bank> banks;				// 계좌
+	
+	@JsonProperty private String memo;					// 메모
+	
+	@JsonProperty private Timestamp updateTime;
+	@JsonProperty private Date insertTime;
+	
+	@JsonProperty private String img;						// 이미지
+	
+	
+	public Partner() {}
+	public Partner(Long id) { this.id = id; }
+	
 	
 	@Id @GeneratedValue
 	public Long getId() {
@@ -74,14 +95,6 @@ public abstract class Partner {
 		this.version = version;
 	}
 	
-	@Column(name="company_type", nullable=true)
-	public CompanyType getCompanyType() {
-		return companyType;
-	}
-	public void setCompanyType(CompanyType companyType) {
-		this.companyType = companyType;
-	}
-
 
 	@Columns(columns={
 			@Column(name="biz_num1", nullable=true),
@@ -97,15 +110,12 @@ public abstract class Partner {
 	}
 
 	/* 업태 */
-	@Index(name="biz_class_index")
-	@JoinColumn(name="biz_class")
-	@ManyToOne(optional=true)
-	public BizClass getBizClass() {
-		//if(bizClass == null) bizClass = new BizClass();
-		return bizClass;
+	@Column(name="biz_condition", nullable=true)
+	public String getBizCondition() {
+		return bizCondition;
 	}
-	public void setBizClass(BizClass bizClass) {
-		this.bizClass = bizClass;
+	public void setBizCondition(String bizCondition) {
+		this.bizCondition = bizCondition;
 	}
 
 	/* 종목 */
@@ -124,7 +134,15 @@ public abstract class Partner {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	
+	public String getOtherName() {
+		return otherName;
+	}
+	public void setOtherName(String otherName) {
+		this.otherName = otherName;
+	}
+	
 	@Column(name="ceo_name")
 	public String getCeoName() {
 		return ceoName;
@@ -132,6 +150,51 @@ public abstract class Partner {
 	public void setCeoName(String ceoName) {
 		this.ceoName = ceoName;
 	}
+	
+	
+	// 주소
+	@OneToMany(mappedBy="partner", orphanRemoval=true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public List<Address> getAddress() {
+		return address == null ? address = new ArrayList<>() : address;
+	}
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
+	public void addAddress(Address address) {
+		getAddress().add(address);
+		address.setPartner(this);
+	}
+	
+	// 은행
+	@OneToMany(mappedBy="partner", orphanRemoval=true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public List<Bank> getBanks() {
+		return banks == null ? banks = new ArrayList<>() : banks;
+	}
+	public void setBanks(List<Bank> banks) {
+		this.banks = banks;
+	}
+	public void addBank(Bank bank) {
+		getBanks().add(bank);
+		bank.setPartner(this);
+	}
+	
+	// 매니저
+	@OneToMany(mappedBy="partner", orphanRemoval=true, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
+	public List<Manager> getManager() {
+		return manager == null ? manager = new ArrayList<>() : manager;
+	}
+	public void setManager(List<Manager> manager) {
+		this.manager = manager;
+	}
+	@SuppressWarnings("unchecked")
+	public <T extends Partner> T addManager(Manager manager) {
+		getManager().add(manager);
+		manager.setPartner(this);
+		return (T)this;
+	}
+	
 	
 	
 	@Columns(columns={
@@ -177,27 +240,34 @@ public abstract class Partner {
 
 	
 	public Email getEmail() {
-		return email;
+		return email == null ? email = new Email() : email;
 	}
 	public void setEmail(Email email) {
 		this.email = email;
 	}
 
-	@OneToMany(mappedBy="partner", orphanRemoval=true)
-	@Cascade(CascadeType.SAVE_UPDATE)
-	public Collection<Address> getAddress() {
-		return address;
-	}
-	public void setAddress(Collection<Address> address) {
-		this.address = address;
-	}
-	public void addAddress(Address address) {
-		getAddress().add(address);
-		address.setPartner(this);
-	}
-
 	
-	@Column(name="update_time", columnDefinition="timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	
+	
+	public Website getWeb() {
+		return web == null ? web = new Website() : web;
+	}
+	public void setWeb(Website web) {
+		this.web = web;
+	}
+	
+	
+	public Webhard getWebhard() {
+		return webhard == null ? webhard = new Webhard() : webhard;
+	} 
+	public void setWebhard(Webhard webhard) {
+		this.webhard = webhard;
+	}
+	
+	
+	
+	@Column(name="update_time", insertable=false, updatable=false,
+				columnDefinition="timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
@@ -205,7 +275,8 @@ public abstract class Partner {
 		this.updateTime = updateTime;
 	}
 	
-	@Column(name="insert_time", nullable=false) 
+	
+	@Column(name="insert_time", nullable=false, updatable=false) 
 	public Date getInsertTime() {
 		if(insertTime == null) insertTime = Date.from(Instant.now());
 		return insertTime;
@@ -220,6 +291,13 @@ public abstract class Partner {
 	}
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+	
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	@Override
@@ -252,5 +330,7 @@ public abstract class Partner {
 	public String toString() {
 		return getName();
 	}
+	
+	
 
 }

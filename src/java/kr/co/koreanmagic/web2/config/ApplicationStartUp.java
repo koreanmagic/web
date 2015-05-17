@@ -9,6 +9,7 @@ import kr.co.koreanmagic.web2.servlet.interceptor.HandlerInterceptorRegister;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -61,8 +63,8 @@ public class ApplicationStartUp extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		//super.configureMessageConverters(converters);
 		converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+		converters.add(new MappingJacksonHttpMessageConverter());	// JSON 변환
 	}
 
 	@Override
@@ -113,7 +115,6 @@ public class ApplicationStartUp extends WebMvcConfigurerAdapter {
 			registration = registry.addInterceptor(i);
 			if(i.getPathPatterns() != null && i.getPathPatterns().length > 0)
 				registration.addPathPatterns(i.getPathPatterns());
-			logger.debug(i.getClass().getSimpleName());
 		}
 		super.addInterceptors(registry);
 	}
@@ -123,16 +124,16 @@ public class ApplicationStartUp extends WebMvcConfigurerAdapter {
 		super.addViewControllers(registry);
 	}
 
+	
 	/*
 	 * 리소스 핸들러
 	 */
+	@Value("${hancome.workfile.root}") String resourcePath;
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		final String file = "file:";
-		String workResourcePath = file + "G:/";
-		
-		registry.addResourceHandler("/resource/**")
-				.addResourceLocations(workResourcePath);
+		System.out.println(resourcePath);
+		registry.addResourceHandler("/resource/**").addResourceLocations( "file:" + resourcePath + "/" );
 	}
 	
 	

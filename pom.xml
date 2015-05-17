@@ -73,9 +73,34 @@
 				<version>2.1.1</version>
 				<configuration>
 					<warSourceDirectory>webapp</warSourceDirectory>
+					<warSourceExcludes>webresource/**/*</warSourceExcludes>
 				</configuration>
 			</plugin>
 			
+			<!-- 
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+	              <execution>
+	                <phase>pre-site</phase>
+	                <goals>
+	                  <goal>exec</goal>
+	                </goals>
+	              </execution>
+	            </executions>
+	            <configuration>
+	                  <executable>grunt</executable>
+	                  <arguments>
+	                    <argument>default</argument>
+	                  </arguments>
+	                  <workingDirectory>
+	                  	G:/app/Projects/web2/webapp/webresource
+	                  </workingDirectory>
+	                </configuration>
+            </plugin>
+			 -->
 		</plugins>
 	</build>
 	
@@ -252,8 +277,8 @@
 		<!-- JSON -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-lgpl</artifactId>
-			<version>1.4.2</version>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
 		</dependency>
 		
 		<dependency>
@@ -277,11 +302,7 @@
         	<artifactId>commons-beanutils</artifactId>
         	<version>1.8.0</version>
     	</dependency>
-    	<dependency>
-	        <groupId>commons-dbcp</groupId>
-        	<artifactId>commons-dbcp</artifactId>
-        	<version>1.4</version>
-    	</dependency>
+    	
     	<dependency>
 	        <groupId>commons-collections</groupId>
         	<artifactId>commons-collections</artifactId>
@@ -302,6 +323,12 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.3.2</version>
 		</dependency>
+		 
+		<dependency>
+	        <groupId>commons-dbcp</groupId>
+        	<artifactId>commons-dbcp</artifactId>
+        	<version>1.4</version>
+    	</dependency>
     	<dependency>
 	        <groupId>commons-lang</groupId>
         	<artifactId>commons-lang</artifactId>
@@ -340,18 +367,8 @@
 
 		
 		
-    	
-		
-		
-		
 		<!-- ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 템플릿 엔진 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ -->
 		
-		<!--  프리마커 
-		<dependency>
-    		<groupId>org.freemarker</groupId>
-    		<artifactId>freemarker</artifactId>
-		</dependency>
-		-->
 		
 		<!-- 타일즈 -->
         <dependency>
@@ -385,12 +402,18 @@
         </dependency> 
         <!-- 
         <dependency>
-    		<groupId>taglibs</groupId>
-    		<artifactId>standard</artifactId>
-    		<version>1.1.2</version>
-		</dependency>
-        -->
+	    		<groupId>taglibs</groupId>
+	    		<artifactId>standard</artifactId>
+	    		<version>1.1.2</version>
+			</dependency>
         
+        
+        <dependency>
+				  <groupId>de.neuland-bfi</groupId>
+				  <artifactId>spring-jade4j</artifactId>
+				  <version>0.4.2</version>
+				</dependency>
+        -->
 		<dependency>
     		<groupId>jstl</groupId>
     		<artifactId>jstl</artifactId>
@@ -450,6 +473,28 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>1.1.4.RELEASE</version>
 		</dependency>-->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<!-- 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>1.1.4.RELEASE</version>
+		</dependency>
+		 -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.resource</groupId>
+			<artifactId>jboss-connector-api_1.5_spec</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
+			<version>1.2.2</version>
+		</dependency>
 	</dependencies>
 	
 	
@@ -459,13 +504,11 @@
 		<dependencies>
 		
 		
-			<!--  프리마커
 			<dependency>
 	    		<groupId>org.freemarker</groupId>
     			<artifactId>freemarker</artifactId>
 	    		<version>2.3.20</version>
 			</dependency>
-		 -->
 			<dependency>
 			 	<groupId>commons-pool</groupId>
   				<artifactId>commons-pool</artifactId>

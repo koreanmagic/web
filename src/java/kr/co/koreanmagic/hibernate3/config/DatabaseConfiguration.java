@@ -1,7 +1,5 @@
 package kr.co.koreanmagic.hibernate3.config;
 
-import java.util.Map;
-
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -9,10 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportAware;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @PropertySource("database.properties")

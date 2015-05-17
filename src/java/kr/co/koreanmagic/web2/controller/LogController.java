@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.co.koreanmagic.commons.KoStringUtils;
-import kr.co.koreanmagic.web.support.nav.Navigator;
+import kr.co.koreanmagic.service.CustomerService;
+import kr.co.koreanmagic.service.WorkService;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,29 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class LogController {
 	
 	private Logger logger = Logger.getLogger(getClass());
+	@Autowired SessionFactory factory;
+	@Autowired CustomerService customerService;
+	@Autowired WorkService workService;
 	
-	@RequestMapping(value="/")
-	public String root(ModelMap model) throws Exception {
-		return "test";
-	}
-	
-	@RequestMapping(value="/test")
-	public String test(ModelMap model) throws Exception {
-		return "test";
-	}
-	
-	@RequestMapping(value="/admin/{1}/{2}")
-	public String admin(ModelMap model, @PathVariable("1") String dir, @PathVariable("2") String file,
-						HttpServletRequest req, Navigator nav) throws Exception {
-		print(req);
-		//AdminNavigator nav = getMenu();
-		logger.debug("nav : " + nav.hashCode());
-		nav.reflesh(req);
-		model.put("nav", nav);
-		model.put("data", getDummyData());
-		
-		return "admin." + dir + "." + file;
-	}
 	
 	@RequestMapping(value="/ajax-native")
 	@ResponseBody
@@ -77,6 +61,8 @@ public class LogController {
 		
 	}
 	
+	
+	
 	@RequestMapping(value="/ajax-param")
 	@ResponseBody
 	public String ajaxWait(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -92,14 +78,10 @@ public class LogController {
 	@ResponseBody
 	public String ajax(HttpServletRequest req, HttpServletResponse res) throws Exception {
 		
-		logger.debug("servletPath : " + req.getServletPath());
-		logger.debug("queryString : " + req.getQueryString());
-		
-		printParam(req);
-		printHeader(req);
-		
-		String body = new String(Files.readAllBytes(Paths.get(getClass().getResource("responseBody.txt").toURI())));
-		return body;
+		JSONObject json = new JSONObject();
+		json.put("result", "true");
+		log(json.toJSONString());
+		return json.toJSONString();
 	}
 	
 	
@@ -164,11 +146,6 @@ public class LogController {
 			
 	}
 	
-	private<T> T log(T t) {
-		System.out.println(t);
-		return t;
-	}
-	
 	private List<Map<String, Object>> getDummyData() throws Exception {
 		
 		Path path = Paths.get("g:/data.txt");
@@ -184,12 +161,19 @@ public class LogController {
 			s = l.split(",");
 			model = new HashMap<>();
 			for(i=0;i<len;i++) {
-				model.put(labels[i], s[i]);
+				if(labels[i].equals("date"))
+					model.put(labels[i], new Date());	
+				else
+					model.put(labels[i], s[i]);
 			}
 			result.add(model);
 		}
 		
 		return result;
+	}
+	
+	protected void log(Object...t) {
+		System.out.println(KoStringUtils.join("", ",", t));
 	}
 	
 

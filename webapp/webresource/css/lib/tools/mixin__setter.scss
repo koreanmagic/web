@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+
+@mixin setRadius($top-left:null, $top-right:null, $bottom-right:null, $bottom-left:null) {
+  
+  // setRadius(top, 3);
+  @if($top-left == top) {
+    @include setRadius($top-right,$top-right,0,0);
+  }
+  @elseif($top-left == left) {
+    @include setRadius($top-right,0,0,$top-right);
+  }
+  @elseif($top-left == right) {
+    @include setRadius(0,$top-right,$top-right,0);
+  }
+  @elseif($top-left == bottom) {
+    @include setRadius(0,0,$top-right,$top-right);
+  }
+  @else {
+    // sprit-units :: 단위값이 들어올수도 있으므로, 숫자로 바꾼다.  (단위끼리 곱셈하면 에러가 난다.)
+    @if $top-left != null { border-top-left-radius: sprit-units($top-left) * 1px; }
+    @if $top-right != null { border-top-right-radius: sprit-units($top-right) * 1px; }
+    @if $bottom-right != null { border-bottom-right-radius: sprit-units($bottom-right) * 1px; }
+    @if $bottom-left != null { border-bottom-left-radius: sprit-units($bottom-left) * 1px; }
+  }
+  
+}

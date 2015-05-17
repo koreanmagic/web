@@ -74,7 +74,7 @@ public class BankName implements Comparable<BankName>, Serializable{
 	
 	@Override
 	public String toString() {
-		return String.format("[%s \"%s\"]", getName(), getMemo());
+		return getName();
 	}
 	
 	@Override

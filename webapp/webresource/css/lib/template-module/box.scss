@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+/*
+ * 일반 박스 모델
+ */
+div.notice-box {
+  
+  
+  > div {
+    border: 1px solid $default-border-color;
+  }
+  
+  > div.header {
+    
+    padding: .65em;
+    border-radius: $default-border-radius $default-border-radius 0 0;
+    border-bottom: 1px solid lighten($default-border-color, 10%);
+    @include box-top-default-bg();
+    
+    
+    text-align: center;
+  }
+  
+  > div.content {
+    padding: .5em;
+    
+    background-color: white;
+    border-radius: 0 0 $default-border-radius $default-border-radius;
+    border: 1px solid $default-border-color;
+    border-top: none;
+  }
+  
+}
+
+
+span {
+  
+  &.btn {
+    padding: .3em;
+    border: 1px solid $default-border-color;
+    border-radius: 2px;
+  }
+}

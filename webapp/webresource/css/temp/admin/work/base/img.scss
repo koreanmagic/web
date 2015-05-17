@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+$text-work-list: (1, 2, 3, 4, 5, 6, 7);
+
+$prefix: _img-work;
+
+[class*='#{$prefix}'] {
+  background-image: url('/img/text-work-list.png');
+}
+
+
+.#{$prefix}-today {
+  width: 34px;
+  height: 12px;
+  background-position: -130px -126px;
+}
+
+.#{$prefix}-circle-line {
+  width: 18px;
+  height: 18px;
+  background-position: -130px -138px;
+}
+
+
+$i: 0;
+@each $value in $text-work-list {
+  
+  .#{$prefix}-notice-#{$i + 1} {
+    width: 130px;
+    height: 40px;
+    background-position: 0px ($i * -40px);
+  }
+  
+  .#{$prefix}-state-#{$i + 1} {
+    width: 56px;
+    height: 18px;
+    background-position: -130px ($i * -18px);
+  }
+  
+  $i: $i + 1 !global;
+}
+
+.#{$prefix}-type-DEFAULT {
+  width: 30px;
+  height: 15px;
+  background-position: -130px -156px;
+}
+.#{$prefix}-type-TODAY {
+  width: 30px;
+  height: 15px;
+  background-position: -130px -171px;
+}
+.#{$prefix}-type-BUSSY {
+  width: 30px;
+  height: 15px;
+  background-position: -130px -186px;
+}

@@ -1,5 +1,7 @@
 package kr.co.koreanmagic.hibernate3.legacy;
 
+import garbage.GenericDao;
+
 import java.io.BufferedWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -13,7 +15,6 @@ import java.util.List;
 import kr.co.koreanmagic.commons.KoJDBCUtils;
 import kr.co.koreanmagic.commons.KoStringUtils;
 import kr.co.koreanmagic.commons.KoUtils;
-import kr.co.koreanmagic.dao.GenericDao;
 import kr.co.koreanmagic.service.GenericService;
 
 import org.hibernate.Session;

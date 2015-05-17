@@ -10,23 +10,26 @@ import javax.persistence.Table;
 @Table(name="work_state")
 public class WorkState {
 	
-	private Long id;
+	private Integer id;
 	private String name;
 	private String description;
 	
 	public WorkState() {}
-	public WorkState(Long id) {
+	public WorkState(Integer id) {
 		setId(id);
+	}
+	public WorkState(int num) {
+		setId(num);
 	}
 	public WorkState(String name) {
 		setName(name);
 	}
 	
 	@Id @GeneratedValue
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	

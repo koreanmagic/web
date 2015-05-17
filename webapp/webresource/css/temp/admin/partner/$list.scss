@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+/*** require ***/
+@import "css/lib/tools";
+/*** require ***/
+
+
+@import "#";
+
+table._partner-list {
+  
+  tbody {
+    tr {
+      height: 30px;
+      
+      &:hover {
+        background: rgb(245, 245, 245);
+      }
+      
+      td {
+        
+        text-align: center;
+      }
+      
+    } // tr
+  } // tbody
+  
+}

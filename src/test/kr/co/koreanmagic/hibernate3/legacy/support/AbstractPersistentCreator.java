@@ -1,5 +1,7 @@
 package kr.co.koreanmagic.hibernate3.legacy.support;
 
+import garbage.GenericDao;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import kr.co.koreanmagic.commons.KoReflectionUtils;
-import kr.co.koreanmagic.dao.GenericDao;
 import kr.co.koreanmagic.service.GenericService;
 
 import org.hibernate.Session;

@@ -5,12 +5,12 @@ import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WorkStateService extends GenericService<WorkState, Long> {
+public class WorkStateService extends GenericService<WorkState, Integer> {
 
 	
 	@Override
 	public WorkState getInitalBean() {
-		return get(1l);
+		return get(1);
 	}
 
 	@Override

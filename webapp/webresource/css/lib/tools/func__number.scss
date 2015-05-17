@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+/*
+ * 각종 단위를 없애고 숫자만 돌려준다.
+ * SASS에서 단위는 숫자뒤에 있는 문자열을 뜻한다.
+ * 0을 곱하면 0px, 0% 등 단위만 남는다. 여기에 1을 더하면 1px, 1%가 되는 셈이다.
+ * 본래값에서 1단위를 나누면 정수로 된 몫이 남는다.
+ * 그걸 돌려주면 결국 숫자값만 남게 되는것이다.
+ * 
+ * (계산설명)
+ * 1) 단위가 있을지 모르는 숫자를 0으로 나누면 단위만 남게 된다.
+ * 2) 단위에 1을 더하면 기본 단위가 된다. ex) 1px, 1% 등등
+ * 3) 전체 단위숫자에서 기본단위를 나누면 SASS는 단위없이 몫만 반환한다.  
+ */ 
+@function sprit-units($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+/*
+ * 100%를 숫자로 나눈 값.
+ */
+@function percent-of-100($value) {
+  @return sprit-units($value) / 100%;
+}
+
+
+/*
+ * 전체 넓이에서 해당 길이의 퍼센테이지 구하기
+ */
+@function percentOf($size, $total) {
+  @return ((sprit-units($size) / sprit-units($total)) * 100) * 1%;
+}
+
+

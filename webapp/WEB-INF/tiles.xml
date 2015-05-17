@@ -12,22 +12,28 @@
 
 <tiles-definitions>
 
+	<definition name="admin" template="/WEB-INF/view/admin/template.ftl">
+        <put-attribute name="top" value="/WEB-INF/view/admin/top.ftl" />
+        <put-attribute name="context" value="/WEB-INF/view/admin/context.ftl" />
+	</definition>
     
     <!-- 관리자  templateType="freemarker" -->
-    <definition name="tiles3.admin.*.*" template="/WEB-INF/view/ftl/admin/template.ftl">
-        <put-attribute name="css" value="{2}" />
-        <put-attribute name="top" value="/WEB-INF/view/ftl/admin/top.ftl" />
-        <put-attribute name="context" value="/WEB-INF/view/ftl/admin/context.ftl" />
-        <put-attribute name="left" value="/WEB-INF/view/ftl/admin/left.ftl" />
-        <put-attribute name="body" value="/WEB-INF/view/ftl/admin/{1}/{2}.ftl" />
+    <definition name="tiles3.admin.work.*" extends="admin">
+        <put-attribute name="body" value="/WEB-INF/view/admin/work/{1}.ftl" />
+        <put-attribute name="context" value="/WEB-INF/view/admin/work/context.ftl" />
+        <put-attribute name="js" value="/WEB-INF/view/admin/work/js.ftl" />
     </definition>
     
-    <!-- 관리자  templateType="freemarker" -->
-    <definition name="tiles3.test" template="/WEB-INF/view/ftl/test/template.ftl">
-        <put-attribute name="header" value="/WEB-INF/view/ftl/test/header.ftl" />
-        <put-attribute name="body" value="/WEB-INF/view/ftl/test/body.ftl" />
-        <put-attribute name="footer" value="/WEB-INF/view/ftl/test/footer.ftl" />
+    <definition name="tiles3.admin.partner.*" extends="admin">
+        <put-attribute name="body" value="/WEB-INF/view/admin/partner/{1}.ftl" />
+        <put-attribute name="context" value="/WEB-INF/view/admin/partner/context.ftl" />
+        <put-attribute name="js" value="/WEB-INF/view/admin/partner/js.ftl" />
     </definition>
+    
+    <definition name="tiles3.admin.test.*" extends="admin">
+        <put-attribute name="body" value="/WEB-INF/jade/{1}.jade" />
+    </definition>
+    
     
 
 

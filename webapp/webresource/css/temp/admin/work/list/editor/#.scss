@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+$editor-width: 700px;
+$editor-bgcolor: white;
+  
+$tab-height: 40px;
+$tab-normal-bgcolor: rgb(122, 122, 122);
+$tab-hover-bgcolor: rgb(75,75,75);
+$tab-active-bgcolor: white;
+  
+$editor-container-height: 410px;
+$editor-container-padding-top-bottom: 30px;
+$editor-container-padding-left-right: 40px;
+$editor-tab-width: $editor-width - ($editor-container-padding-left-right * 2);
+  
+$editor-border-radius: 10px;
+
+
+@import "main";
+
+@import "modify-form";
+@import "subcontractor";
+@import "delivery";
+@import "file";
+
+

@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+
+/*
+ * abstract-template / .abstract-search-line 를 참조
+ * 
+ * <div class="search-bar">
+ *    <selec> ... </select>
+ *    <div class="input"><input type="text" ... ></div>
+ *    <button>go</button>
+ * </div>
+ * 
+ */
+div.search-bar {
+  
+  $search-bar-border-raius: 5px;
+  
+  height: inherit;
+  border-radius: $search-bar-border-raius;
+  border: 1px solid $default-border-color;
+  
+  select, input, button {
+    height: inherit;
+    border: none;
+  }
+  
+  select, button {
+    
+  }
+  
+  select {
+    float: left;
+    border-right: 1px solid $default-border-color;
+    @include box-top-default-bg();
+    border-radius: $search-bar-border-raius 0 0 $search-bar-border-raius;
+  }
+  
+  
+  // <div class="input"><input ...
+  > div.input {
+    
+    overflow: hidden;
+    height: inherit;
+    
+    // select 태그가 없을 경우
+    &:first-child {
+      > input {
+        border-radius: $search-bar-border-raius 0 0 $search-bar-border-raius;
+      }
+    }
+    
+    > input {
+      display: block;
+      padding: 0 .7em;
+      border-radius: 0;
+      width: 100%;
+      
+      vertical-align: middle;    
+    }
+  }
+  
+    
+  button {
+    float: right;
+    border-left: 1px solid $default-border-color;
+    border-radius: 0 $search-bar-border-raius $search-bar-border-raius 0;
+  }
+}

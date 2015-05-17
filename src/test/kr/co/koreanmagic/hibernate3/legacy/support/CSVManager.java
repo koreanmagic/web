@@ -67,8 +67,9 @@ public class CSVManager {
 			 * '#'문자가 발견될때까지 루프를 돌린다.
 			 * '#'문자가 나타난 바로 그 줄부터 파싱이 시작된다.
 			 */
-			while((line = br.readLine()) != null)
+			while((line = br.readLine()) != null) {
 				if(line.contains(KEYS)) break;
+			}
 			
 			/** ▒▒▒▒▒▒▒▒▒▒  Key 목록 파싱  ▒▒▒▒▒▒▒▒▒▒ **/
 			String key = line.substring(

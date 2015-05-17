@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+@import "#";
+
+.partner-insert {
+  
+  .form-group dt > label {
+    width: 70px;
+  }
+  
+  textarea[name='memo'] {
+    width: 550px;
+    height: 110px;
+  }
+  
+}

@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+div {
+  
+  &.bordered {
+    border: 1px solid $default-border-color; 
+  }
+  
+  &.radius {
+    border-radius: $default-border-radius;
+  }
+  
+}

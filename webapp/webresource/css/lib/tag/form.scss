@@ -1,0 +1,293 @@
+@charset "UTF-8";
+
+$height: 32px;
+$small-height: $height - 8;
+
+$input-min-width: 300px;
+$input-background-color: rgb(255,255,255);
+
+$border-color: rgb(190,190,190); 
+$border-radius: 2px;
+  
+$font-color-large: rgb(80,80,80);
+$font-color-middle: rgb(130,130,130);
+$font-color-small: rgb(210,210,210);
+
+form {
+  
+  $block-background: rgb(236, 236, 236);
+  [type='submit'], [type='reset'] {
+    width: 75px;
+    height: 31px;
+    background: rgb(255, 255, 255);
+    border-width: 1px;
+    border-style: solid;
+    border-color: $border-color;
+    border-radius: 3px;
+    
+    font-size: 12px;
+    font-weight: bold;
+    color: rgb(121, 121, 121);
+    
+    cursor: pointer;
+    
+    &:hover, &:active {
+      color: white;
+    }
+    
+    // 블락된 상태면
+    &[disabled] {
+      background: $block-background;
+      cursor: not-allowed;
+      &:hover, &:active {
+        border-color: $border-color;
+        color: rgb(121, 121, 121);
+        background: $block-background;
+      }
+    }
+  }
+  
+  [type='submit'] {
+    &:hover, &:active {
+      background: rgb(92, 184, 92);
+      border-color: rgb(76, 174, 76);
+    }
+  }
+  
+  [type='reset'] {
+    &:hover, &:active {
+      background-color: rgb(240, 173, 78);
+      border-color: rgb(238, 162, 54);
+    }
+  }
+  
+  
+  .btns {
+    margin-top: 10px;
+    text-align: center;
+  }
+}
+
+.form-table {
+  $border-outer-color: rgb(116, 116, 116);
+  $border-inner-color: rgb(210,210,210);
+  $padding: .5em;
+  
+  //border-top: 3px solid $border-outer-color;
+  //border-bottom: 1px solid $border-outer-color;
+
+  > tbody {
+    
+    &+tbody {
+      > tr {
+        > td, >th {
+          //border-top: 1px solid $border-inner-color;
+        }
+      }
+    }
+    
+    > tr {
+      
+      >th, >td {
+        padding: $padding;
+        vertical-align: top;
+      }
+      
+      > th {
+        
+        width: 1%;
+        
+        text-align: left;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+        label {
+          height: $height;
+          line-height: $height;
+        }
+      }
+    }
+  } // > tbody
+  
+  
+  &.small {
+    
+    >tbody {
+      >tr {
+        >th {
+          label {
+            height: $small-height;
+            line-height: $small-height;
+            
+            font-weight: normal;
+            color: rgb(140,140,140);
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+
+
+// 인풋 그룹
+.form-group {
+  
+  position: relative;
+  
+  &.inline {
+    float: left;
+  }
+  
+  &+.form-group {
+    margin-top: 15px;
+  }
+  
+  @extend %float-extend;
+  
+  .separator {
+    float: left;
+    margin: 0 4px;
+    
+    text-align: center;
+    line-height: $height;
+  }
+  
+  .description, .error {
+    float: left;
+    clear: both;
+    margin-top: 3px;
+    
+    letter-spacing: -1px;
+  }
+  
+  .error {
+    color: rgb(212, 63, 58);
+  }
+  
+  .description {
+    color: rgb(180,180,180);
+  }
+  
+  // ************  작은 버전 ************ //
+  &.small {
+    .separator {
+      line-height: $small-height;
+    }
+    
+    dt > label {
+      height: $small-height;
+      line-height: $small-height;
+    }
+    
+    .input-group {
+      [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label  {
+         height: $small-height;
+      }
+    }
+  }
+
+  
+  // ************  dl 엘리먼트로 사용할 경우 ************ //
+  dt, dd {
+    display: table-cell;
+  }
+  
+  dt {
+    width: 1%;
+    vertical-align: top;
+    white-space: nowrap;
+    > label {
+      display: block;
+      padding-left: 5px;
+      padding-right: 5px;
+      
+      height: $height;
+      line-height: $height;
+      font-weight: bold;
+    }
+  }
+  
+} // .form-group
+
+
+.input-group {
+  
+  display: table;
+  position: relative;
+  
+  &.inline {
+    float: left;
+  }
+  
+  [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label {
+    box-sizing: border-box;
+    height: $height;
+    font-size: 12px;
+  }
+  
+  [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $border-color;
+  }
+  
+  // input-group의 멤버로 들어갈 수 있는 엘리먼트들
+  [type*='text'], .addon, select, label, textarea {
+    display: table-cell;
+  }
+  
+  [type*='text']~.addon, .addon+[type*='text'], .addon+textarea, .addon+select {
+    border-left: 0;
+  }
+  
+  [type*='text'], textarea {
+    width: 100%;
+    padding: .6em;
+    text-indent: .2em;
+  }
+  
+  // 라디오나 체크박스의 경우 라벨버튼만 남긴다
+  // .input-group에 쌓인 인풋만 적용한다.
+  // 다른 목적으로 체크타입을 사용할 수 있기 때문이다.
+  [type='radio'], [type='checkbox'], [type='file'] {
+    display: none;
+    
+    // for
+    &+label {
+      float: left;
+      padding-left: 6px;
+      padding-right: 6px;
+      margin-left: -1px;
+      
+      color: rgb(100,100,100);
+      font-weight: normal;
+      line-height: $height;
+      text-align: center;
+      
+      background: white;
+      cursor: pointer;
+    } // &+label
+    
+    // 체크될 경우
+    &:checked {
+      &+label {
+        display: inline-block;
+        color: white;
+        background: rgb(46, 105, 182);
+      }
+    } // &:checked
+  }  
+  .addon, .text {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 1%;
+    
+    font-size: 11px;
+    color: rgb(134, 134, 134);
+    white-space: nowrap;
+    background: rgb(248, 248, 248);
+  }
+  
+} // .input-group

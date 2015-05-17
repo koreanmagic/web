@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kr.co.koreanmagic.commons.KoReflectionUtils;
+import kr.co.koreanmagic.commons.KoStringUtils;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -52,24 +53,18 @@ public class BusinessNumberCompositeUserType implements CompositeUserType {
 
 	@Override
 	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws SQLException {
-
-		int i = 0;
-		int len = names.length;
-		ThreeNumber bn = null;
 		
-		if(i > len) {
-			bn = new ThreeNumber();
-			bn.setNum1(rs.getObject(names[i++]).toString());
-		} else
-			return null;
+		/*
+		 * 값이 없을 경우 null을 보낼 수도 있지만
+		 * view단에서 문제가 될 수 있으므로, 빈 객체라도 보낸다.
+		 */
+		Object[] values = new String[names.length];
+		for(int i=0,l=names.length; i<l; i++) {
+			if( (values[i] = rs.getObject(names[i])) == null)
+				values[i] = "";
+		}
 		
-		if(i > len)
-			bn.setNum2(rs.getObject(names[i++]).toString());
-		
-		if(i > len)
-			bn.setNum3(rs.getObject(names[i]).toString());
-		
-		return bn;
+		return new ThreeNumber(values);
 	}
 
 	@Override
@@ -82,7 +77,7 @@ public class BusinessNumberCompositeUserType implements CompositeUserType {
 			return;
 		}
 		
-		ThreeNumber bn = KoReflectionUtils.cast(value);
+		ThreeNumber bn = (ThreeNumber)value;
 		
 		/* 값 입력 */
 		st.setString(index++, bn.getNum1());

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>util</short-name>
+  <uri>http://www.koreanmagic.co.kr/util</uri>
+  <display-name>koreanmagic.util</display-name>
+  
+
+    <tag>
+        <name>forEach</name>
+        <tag-class>kr.co.koreanmagic.web2.servlet.tag.ForEach</tag-class>
+        <body-content>scriptless</body-content>
+        <description>
+        	이 태그의 사연은 이렇다.
+        	목적은 프리마커에서 spring/formtag를 사용하기 위한 방책 중 하나다.
+        	프리마커에서는 모든 값에 대해 null체크를 하기떄문에 포함구조로 되어있는 객체의 값을 탐색하는데 애로사항이 아주 많다.
+        	단계별로 내려갈떄마다 null체크를 해야하니, 코드도 길어지고 엄청 복잡하다.
+        	특히 form태그를 만들때 그 애로사항은 극에 달한다.
+        	때문에 spring formtag를 사용한다. spring은 객체 안의 객체를 탐색할때 null값이 있으면 알아서 이를 빈문자열로 반환해준다.
+        	
+        	그런데 여기서 또 문제가 있다.
+        	spring formtag는 commandName을 통해 객체 값을 받는데. 이는 request 등의 attribute에 저장된 키 값이다.
+        	콘트롤러 단에서 포함된 attribute는 상관없지만, 프리마커 상에서 다루는 값을 attribute에 등록하려면.. 방법이 없다.
+        	특히 리스트 값을 순회하며 각 객체들로 form을 만들려 하면 답이 없다;;
+        	
+        	떄문에 List를 순회하면서 이 값들을 attribute에 등록해줄 태그가 필요한 것이다!
+        	이 태그의 목적은 바로 그것이다.
+		</description>
+        <attribute>
+        	<name>value</name>
+        	<description>
+        		리스트나 배열 값, 혹은 객체 하나만도 받는다.
+        	</description>
+		</attribute>
+		<attribute>
+        	<name>name</name>
+        	<description>request에 저장할 키 값</description>
+        	<required>false</required>
+		</attribute>
+		
+    </tag>
+    
+    
+    <tag>
+        <name>js</name>
+        <tag-class>kr.co.koreanmagic.web2.servlet.tag.IncludeJS</tag-class>
+        <body-content>empty</body-content>
+        <description>
+        	자바스크립트 임포트
+		</description>
+		<attribute>
+        	<name>path</name>
+        	<description>디렉터리 glob패턴</description>
+        	<required>false</required>
+		</attribute>
+    </tag>
+    
+    <tag>
+        <name>trace</name>
+        <tag-class>kr.co.koreanmagic.web2.servlet.tag.Trace</tag-class>
+        <body-content>empty</body-content>
+        <description>
+        	리퀘스트 값 찍어보기
+		</description>
+    </tag>
+
+</taglib>

@@ -3,11 +3,10 @@ package kr.co.koreanmagic.hibernate3.mapper.domain;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,79 +18,77 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import kr.co.koreanmagic.hibernate3.mapper.domain.category.ItemCategory;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Size;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.enumtype.WorkStatus;
+import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
+import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.DeliveryType;
+import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.WorkType;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 
-/*
- * @Not Null
- * itemCategory, subconstractor
- */
+@JsonAutoDetect(fieldVisibility=Visibility.NONE, 
+				getterVisibility = Visibility.NONE, 
+				setterVisibility = Visibility.NONE)
+
+@GenericGenerator(name="seq_id", strategy="kr.co.koreanmagic.hibernate3.mapper.generate.WorkSequence")
 @Entity
-@Table(name="works")
+@Table(name="hancome_work")
 public class Work {
 	
-	private WorkStatus workStatus;
+	private WorkState workState;
 	
-	private Long id;
-	private Long version;
+	@JsonProperty private String id;
+	@JsonProperty private Long version;
 	
-	private WorkGroup workGroup;
-	private ItemCategory itemCategory;		// 품목
-	private String itemDetail;				// 품목 상세
-	private String subject;
-	
-	
-	private Date insertTime;				// Auto
-	private Timestamp updateTime;			// Auto
-	
-	private Subcontractor subcontractor;
-	
-	private Integer cost;
-	private Integer price;
-	
-	private Size size;
-	private Size bleedSize;
-	private String unit;
-	
+	@JsonProperty private WorkType workType;				// 긴급, 당일판
+	private Customer customer;				// 고객
+	@JsonProperty private Manager manager;				// 담당자
 
-	private Integer count;		// 건수
-	private String number;		// 수량
+	@JsonProperty private String item;					// 품목
+	@JsonProperty private String itemDetail;				// 품목 상세
+	@JsonProperty private String afterProcess;			// 후가공
+	
+	@JsonProperty private Date insertTime;				// 등록일자
+	@JsonProperty private Timestamp updateTime;		// 수정일자
+	private Date stateTime;							// 작업 상황 변경시간
+	
+	@JsonProperty private Subcontractor subcontractor;
+	
+	@JsonProperty private String count;					// 갯수
+	@JsonProperty private String num;					// 건수
+	@JsonProperty private Integer cost;					// 제작단가
+	@JsonProperty private Integer price;					// 공급단가
+	
+	@JsonProperty private String size;
+	@JsonProperty private String memo;				// 부가적인 메모
+	
+	@JsonProperty private DeliveryType delivery;		// 납품방법
+	private Address address;			// 배송지
+	
+	private List<WorkResourceFile> resourceFile;	// 참고파일
 	
 	
-	private Date deliveryDate;
-	private Address deliveryAddress;
-	private String deliveryMemo;
-	
-	private String memo;				// 부가적인 메모
-	
-	
-	private Collection<WorkFile> workFiles;
-	private Collection<WorkDraft> workDrafts;
-	private Collection<WorkReference> workReferences;
-	
-	
-	@Column(name="work_status")
-	public WorkStatus getWorkStatus() {
-		if(workStatus == null) workStatus = WorkStatus.defaultType();
-		return workStatus;
+	@ManyToOne(optional=false)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="state")
+	public WorkState getWorkState() {
+		return workState;
 	}
-	public void setWorkStatus(WorkStatus workStatus) {
-		this.workStatus = workStatus;
+	public void setWorkState(WorkState workState) {
+		this.workState = workState;
 	}
-	
-	
-	@Id @GeneratedValue
-	public Long getId() {
+
+	@Id @GeneratedValue(generator="seq_id")
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Version
 	public Long getVersion() {
 		return version;
@@ -99,26 +96,39 @@ public class Work {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-	
-	@ManyToOne
-	@JoinColumn(name="work_group")
-	public WorkGroup getWorkGroup() {
-		return workGroup;
+
+	@Column(name="work_type")
+	public WorkType getWorkType() {
+		return workType;
 	}
-	public void setWorkGroup(WorkGroup workGroup) {
-		this.workGroup = workGroup;
+	public void setWorkType(WorkType workType) {
+		this.workType = workType;
+	}
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="customer_id")
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+	
+	@ManyToOne(optional=true)
+	public Manager getManager() {
+		return manager;
+	}
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+	
+	
+	public String getItem() {
+		return item;
+	}
+	public void setItem(String item) {
+		this.item = item;
 	}
 
-	
-	@ManyToOne
-	@JoinColumn(name="item_category")
-	public ItemCategory getItemCategory() {
-		return itemCategory;
-	}
-	public void setItemCategory(ItemCategory itemCategory) {
-		this.itemCategory = itemCategory;
-	}
-	
 	@Column(name="item_detail")
 	public String getItemDetail() {
 		return itemDetail;
@@ -127,41 +137,64 @@ public class Work {
 		this.itemDetail = itemDetail;
 	}
 	
+	public String getAfterProcess() {
+		return afterProcess;
+	}
+	public void setAfterProcess(String afterProcess) {
+		this.afterProcess = afterProcess;
+	}
 	
-	@Column(name="subject", nullable=false)
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	@Column(name="insert_time", nullable=false)
+	
+	@Column(name="insert_time", nullable=false, updatable=false)
 	public Date getInsertTime() {
 		if(insertTime == null) insertTime = Date.from(Instant.now());
 		return insertTime;
 	}
+
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 
-	@Column(name="update_time", columnDefinition="timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	@Column(name="update_time", insertable=false, updatable=false,
+			columnDefinition="timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
+	
 
-	@ManyToOne
-	@JoinColumn(name="subconstractor")
-	public Subcontractor getSubconstractor() {
+	public Date getStateTime() {
+		return stateTime;
+	}
+	public void setStateTime(Date stateTime) {
+		this.stateTime = stateTime;
+	}
+	
+	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	public Subcontractor getSubcontractor() {
 		return subcontractor;
 	}
-	public void setSubconstractor(Subcontractor subcontractor) {
+	public void setSubcontractor(Subcontractor subcontractor) {
 		this.subcontractor = subcontractor;
 	}
 
+	
+	public String getCount() {
+		return count;
+	}
+	public void setCount(String count) {
+		this.count = count;
+	}
+	
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
+	}
+	
 	public Integer getCost() {
 		return cost;
 	}
@@ -176,71 +209,11 @@ public class Work {
 		this.price = price;
 	}
 
-	public Size getSize() {
+	public String getSize() {
 		return size;
 	}
-	public void setSize(Size size) {
+	public void setSize(String size) {
 		this.size = size;
-	}
-	
-	@AttributeOverrides({
-		@AttributeOverride(name="width", column=@Column(name="bleed_width")),
-		@AttributeOverride(name="height", column=@Column(name="bleed_height")),
-	})
-	@Column(name="bleed_size")
-	public Size getBleedSize() {
-		return bleedSize;
-	}
-	public void setBleedSize(Size bleedSize) {
-		this.bleedSize = bleedSize;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-	
-	
-	public Integer getCount() {
-		return count;
-	}
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-	public void setNumber(String number) {
-		this.number = number;
-	}
-	
-	@Column(name="delivery_date")
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
-
-	@ManyToOne(optional=true)
-	@org.hibernate.annotations.Cascade({CascadeType.SAVE_UPDATE})
-	@JoinColumn(name="delivery_address")
-	public Address getDeliveryAddress() {
-		return deliveryAddress;
-	}
-	public void setDeliveryAddress(Address deliveryAddress) {
-		this.deliveryAddress = deliveryAddress;
-	}
-
-	@Column(name="delivery_memo")
-	public String getDeliveryMemo() {
-		return deliveryMemo;
-	}
-	public void setDeliveryMemo(String deliveryMemo) {
-		this.deliveryMemo = deliveryMemo;
 	}
 
 	public String getMemo() {
@@ -252,56 +225,38 @@ public class Work {
 	
 	
 	
-	/* 인쇄용 파일 */
-	@OneToMany(mappedBy="work", fetch=FetchType.LAZY)
-	@Cascade(value=CascadeType.SAVE_UPDATE)
-	public Collection<WorkFile> getWorkFiles() {
-		return workFiles;
+	public DeliveryType getDelivery() {
+		return delivery;
 	}
-	public void addWorkFile(WorkFile workFile) {
-		getWorkFiles().add(workFile);
-		workFile.setWork(this);
+	public void setDelivery(DeliveryType delivery) {
+		this.delivery = delivery;
 	}
 	
-	/* 시안 파일 */
-	@OneToMany(mappedBy="work", fetch=FetchType.LAZY)
-	@Cascade(value=CascadeType.SAVE_UPDATE)
-	public Collection<WorkDraft> getWorkDrafts() {
-		if(this.workDrafts == null) this.workDrafts = new ArrayList<>();
-		return workDrafts;
+	@ManyToOne(fetch=FetchType.LAZY)
+	public Address getAddress() {
+		return address;
 	}
-	public void addWorkDraft(WorkDraft workDraft) {
-		getWorkDrafts().add(workDraft);
-		workDraft.setWork(this);
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
-	/* 참고 파일 */
-	@OneToMany(mappedBy="work", fetch=FetchType.LAZY)
-	@Cascade(value=CascadeType.SAVE_UPDATE)
-	public Collection<WorkReference> getWorkReferences() {
-		if(this.workReferences == null) this.workReferences = new ArrayList<>();
-		return workReferences;
+	// 리소스 파일
+	@OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL, mappedBy="work")
+	public List<WorkResourceFile> getResourceFile() {
+		if(resourceFile == null) resourceFile = new ArrayList<>();
+		return resourceFile;
 	}
-	public void addWorkReferences(WorkReference workReference) {
-		getWorkReferences().add(workReference);
-		workReference.setWork(this);
+	public void setResourceFile(List<?> resourceFile) {
+		this.resourceFile = (List<WorkResourceFile>)resourceFile;
 	}
-	
-	
-	
-	
-	public void setWorkFiles(Collection<WorkFile> workFiles) {
-		this.workFiles = workFiles;
+	public<T extends WorkFile> void addResourceFile(T resourceFile) {
+		resourceFile.setWork(this);
+		getResourceFile().add((WorkResourceFile)resourceFile);
 	}
-	public void setWorkDrafts(Collection<WorkDraft> workDrafts) {
-		this.workDrafts = workDrafts;
-	}
-	public void setWorkReferences(Collection<WorkReference> workReferences) {
-		this.workReferences = workReferences;
-	}
+
 	@Override
 	public String toString() {
-		return getInsertTime().toString();
+		return String.format("[%s] %s", getId(), getItem());
 	}
 	
 

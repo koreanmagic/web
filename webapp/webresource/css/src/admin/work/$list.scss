@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+$ui-item-bgcolor: rgb(248,248,248);
+//아이템 엘리먼트에 마우스 올렸을때 선 변화 
+$ui-itemContainer-container-hover: 1px solid rgb(79, 122, 146);
+// 각 데이터 세로 길이
+$work-data-height: 16px;
+
+@import "#";
+@import "list/#";
+
+

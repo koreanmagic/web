@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+ul {
+  
+  &.bordered {
+    border: 1px solid $default-border-color; 
+  }
+  
+  &.radius {
+    border-radius: $default-border-radius;
+    
+    > li {
+      &:first-child {
+        border-radius: $default-border-radius $default-border-radius 0 0;
+      }
+      
+      &:last-child {
+        border-radius: 0 0 $default-border-radius $default-border-radius;
+      }
+    }
+    
+  } // &.radius
+  
+}

@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+.validate-form {
+  
+  [data-check-for] {
+    
+    position: relative;
+    left: -1px;
+    
+    color: transparent;
+    font-size: 1.3em;
+    text-align: center;
+    
+    background-color: white;
+  }
+    
+  [data-check-for].validate-success {
+    color: rgb(76, 174, 76);
+    //border-color: rgb(76, 174, 76);
+  }
+  [data-check-for].validate-error {
+    color: rgb(212, 63, 58);
+    //border-color: rgb(212, 63, 58);
+  }
+  
+  .input-group {
+    &.validate-error {
+      >[type*='text'], >.addon {
+        border-color: rgb(212, 63, 58);
+      }
+    }
+  }
+}
+

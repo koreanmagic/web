@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+
+.form-layout {
+  $border-outer-color: rgb(116, 116, 116);
+  $border-inner-color: rgb(210,210,210);
+  $padding: 2em;
+  
+  border-top: 3px solid $border-outer-color;
+  border-bottom: 1px solid $border-outer-color;
+
+  > tbody {
+    
+    &+tbody {
+      > tr {
+        > td, >th {
+          border-top: 1px solid $border-inner-color;
+        }
+      }
+    }
+    
+    > tr {
+      > th {
+        padding: $padding;
+        width: 150px;
+        border-right: 1px solid $border-inner-color;
+        
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-weight: bold;
+        background: rgb(249, 249, 249);
+      }
+      > td {
+        padding: $padding;
+      }
+    }
+  } // > tbody
+  
+}
+
+
+// 기본적으로 사용하는 레이아웃 간격 등
+.form-wrap {
+  padding: 0 7em;
+}
+
+.headline {
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: -1.5px;
+  
+}
+
+
+// ***************** 각 인풋별 사이즈 ***************** //
+
+
+// ***************** 각 인풋별 사이즈 ***************** //
+
+.input-group {
+  
+  &.num {
+    width: 4em;
+    &~.input-group {
+      width: 5em;
+    }
+  }
+  
+  &.email {
+    width: 10em;
+    &~.input-group {
+      width: 13em;
+    }
+  }
+  
+}
+
+
+
+

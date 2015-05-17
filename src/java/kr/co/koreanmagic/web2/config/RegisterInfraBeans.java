@@ -1,25 +1,12 @@
 package kr.co.koreanmagic.web2.config;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import kr.co.koreanmagic.commons.KoUtils;
-import kr.co.koreanmagic.context.support.convert.IntegerToWorkStateConverter;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ConversionServiceFactoryBean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 @Configuration
+@PropertySource("resource.properties")
 public class RegisterInfraBeans {
 	
 	
@@ -34,8 +21,10 @@ public class RegisterInfraBeans {
 	 */
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer pspc() {
-		return new PropertySourcesPlaceholderConfigurer();
+		PropertySourcesPlaceholderConfigurer pp = new PropertySourcesPlaceholderConfigurer();
+		return pp;
 	}
+	
 	
 
 }

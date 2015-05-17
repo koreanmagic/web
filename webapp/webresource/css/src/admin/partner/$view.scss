@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+@import "#";
+
+table._modify-table {
+  
+  td, tr {
+    height: 40px;
+  }
+  // 앞에 th(제목)이 있는 td만 앞띄움을 한다.
+  th {
+    &+td {
+      padding-left: 10px;
+    }
+  }
+  
+  > tbody {
+    > tr {
+      > th {
+        width: 10%;
+      }
+      > td {
+        width: 40%;
+      }      
+    } // > tr
+  } // > tbody
+  
+  thead {
+    th {
+      font-size: 17px;
+      letter-spacing: -2px;
+      text-align: center;
+      color: rgb(218, 218, 218);
+      background: rgb(89, 89, 89) !important;
+    }
+  }
+  
+  .form-group {
+    
+    &.hidden {
+      display: none !important;
+      &~.value {
+        display: inline-block;
+      }
+    }
+    
+    &~.value {
+      display: none;
+    }
+  }
+  
+}
+

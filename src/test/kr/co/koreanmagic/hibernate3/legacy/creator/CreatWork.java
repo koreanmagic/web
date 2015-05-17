@@ -1,5 +1,6 @@
 package kr.co.koreanmagic.hibernate3.legacy.creator;
 
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
@@ -10,16 +11,15 @@ import kr.co.koreanmagic.hibernate3.legacy.support.NameConvertor;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Subcontractor;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
-import kr.co.koreanmagic.hibernate3.mapper.domain.WorkGroup;
 import kr.co.koreanmagic.hibernate3.mapper.domain.category.ItemCategory;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
-import kr.co.koreanmagic.hibernate3.mapper.domain.support.embeddable.Size;
+import kr.co.koreanmagic.hibernate3.mapper.domain.embeddable.Size;
 
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
+public class CreatWork extends AbstractPersistentCreator<Work> {
 	
 	private NameConvertor customerMasterNames = NameConvertManager.get(Customer.class);
 	private NameConvertor itemMasterNames = NameConvertManager.get(ItemCategory.class);
@@ -32,38 +32,34 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 	};
 	
 	@Override
-	public WorkGroup creat(Map<String, Object> values) {
+	public Work creat(Map<String, Object> values) {
 		
 		setMap(values);
 		
-		WorkGroup workGroup = null;
 		Work work = null;
 		String value = null;
 		
-		
-		workGroup = new WorkGroup();
 		work = new Work();
 		
-		workGroup.addWork(work);
 		
 		try {
 			
 			// 1. 식별자
 			if (check("id")) {
-				workGroup.setId(getValue());
+				work.setId(getValue());
 			}
 			
 		// 2. 입력시간
 		if (check("insert_time")) {
 			value = getValue().replaceAll(" ", "T");
 			Date insertTime = new DateTime(value).toDate();
-			workGroup.setInsertTime(insertTime);
+			work.setInsertTime(insertTime);
 			work.setInsertTime(insertTime);
 		}
 
 		// 3. 작업상황
 		if (check("con_id")) {
-			workGroup.setState(
+			work.setWorkState(
 								convert(Integer.valueOf(getValue()), WorkState.class)
 							);
 		}
@@ -80,25 +76,23 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 		
 		// 5. 품목
 		if (check("item")) {
-			value = itemMasterNames.convert(getValue());
-			work.setItemCategory(
-						convert(value, ItemCategory.class)
-					);
+			//value = itemMasterNames.convert(getValue());
+			work.setItem(getValue());
 		}
 
 		// 6. 품목상세
 		if (check("item_type")) {
-			work.setSubject(getValue());
+			work.setItemDetail(getValue());
 		}
 
 		// 7. 건수
 		if (check("count")) {
-			work.setCount(Integer.valueOf(getValue()));
+			//work.setCount(Integer.valueOf(getValue()));
 		}
 
 		// 8. 수량
 		if (check("number")) {
-			work.setNumber(getValue());
+			work.setCount(getValue());
 		}
 
 		// 9. 사이즈
@@ -106,7 +100,8 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 		 * 사이즈 없이 "known"이라고 된 컬럼이 있다.
 		 */
 		if (check("size")) {
-			value = getValue();
+			work.setSize(getValue());
+			/*
 			if(!value.equals("known") || value.contains("-")) {
 				String[] sizes = value.split("-");
 				for(int j = 0; j < 2; j++) {
@@ -118,11 +113,12 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 				Size size = new Size();
 				work.setSize(size);
 			}
+			*/
 		}
 
 		// 11. 단위
 		if (check("unit")) {
-			work.setUnit(getValue());
+			//work.setUnit(getValue());
 		}
 
 		// 12. 메모 (나중에 DB에서 직접 쿼리를 날려 입력하자. 줄바꿈 때문에 CSV에서 에러가 난다.
@@ -133,11 +129,11 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 		
 		// 13. 게시물제목
 		if (check("tag")) {
-			workGroup.setSubject(getValue());
+			//workGroup.setSubject(getValue());
 		}
 		// 제목이 없는 레코드가 있다.
 		else {
-			workGroup.setSubject("제목없음");
+			//workGroup.setSubject("제목없음");
 		}
 
 		
@@ -163,20 +159,18 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 		// 18. 배송 시간
 		if (check("delivery_time")) {
 			value = getValue().replaceAll(" ", "T");
-			work.setDeliveryDate(new DateTime(value).toDate());
+			//work.setDeliveryDate(new DateTime(value).toDate());
 		}
 
 		// 19. 하청업체
 		if (check("subcontract")) {
 			value = subcontractorMasterNames.convert(getValue());
-			work.setSubconstractor(
-						convert(value, Subcontractor.class)
-					);
+			work.setSubcontructor(value);
 		}
 
 		// 20. 조회수
 		if (check("read_count")) {
-			workGroup.setReadCount(Integer.valueOf(getValue()));
+			//workGroup.setReadCount(Integer.valueOf(getValue()));
 		}
 
 		// 21. 재단사이즈
@@ -187,15 +181,15 @@ public class CreatWork extends AbstractPersistentCreator<WorkGroup> {
 				bleedSize = value.split("-");
 				if(bleedSize.length == 2) {
 					Size size = new Size();
-					work.setBleedSize(size);
+					//work.setBleedSize(size);
 				}
 			}
 		}
 
-		return workGroup;
+		return work;
 		
 		} catch (Exception e) {
-			throw new RuntimeException("식별자: " + workGroup.getId() + "  ", e);
+			throw new RuntimeException("식별자: " + work.getId() + "  ", e);
 		}
 	}
 	

@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+
+$placeholder-color: rgb(226, 226, 226);
+
+::-webkit-input-placeholder { color:$placeholder-color !important} /* 웹킷 전용 속성 */
+:-moz-placeholder { color:$placeholder-color !important; opacity:1}/* Mozilla Firefox 4 to 18 */
+::-moz-placeholder { color:$placeholder-color !important; opacity:1} /* Mozilla Firefox 19+ */
+:-ms-input-placeholder { color:$placeholder-color}/* Internet Explorer 10+ */
+
+@import "body";
+@import "span";
+@import "button";
+@import "div";
+@import "dl";
+@import "table";
+@import "ul";
+@import "form";
+@import "img";

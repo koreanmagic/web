@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+
+$prefix: _img-partner;
+
+[class*='#{$prefix}'] {
+  background-image: url('/img/img-partner.png');
+}
+
+$viewText: #{$prefix}-view-text;
+  
+[class*='#{$viewText}'] {
+  display: inline-block;
+  width: 70px;
+  height: 30px;
+}
+ 
+.#{$viewText} {
+  &-default {
+    background-position: 0 0;
+  }
+  &-tel {
+    background-position: 0 -30px;
+  }
+  &-address {
+    background-position: 0 -60px;
+  }
+  &-account {
+    background-position: 0 -90px;
+  }
+  &-manager {
+    background-position: 0 -120px;
+  }
+ }

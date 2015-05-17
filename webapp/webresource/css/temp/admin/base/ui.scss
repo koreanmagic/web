@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+
+[data-href] {
+  cursor: pointer;
+}
+
+
+// 오버레이
+#KScript-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  
+  //포지션 함수를 위한 리셋
+  // overlay에 올라가는 순간 ui-helper-block이 붙여지므로 display:block은 필요없다.
+  #KScript-popup-container > * {
+    margin: 0 auto;
+  }
+
+}
+
+
+.fileTable {
+  
+  // ▒▒▒▒▒▒▒▒▒▒▒▒  정보란 부분  ▒▒▒▒▒▒▒▒▒▒▒▒
+  .info {
+    min-height: 21px;
+    
+    li {
+      display: inline-block;
+      &+li {
+        margin-left: 10px;
+      }
+    }
+    
+    .input {
+      input[type='file'] {
+        display: none;
+        &+label {
+          padding: .2em .5em;
+          border: 1px solid rgb(170,170,170);
+          font-size: 11px;
+          cursor: pointer;
+          &:hover, &:focus {
+            background: rgb(230,230,230);
+          }
+        }
+      }
+    } // .input
+    
+    .length:after {
+      content: "개";
+    }
+  }
+  
+} // .scroll-table
+
+
+
+[class*='ui-scrollTable-'].form, [class*='ui-scrollTable-'].modify {
+  
+  dt {
+    > label {
+      font-weight: normal;
+      color: rgb(100,100,100);
+    }
+  }
+  
+}

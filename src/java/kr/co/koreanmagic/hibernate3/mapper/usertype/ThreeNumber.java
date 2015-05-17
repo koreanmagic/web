@@ -1,32 +1,25 @@
 package kr.co.koreanmagic.hibernate3.mapper.usertype;
 
-import javax.persistence.Embeddable;
 
 public class ThreeNumber {
 
 	private String separator = "-";
+	
 	private String num1;
 	private String num2;
 	private String num3;
-	
-	public ThreeNumber() {
-	}
-	public ThreeNumber(Integer n1, Integer n2, Integer n3) {
-		setNum1(n1.toString());
-		setNum2(n2.toString());
-		setNum3(n3.toString());
-	}
-	public ThreeNumber(String...s) {
-		setNum1(s[0]);
-		setNum2(s[1]);
-		if(s.length > 2)	// 1588-0000 등과 같은 2자리 번호도 있을 수 있다.
-			setNum3(s[2]);
-	}
 	
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
 
+	public ThreeNumber() {}
+	
+	public ThreeNumber(Object...num) {
+		setNum1(num[0].toString());
+		setNum2(num[1].toString());
+		if(num.length == 3) setNum3(num[2].toString());
+	}
 	
 	public String getNum1() {
 		return num1;
@@ -100,9 +93,16 @@ public class ThreeNumber {
 	
 	@Override
 	public String toString() {
-		return getNum1() + separator + getNum2() + separator + getNum3();
+		StringBuilder builder = new StringBuilder("");
+		if(!isEmpty(num1)) builder.append(num1).append(separator);
+		if(!isEmpty(num2)) builder.append(num2).append(separator);
+		if(!isEmpty(num3)) builder.append(num3);
+		return builder.toString();
 	}
 	
+	private boolean isEmpty(String num) {
+		return (num != null && num.length() > 0) ? false : true; 
+	}
 
 }
 	

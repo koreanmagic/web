@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAOA,KAAM;ECasB,sBAAsB,EAAE,GAA4B;EACnD,uBAAuB,EAAE,GAA6B;EACnD,0BAA0B,EAAE,GAAgC;EAC7D,yBAAyB,EAAE,GAA+B",
+"sources": ["../webresource/css/temp/$test.scss","../webresource/css/lib/tools/mixin__setter.scss"],
+"names": [],
+"file": "test.css"
+}

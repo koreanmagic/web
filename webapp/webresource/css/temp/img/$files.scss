@@ -1,0 +1,118 @@
+/*
+SCSS variables are information about icon's compiled state, stored under its original file name
+
+.icon-home {
+  width: $icon-home-width;
+}
+
+The large array-like variables contain all information about a single icon
+$icon-home: x y offset_x offset_y width height total_width total_height image_path;
+
+At the bottom of this section, we provide information about the spritesheet itself
+$spritesheet: width height image $spritesheet-sprites;
+*/
+$hwp-name: 'hwp';
+$hwp-x: 0px;
+$hwp-y: 0px;
+$hwp-offset-x: 0px;
+$hwp-offset-y: 0px;
+$hwp-width: 40px;
+$hwp-height: 40px;
+$hwp-total-width: 80px;
+$hwp-total-height: 80px;
+$hwp-image: '/img/sprite/files.png';
+$hwp: (0px, 0px, 0px, 0px, 40px, 40px, 80px, 80px, '/img/sprite/files.png', 'hwp', );
+$pdf-name: 'pdf';
+$pdf-x: 40px;
+$pdf-y: 0px;
+$pdf-offset-x: -40px;
+$pdf-offset-y: 0px;
+$pdf-width: 40px;
+$pdf-height: 40px;
+$pdf-total-width: 80px;
+$pdf-total-height: 80px;
+$pdf-image: '/img/sprite/files.png';
+$pdf: (40px, 0px, -40px, 0px, 40px, 40px, 80px, 80px, '/img/sprite/files.png', 'pdf', );
+$xls-name: 'xls';
+$xls-x: 0px;
+$xls-y: 40px;
+$xls-offset-x: 0px;
+$xls-offset-y: -40px;
+$xls-width: 40px;
+$xls-height: 40px;
+$xls-total-width: 80px;
+$xls-total-height: 80px;
+$xls-image: '/img/sprite/files.png';
+$xls: (0px, 40px, 0px, -40px, 40px, 40px, 80px, 80px, '/img/sprite/files.png', 'xls', );
+$spritesheet-width: 80px;
+$spritesheet-height: 80px;
+$spritesheet-image: '/img/sprite/files.png';
+$spritesheet-sprites: ($hwp, $pdf, $xls, );
+$spritesheet: (80px, 80px, '/img/sprite/files.png', $spritesheet-sprites, );
+
+/*
+The provided mixins are intended to be used with the array-like variables
+
+.icon-home {
+  @include sprite-width($icon-home);
+}
+
+.icon-email {
+  @include sprite($icon-email);
+}
+*/
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+/*
+The `sprites` mixin generates identical output to the CSS template
+  but can be overridden inside of SCSS
+
+@include sprites($spritesheet-sprites);
+*/
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+
+
+//asdfasdf
+/***** GLOBAL SCSS *****/ 
+@mixin sprites2($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .icon-files-#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+@include sprites2( $spritesheet-sprites );

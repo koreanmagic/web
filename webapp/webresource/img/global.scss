@@ -1,0 +1,12 @@
+
+/***** GLOBAL SCSS *****/ 
+@mixin sprites2($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .icon-{{dir}}-#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+@include sprites2( $spritesheet-sprites );

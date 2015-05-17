@@ -7,11 +7,12 @@ import javax.persistence.Table;
 @Table(name="customers")
 public class Customer extends Partner {
 	
+	public Customer(){}
+	public Customer(Long id){ super(id); }
 	
 	@Override
 	public String toString() {
-		return String.format("[ %s (%s) ]", getName(), getCeoName());
+		return getName();
 	}
-	
 
 }

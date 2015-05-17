@@ -1,0 +1,423 @@
+@charset "UTF-8";
+
+//*******************  페이지 버튼  *******************  //
+._location {
+  
+  ._prev-btn, ._next-btn, ._current-page {
+    position: fixed;
+    margin-top: 70px;
+  }
+  
+  ._prev-btn, ._next-btn {
+    top: 45%;
+    font-size: 65px;
+    
+    i {
+      color: rgb(225,225,225);
+    }
+    
+    a {
+      i {
+        color: rgb(120,120,120);
+        &:hover {
+          color: rgb(80,80,80);
+        }
+        &:active {
+          color: rgb(30,30,30);
+        }
+      }
+    } // a
+  } // ._prev-btn, ._next-btn
+  
+  ._prev-btn {
+    margin-left: -1.2em;
+  }
+  // 오른쪽 버튼 자리 잡기
+  // fixed는 전체 문서를 기준으로 하므로, absolute 설정을 통해 자리를 먼저 잡아준다.
+  ._right-position {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  ._next-btn {
+    margin-left: .5em;
+  }
+  
+  //현재 페이지
+  ._current-page {
+    //top: 50%;
+    left: 25%;
+    z-index: 1000;
+    width: 50%;
+    
+    font-size: 400px;
+    font-family: tahoma;
+    font-weight: bold;
+    opacity: .25;
+    text-align: center;
+  }
+}
+//*******************  페이지 버튼  *******************  //
+
+
+/*
+ * 사용자 요구에 따라 리스트를 펼치는 위젯
+ * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
+ */
+// *********** WRAP **********
+
+
+$item-resource-height: 26px;
+
+._work-container {
+
+  $ui-itemContainer-container-border-color: rgb(230,230,230);
+  position: relative;
+} // ._work-container
+
+._work-wrap {
+  position: relative;
+  margin-top: 1em;      // 각 아이템별 사이 간격
+}
+
+._work {
+  
+  position: relative;
+  padding-bottom: 6px;
+    
+  border: 1px solid rgb(183, 183, 183);
+  border-bottom: 1px solid rgb(184, 184, 184);
+  min-height: 200px;
+  
+  background: rgb(255, 255, 255);
+  
+  @extend %float-extend;
+  
+  .delete {
+    display: none;
+    $delete-height: 26px;
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    
+    width: $delete-height;
+    height: $delete-height;
+    
+    text-align: center;
+    line-height: $delete-height;
+    font-size: $delete-height * .7;
+    color: rgba(0,0,0,.6);
+    background: rgba(0,0,0,.3);
+    
+    cursor: pointer;
+    
+    &:hover {
+      color: rgba(0,0,0,.8);
+      background: rgba(0,0,0,.5);
+    }
+  }
+  
+  
+  // 아이템 엘리먼트에 마우스 올렷을때
+  &:hover {
+    border: $ui-itemContainer-container-hover;
+    
+    // 델리트 버튼에 마우스 오버 했을때
+    &.delete {
+      border: 1px solid rgb(218, 27, 27);
+      outline: 1px solid rgb(218, 27, 27);
+    }
+    
+    // 삭제버튼 활성화
+    .delete {
+      display: block;
+    }
+  } // &:hover
+    
+}// ._list-item-container
+
+  
+
+/* ******************* 데이터 글씨 설정 ******************* */
+._work {
+
+  
+[data-key], .customer-info > dd {
+  color: rgb(85,85,85);
+}
+
+.customer-info > dd, [data-key='item'], [data-key='subcontractor'] {
+  font-family: $special-font-family;
+  font-weight: bold;
+  letter-spacing: -1.3px;
+}
+
+// 내용 옆에 아이콘을 붙이기 위한 기발한 설정!!
+[data-key='item'], [data-key='itemDetail'] {
+  max-width: 92%;
+  box-sizing: border-box;
+}
+[data-key='item'] {
+  margin-bottom: 2px;
+  font-size: 14px;
+  color: rgb(52, 52, 52);
+  
+  cursor: pointer;
+}
+
+[data-key='itemDetail'] {
+  font-size: 11px;
+  color: rgb(199, 97, 44);
+}
+
+[data-key='manager'] {
+  top: -2px;
+  font-weight: normal;
+  color: rgb(170,170,170);
+  // 담당자가 있을 경우
+  &[data-info] {
+    color: rgb(76, 117, 181);
+    font-weight: bold;
+  }
+}
+
+[data-key='manager.position'] {
+  font-size: 11px;
+  color: rgb(76, 117, 181);
+  letter-spacing: -1px;
+}
+
+
+    
+[data-key*='cost'], [data-key*='price'] {
+  font-family: tahoma;
+  font-weight: bold;
+  color: rgb(52, 118, 166);
+        
+  &:after {
+    content: "원";
+    font-weight: normal;
+  }
+  
+  &:empty {
+     &:after {
+       content: "";
+     }
+  }
+}     
+
+[data-key*='cost'] {
+  &:before {
+    content: "제작단가 : ";
+    font-weight: normal;
+  }
+}   
+
+[data-key*='insertTime'] {
+  font-size: 11px;
+  font-family: 'tahoma';
+  color: rgb(150,150,150);
+}
+   
+
+[data-editor], [data-info] {
+  cursor: pointer;
+}
+
+} // ._work
+
+
+.data-row {
+  
+  $height: 17px;
+  padding: 0 8px;
+  height: $height; 
+  
+  dt, dd {
+    height: $height;
+    line-height: $height;
+  }
+  dt {
+    float: left;
+    margin-right: 6px;
+    min-width: 10px;
+    
+    font-size: 11px;
+    color: rgb(171, 171, 171);
+  }
+  dd {
+    overflow: hidden;
+    white-space: nowrap;
+    > span {
+      overflow: hidden;
+      
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .item-tag {
+      position: absolute;
+      margin-top: 3px;
+      margin-left: 3px;
+      font-size: 10px;
+      color: rgb(102, 107, 101);
+    }
+    &.right {
+      text-align: right;
+    }
+    
+  }
+}
+
+// 간격조절
+._item {
+  margin-top: 7px;
+  margin-bottom: 2px;
+}
+
+._item-detail {
+  margin-bottom: 8px;
+}
+
+._price {
+  margin-bottom: 6px;
+}
+
+.item-info {
+    margin-bottom: 8px;
+}
+
+.customer-info {
+  $img-size: 35px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  
+  height: $img-size;
+  
+  dt {
+    height: $img-size;
+    >img {
+      width: $img-size;
+      height: $img-size;
+      border-radius: 5px;
+    }
+  }
+  
+  .customer-name {
+    height: 18px;
+    > span {
+      height: 18px;
+    }
+  }
+}
+
+.work-file {
+  width: 70%;
+  white-space: normal;
+}
+
+.text-box {
+  overflow: auto;
+  width: 200px;
+  padding: .7em;
+  max-height: 160px;
+  
+  line-height: 1.5em;
+}
+
+
+/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 이미지 갤러리 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
+._work-img {
+  height: 100px;
+  
+  text-align: center;
+  background: rgb(230,230,230);
+        
+  ._screen > img {
+    max-height: 130px;
+  }
+  
+} // ._panel
+
+
+
+._work-controller {
+  
+  dd {
+    line-height: normal;
+    > .disable {
+      display: none;
+    }
+    button {
+      line-height: 1em;
+      border: 1px solid rgb(180,180,180);
+    }
+  }
+  
+  
+  [class*='work-type'] {
+    padding: 2px;
+    width: 30px;
+    height: 15px;
+    
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    
+    font-size: 11px;
+    line-height: 11px;
+    text-align: center;
+    color: white;
+    
+    box-sizing: border-box;
+  }
+  .work-type {
+    &-DEFAULT, &-TODAY, &-BUSSY {
+      color: white;
+    }
+    &-DEFAULT {
+      background: rgb(92, 184, 92);
+      border-color: rgb(76, 174, 76);
+    }
+    &-TODAY {
+      background: rgb(66, 139, 202);
+      border-color: rgb(53, 126, 189);
+    }
+    &-BUSSY {
+      background: rgb(217, 83, 79);
+      border-color: rgb(212, 63, 58);
+    }
+  }
+  
+  ._resource-file-refer {
+    cursor: pointer;
+  } 
+  
+  ._state-select {
+    float: right;
+    font-size: 11px;
+    .select-box {
+      right: 0;
+      white-space: nowrap;
+    }
+  }
+  
+  // 참고파일 설정
+  ._pop-file-refer {
+    .size {
+      position: absolute;
+      margin-top: -7px;
+      
+      font-size: 10px;
+      font-family: tahoma;
+      color: rgb(200, 50, 50);
+    }
+  } // ._refer-file
+
+}
+
+
+
+
+
+

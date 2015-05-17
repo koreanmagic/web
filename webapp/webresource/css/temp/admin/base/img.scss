@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+
+$prefix: "_img-static";
+
+[class*='#{$prefix}'] {
+  background-image: url('/img/global-static-img.png');
+}
+
+.#{$prefix} {
+  
+  &-work, &-customer, &-subcontractor {
+    width: 160px;
+    height: 64px;
+  }
+  // 거래처
+  &-work {
+    background-position: 0 -166px;
+  }
+  &-customer {
+    background-position: 0 -38px;
+  }
+  &-subcontractor {
+    background-position: 0 -102px;
+  }
+}
+

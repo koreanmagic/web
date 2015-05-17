@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+.select-file {
+  margin-top: 30px;
+  @extend %float-extend;
+  > * {
+    float: left;
+  }
+}

@@ -4,7 +4,6 @@ import kr.co.koreanmagic.web.support.nav.Navigator;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component

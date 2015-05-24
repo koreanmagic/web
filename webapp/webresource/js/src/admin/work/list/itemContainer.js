@@ -12,33 +12,35 @@ define([
 	
 	// 전역 변수
 	// 현재 활성화된 widget 객체가 여기에 등록된다.
-	var activeList = [],
-		widgetSelectorPrefix,
+	var widgetSelectorPrefix,
 		widgetFullName,
-		expando = new Date() * 1,
-		uuid = 1,
-		rsortnum = /\s(\d+)$/,
-		customerSelectKeyword,
 		
-		convertor = Utils.dataConvert(),
+		convertor = Utils.dataConvert(),	// 기본적인 데이터 컨버터
 		
 		defaultTypeHandlers = {
-			"default": function( name, v ) {
+			"default": function( v, name, values, ele ) {
 				var ele;
 				v = v ? v : "";
-				ele = getEle.call(this, name);
-				ele.length && ele.text( convertor(v, name) );   
+				ele.length && ele.text( convertor(values, name) );   
 			},
-			"memo": function(name, v) {
-				ele = getEle.call(this, name);
-				ele.length && ele.html( convertor(v, name) );
+			"memo": function(v, name, values, ele) {
+				ele.length && ele.html( convertor(values, name) );
 			},
-			"subcontractor": function( name, v ) {
+			"fileType": function( v, name, values, ele ) {
+				var url = '/resource/' + values['parentPath'] + '/' + values['saveName'] + '.' + values['fileType'];
+					className = 'icon-static-file-' + v;
+				
+				url += '?filename=' + values['filename'];
+				
+				ele[0].className = '';
+				ele.addClass(className).attr('href', url);
+			},
+			"subcontractor": function( v, name, values, ele ) {
 				this.find("[data-info='subcontractor']").attr("data-info-key", v.id);
-				getEle.call(this, name).text( v.name );
+				ele.text( v.name );
 			},
-			"manager": function( name, v ) {
-				var manager = getEle.call(this, "manager"),
+			"manager": function( v, name, values, ele ) {
+				var manager = ele,
 					position = getEle.call(this, "manager.position");
 					
 				if( v != null ) {
@@ -53,13 +55,24 @@ define([
 		}
 		;
 	
-	// data-key 어트리뷰트가 핵심 마킹이다.  실제 값을 입력해주는 공통 메서드
+	// data-name 어트리뷰트가 핵심 마킹이다.  실제 값을 입력해주는 공통 메서드
 	function setValues( values, handlers ) {
 		var self = this;
 		handlers = handlers || defaultTypeHandlers;
 		$.each(values, function( name, value ) {
-			getHandler(name, handlers).call(self, name, value);
+			getHandler(name, handlers).call( self, value, name, values, getEle.call(self, name));
 		});
+	}
+	
+	
+	// data-name 어트리뷰트가 핵심 마킹이다.  실제 값을 입력해주는 공통 메서드
+	function setValuesFactory( handlers ) {
+		handlers = $.extend({}, defaultTypeHandlers, handlers);
+		
+		return function( values ) {
+			setValues.call(this, values, handlers);
+		};
+		
 	}
 	
 	function getHandler( name, handlers ) {
@@ -70,41 +83,12 @@ define([
 	};
 	
 	function getEle( name ) {
-		return this.find("[data-key='"+ name + "']");
+		return this.find("[data-name='"+ name + "']");
 	};
 	
 	
-	
-	function ajax( url, data, handlers, method ) {
-		var widget = this;
-		
-		if(handlers === undefined) {
-			handlers = data;
-			data = undefined;
-		}
-		handlers = (typeof handlers === "string") ?
-					this.constructor.prototype[handlers] :
-					handlers;
-		// one Handler == success
-		if($.isFunction(handlers)) {
-			handlers = { success: handlers };
-		}
-		return jQuery.ajax( jQuery.extend({
-				url: url,
-				type: method,		// GET, POST
-				dataType: "json",
-				//processData: false,
-				//traditional: true,
-				data: data,
-			}, jQuery.isPlainObject( url ) && url ) )
-			.success(function(e) { (handlers.success || $.noop).apply(widget, arguments); })
-			.fail(function(e) { (handlers.error || $.noop).apply(widget, arguments); })
-			.done(function(e) { (handlers.complete || $.noop).apply(widget, arguments); });
-	}	
-	
 	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 위젯 옵션  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
 	var widgetOptions =	{
-		defaultSort: "_customer",
 	},
 	
 	// -------------------- ★★★ 위젯 확장 ★★★  --------------------
@@ -151,6 +135,7 @@ define([
 		},
 		
 		_init: function() {
+			
 		},
 		
 		// 모두 삭제
@@ -190,13 +175,6 @@ define([
 	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 아이템 관리 확장메서드  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
 	{
 		
-		getJSON: function( url, data, handlers ) {
-			return ajax.call(this, url, data, handlers, "GET" );
-		},
-		
-		postJSON: function( url, data, handlers ) {
-			return ajax.call(this, url, data, handlers, "POST" );
-		},
 		
 	}, // advancedPrototype
 	
@@ -280,7 +258,6 @@ define([
 			});
 			this._on( eventObj );
 			
-			
 			eventObj = {};
 			$.each(this._globalEvent, function(selector, handler) {
 				// 오브젝트의 value가 함수라면 위젯 이벤트로 등록
@@ -317,7 +294,6 @@ define([
 		this.data("instance", this);
 		
 		this.create();
-		this.init();
 	}
 	
 	Item.fn = Item.prototype = $();		// jQuery 객체를 상속한다.
@@ -338,24 +314,82 @@ define([
 			this.id = this.access("workId");		// DB primary Key
 			this.customer = this.access("customerId");
 			
+			this.resourceFile();
+			this.confirmFile();
 		},
 		
-		getValueEle: function() {
-			var elems = {};
-			$.each(this.find("[data-key]"), function( index, ele ){
-				Utils.createObjByName(elems, ele.getAttribute("data-key"), ele);
-			});
-			return elems;
-		},
 		
 		// 삭제될때 호출
 		destroy: function() {
 			return this;
 		},
 		
-		// 모든 정보 새로고침
-		refresh: $.noop,
 		
+		// 모든 정보 새로고침
+		refresh: function() {
+			var self = this;
+			
+			$.getJSON('/admin/work/editor/get/' + this.id)
+			.success(function( json ) {
+				self.setValue(json);
+				self.resourceFile();
+				self.confirmFile();
+			});
+		},
+		
+		
+		// 참고파일이 있는지 확인하고 버튼 생성
+		resourceFile: function() {
+			var self = this,
+				div = this.find("._pop-file-refer");
+			
+			$.getJSON("/admin/work/get/resource/size/" + this.id)
+				.success(function( data ) {
+					if( data.size > 0 ) {
+						div.removeClass("disable");
+						div.find(".size").text(data.size);
+					} 
+					else div.addClass("disable");
+				});
+		},
+		
+		// 인쇄파일이 있는지 확인하고 있으면 버튼 생성
+		confirmFile: function() {
+			var self = this,
+				btn = self.find('.btn-work-file'),
+				target = $( btn.data('uiDropdown') )
+				;
+				
+			$.getJSON( '/admin/work/editor/resource/list',
+					{"work": this.id, 'serviceType': 'workConfirmFile'}
+			)
+			.success(function( data ) {
+				data = data[0];
+				if( data ) {
+					btn.removeClass('disable');
+					
+					// 실제 다운받게 될 파일명
+					data['filename'] = self.id + '_' + self.getValue(['customer', 'item']).join('_') 
+												+ '.' + data['fileType'];  
+					
+					setValues.call(target, data);
+					
+				} else {
+					btn.addClass('disable');
+				}
+			});
+		},
+		
+		
+		draftFile: function() {
+			var self = this,
+			btn = self.find('.btn-work-file'),
+				target = $( btn.data('uiDropdown') )
+				;
+		},
+		
+		// 에디터 열기
+		// 1) 먼저 work 하이버네이트 프록시를 세션에 저장한다.
 		editor: function( option ) {
 			var item = this,
 				widget = this.parent;
@@ -366,28 +400,26 @@ define([
 					option = $.extend( option, {"item": item} );
 					widget.editor(option, item);
 				});
-			
 		},
 		
-		URL: function( url ) {
-			return url + this.id;
-		},
-		
-		typeHandlers: $.extend( {}, defaultTypeHandlers,
-			{
-				"afterProcess": function( name, v ) {
+		setValue: setValuesFactory({
+				"afterProcess": function( v, name, values ) {
 					v ? 
 						getEle.call(this, 'itemDetail').next().removeClass('ui-helper-hidden') :
 						getEle.call(this, 'itemDetail').next().addClass('ui-helper-hidden');
 				}, // afterProcess
 				
-				"memo": function(name, v) {
-					v ? this.find('.btn-memo').removeClass('disable') : this.find('.btn-memo').addClass('disable');
-					defaultTypeHandlers.memo.call(this, name, v);
+				"memo": function( v, name, values ) {
+					if(v) {
+						this.find('.btn-memo').removeClass('disable');
+						defaultTypeHandlers.memo.apply(this, arguments);
+					} else {
+						this.find('.btn-memo').addClass('disable');
+					}
 				}, // memo
 				
-				"delivery": function(name, v) {
-					var className = ['fa-male', 'fa-cubes', 'fa-truck'],
+				"delivery": function( v, name, values ) {
+					var className = ['fa-cubes', 'fa-male', 'fa-truck'],
 						ordinal = v.ordinal,
 						ele = getEle.call(this, name);
 					
@@ -402,37 +434,17 @@ define([
 			}
 		),
 		
-		values: function( values ) {
-			var self = this,
-				getter = function( ele ) {
-					return ele.textContent;
-				};
-				
-			// 값 입력
-			if( values ) setValues.call(this, values, this.typeHandlers);
-			else
-				Utils.mapCopy( this.getValueEle(), getter );
+		// 이름리스트를 배열로 입력하며, 배열로 값을 받고, 객체로 입력하면 객체로 받는다.
+		getValue: function( names, context ) {
+			var self = context || this;
 			
-			return values;
+			$.each(names, function( i, name ) {
+				names[i] = getEle.call(self, name).text();
+			});
+			
+			return names;
 		},
 		
-		// 위젯의 registerHandler 메서드의 편의함수
-		setClass: function( classNames, add ) {
-			var l = classNames.length;
-			
-			if( add !== false)
-				while(l--)
-					this.addClass( classNames[l] );
-					
-			else
-				while(l--)
-					this.removeClass( classNames[l] );
-		},
-		
-		getJSON: widgetPrototype.getJSON,
-		postJSON: widgetPrototype.postJSON,
-		
-		init: $.noop,				// 초기화 메서드. 
 	});
 	
 	
@@ -450,10 +462,5 @@ define([
 			
 		return value;
 	};
-	
-	function log( msg ) {
-		console.log( msg );
-		return msg;
-	}
 	
 });

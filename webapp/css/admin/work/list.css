@@ -424,47 +424,47 @@
       display: block; }
 
 /* ******************* 데이터 글씨 설정 ******************* */
-._work [data-key], ._work .customer-info > dd {
+._work [data-name], ._work .customer-info > dd {
   color: #555555; }
-._work .customer-info > dd, ._work [data-key='item'], ._work [data-key='subcontractor'] {
+._work .customer-info > dd, ._work [data-name='item'], ._work [data-name='subcontractor'] {
   font-family: "맑은 고딕", "Apple SD Gothic Neo", Sans-serif;
   font-weight: bold;
   letter-spacing: -1.3px; }
-._work [data-key='item'], ._work [data-key='itemDetail'] {
+._work [data-name='item'], ._work [data-name='itemDetail'] {
   max-width: 92%;
   box-sizing: border-box; }
-._work [data-key='item'] {
+._work [data-name='item'] {
   margin-bottom: 2px;
   font-size: 14px;
   color: #343434;
   cursor: pointer; }
-._work [data-key='itemDetail'] {
+._work [data-name='itemDetail'] {
   font-size: 11px;
   color: #c7612c; }
-._work [data-key='manager'] {
+._work [data-name='manager'] {
   top: -2px;
   font-weight: normal;
   color: #aaaaaa; }
-  ._work [data-key='manager'][data-info] {
+  ._work [data-name='manager'][data-info] {
     color: #4c75b5;
     font-weight: bold; }
-._work [data-key='manager.position'] {
+._work [data-name='manager.position'] {
   font-size: 11px;
   color: #4c75b5;
   letter-spacing: -1px; }
-._work [data-key*='cost'], ._work [data-key*='price'] {
+._work [data-name*='cost'], ._work [data-name*='price'] {
   font-family: tahoma;
   font-weight: bold;
   color: #3476a6; }
-  ._work [data-key*='cost']:after, ._work [data-key*='price']:after {
+  ._work [data-name*='cost']:after, ._work [data-name*='price']:after {
     content: "원";
     font-weight: normal; }
-  ._work [data-key*='cost']:empty:after, ._work [data-key*='price']:empty:after {
+  ._work [data-name*='cost']:empty:after, ._work [data-name*='price']:empty:after {
     content: ""; }
-._work [data-key*='cost']:before {
+._work [data-name*='cost']:before {
   content: "제작단가 : ";
   font-weight: normal; }
-._work [data-key*='insertTime'] {
+._work [data-name*='insertTime'] {
   font-size: 11px;
   font-family: 'tahoma';
   color: #969696; }
@@ -491,10 +491,11 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       max-width: 100%; }
-    .data-row dd .item-tag {
+    .data-row dd .item-tag, .data-row dd .today-work {
       position: absolute;
+      margin-left: 3px; }
+    .data-row dd .item-tag {
       margin-top: 3px;
-      margin-left: 3px;
       font-size: 10px;
       color: #666b65; }
     .data-row dd.right {
@@ -514,7 +515,7 @@
   margin-bottom: 8px; }
 
 .customer-info {
-  margin-top: 6px;
+  margin-top: 15px;
   margin-bottom: 12px;
   height: 35px; }
   .customer-info dt {
@@ -529,8 +530,12 @@
       height: 18px; }
 
 .work-file {
-  width: 70%;
+  padding: .1em;
+  width: 250px;
   white-space: normal; }
+  .work-file > a {
+    display: block;
+    margin: 7px auto; }
 
 .text-box {
   overflow: auto;
@@ -544,9 +549,15 @@
   height: 100px;
   text-align: center;
   background: #e6e6e6; }
-  ._work-img ._screen > img {
-    max-height: 130px; }
+  ._work-img > img {
+    height: inherit; }
 
+._work-controller .editor {
+  display: none; }
+._work-controller.editor dd * {
+  display: none; }
+._work-controller.editor dd > button:first-child, ._work-controller.editor dd .editor {
+  display: inline-block; }
 ._work-controller dd {
   line-height: normal; }
   ._work-controller dd > .disable {

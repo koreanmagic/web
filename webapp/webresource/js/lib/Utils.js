@@ -39,42 +39,48 @@ define([
 	var Utils = {},
 	
 		convertTypes = {
-		"tel": function( item ) {
-				var v = item.num1 + "-" + item.num2 + "-" + item.num3;
+		"tel": function( value, name, values ) {
+				var v = value.num1 + "-" + value.num2 + "-" + value.num3;
 				return v.length > 2 ? v : "";
 			},
 		"fax": "tel",
 		"mobile": "tel",
 		"bizNum": "tel",
-		"email": function( item ) {
-			var v = item.id + "@" + item.host;
+		"email": function( value, name, values ) {
+			var v = value.id + "@" + value.host;
 			return v.length > 1 ? v : "";
 		},
-		"bankName": function( item ) {
-			return item.name;
+		"bankName": function( value, name, values ) {
+			return value.name;
 		},
-		"web": function( item ) {
-			return item.url;
+		"web": function( value, name, values ) {
+			return value.url;
 		},
-		"webhard": function( item ) {
-			return item.userId || " / " + item.password || "" ;
+		"webhard": function( value, name, values ) {
+			return value.userId || " / " + value.password || "" ;
 		},
-		"insertTime": function( item ) {
-			return new Date(item).format("yyyy-MM-dd HH:mm");
+		"insertTime": function( value, name, values ) {
+			return new Date(value).format("yyyy-MM-dd HH:mm");
 		},
 		"updateTime": "insertTime",
-		"price": function( item ) {
-			return item.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		"uploadTime": "insertTime",
+		"price": function( value, name, values ) {
+			return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 		},
 		"cost": "price",
-		"workType": function( item ) {
-			return item.value;
+		"workType": function( value, name, values ) {
+			return value.value;
 		},
 		"delivery": "workType",
-		"memo": function( item ) {
-			return item.replace(/\n/g, '<BR />');
+		"memo": function( value, name, values ) {
+			return value.replace(/\n/g, '<BR />');
 		},
-		
+		'originalName': function( value, name, values ) {
+			return value + '.' + values['fileType'];
+		},
+		'fileSize': function( value, name, values ) {
+			return Utils.byteCalculation(value);
+		},
 	};
 	
 	
@@ -139,11 +145,11 @@ define([
 			var types = options ? $.extend( {}, convertTypes, options ) : convertTypes,
 				handler, value;
 			return function( item, type ) {
-				// item은 객체이거나 리터럴값
-				value = item; //$.isPlainObject(item) ? item[type] : item;
+				// item은 객체
+				value = item[type];
 				if( !value ) return "";
 				if( handler = types[type] ) {
-					value = (typeof handler === 'string') ? types[handler].call(null, value) : handler.call(null, value);
+					value = ( (typeof handler === 'string') ? types[handler] : handler).call(value, value, type, item);
 				}
 				return value;
 			};
@@ -214,6 +220,16 @@ define([
 			});
 		},
 		
+		
+		byteCalculation : function byteCalculation(bytes) {
+		  var bytes = parseInt(bytes),
+		      s = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
+		      e = Math.floor(Math.log(bytes)/Math.log(1024));
+		       
+		  if(e == "-Infinity") return "0 "+s[0]; 
+		  else return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+		},
+				
 	};
 	
 	return Utils;

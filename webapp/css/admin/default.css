@@ -268,6 +268,24 @@
   .input-group.email ~ .input-group {
     width: 13em; }
 
+.item-category {
+  position: relative; }
+  .item-category ._item-names {
+    padding: .5em;
+    width: 100%;
+    box-sizing: border-box; }
+    .item-category ._item-names > ul {
+      float: left;
+      text-align: center; }
+      .item-category ._item-names > ul li {
+        padding: .3em .8em; }
+        .item-category ._item-names > ul li:hover {
+          background: whitesmoke; }
+        .item-category ._item-names > ul li.header {
+          font-weight: bold; }
+          .item-category ._item-names > ul li.header:hover {
+            background: none; }
+
 .scroll-table .modify .form, .scroll-table .upload .form {
   padding: .3em;
   border: 1px solid #bebebe;

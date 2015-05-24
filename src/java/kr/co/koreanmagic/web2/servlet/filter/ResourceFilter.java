@@ -24,6 +24,7 @@ public class ResourceFilter implements Filter {
 	}
 
 	
+	// ?filename={name.type}
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
@@ -43,21 +44,10 @@ public class ResourceFilter implements Filter {
 	}
 	
 	private String resolveFileName(HttpServletRequest request) {
-		String name = request.getParameter("name");
-		String type = request.getParameter("type");
+		String name = request.getParameter("filename");
 		
 		if(name == null) {
 			name = getFileName( request.getServletPath() );
-		}
-		
-		if( type != null ) {
-			switch(type) {
-				// refer일 경우 뒤에 붙어있는 해시를 지운다.
-				case "refer":
-					return name.replaceFirst("-[^-]+(?=\\.\\w+$)", "");
-				default :
-					return name;
-			}
 		}
 		
 		return name;
@@ -67,6 +57,7 @@ public class ResourceFilter implements Filter {
 	private String getFileName( String servletPath ) {
 		return servletPath.substring( servletPath.lastIndexOf("/") + 1, servletPath.length() );
 	}
+	
 
 	@Override
 	public void destroy() {

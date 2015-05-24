@@ -52,6 +52,9 @@
 </div>
 
 
+<div id="test">
+	<input id="testInput" />
+</div>
 
 <!-- 작업State 총괄 현황표 -->
 	<div class="_item-notice fluid-line">
@@ -96,8 +99,8 @@
 
 <!-- [매크로] 참고파일 -->
 <#macro referFile items><#compress>
-<div class="_resource" tabindex="-1">
-	<span class="tooltip-target" tabindex="-1">참고</span>
+<div class="_resource">
+	<span class="tooltip-target">참고</span>
 	<div class="tooltip-content tooltip-fixed">
     <#list items.resourceFile as r>
       <ul>
@@ -126,8 +129,8 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 
 <#-- 배송정보 아이콘 작성 매크로 -->
 <#macro delivery num><#compress>
-	<#if num == 0>fa-male
-	<#elseif num == 1>fa-cubes
+	<#if num == 0>fa-cubes
+	<#elseif num == 1>fa-male
 	<#else>fa-truck
 	</#if>
 </#compress></#macro>
@@ -138,7 +141,7 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 	<!-- 작업카드 루프 -->
 	<#list boardList.list as v>
 	<#assign selector = "[data-work-id='" + v.id + "']" />
-	<div class="_work-wrap span-2" data-work-id="${v.id}" data-customer-id="${v.customer.id}" tabindex="-1">
+	<div class="_work-wrap span-2" data-work-id="${v.id}" data-customer-id="${v.customer.id}">
 		
 		<!-- 작업 정보 컨테이너 -->
 		<div class="_work tooltip-focus">
@@ -149,19 +152,22 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 			
 			<!----------------- 시안 이미지 ----------------->
 			<div class="_work-img">
+				<div></div>
 			</div>
 			
 			
 			<dl class="customer-info data-row">
 				<dt><img src="/img/customer-who.gif"></dt>
-				<dd class="customer-name"><span class="h2" <@dropdown ".dropdown-customer" "lb"/>>${v.customer.name}</span></dd>
+				<dd class="customer-name">
+					<span class="h2" <@dropdown ".dropdown-customer" "lb"/> data-name="customer">${v.customer.name}</span>
+				</dd>
 				<dd>
 					<#if v.manager?exists>
-						<span class="manager" data-info="manager" data-info-key="${v.manager.id}" data-key="manager">${v.manager.name}</span>
-						<span data-key="manager.position">${v.manager.position?default('')}</span>
+						<span class="manager" data-info="manager" data-info-key="${v.manager.id}" data-name="manager">${v.manager.name}</span>
+						<span data-name="manager.position">${v.manager.position?default('')}</span>
 					<#else>
-						<span class="manager" data-key="manager">담당자 없음</span>
-						<span data-key="manager.position"></span>
+						<span class="manager" data-name="manager">담당자 없음</span>
+						<span data-name="manager.position"></span>
 					</#if>
 				</dd>
 			</dl>			
@@ -172,52 +178,53 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 
 				<dd class="btn-group small">
 					
-					<button class="work-type-${v.workType.name()}" data-key="workType" <@dropdown ".dropdown-workTypes" "cb+3"/>>
+					<button class="work-type-${v.workType.name()}" data-name="workType" <@dropdown ".dropdown-workTypes" "cb+3"/>>
 						${v.workType}
 					</button> 
 					
-					<button class="fa <@delivery num=v.delivery.ordinal() />" data-key="delivery" data-editor="4" alt="${v.delivery}" data-ui-tooltip="lt-3"></button>
+					<button class="fa <@delivery num=v.delivery.ordinal() />" data-name="delivery" data-editor="4" alt="${v.delivery}" data-ui-tooltip="lt-3"></button>
 					
 					<!-- 메모 -->
-					<button class="fa fa-pencil-square-o btn-memo<#if !v.memo?has_content> disable</#if>" <@dropdown "[data-key='memo']" "lb+4"/> alt="메모" data-ui-tooltip="lt-3">
+					<button class="fa fa-pencil-square-o btn-memo<#if !v.memo?has_content> disable</#if>" <@dropdown ".data-memo" "lb+4"/> alt="메모" data-ui-tooltip="lt-3">
 					</button>
 
 					<!-- 참고파일 -->
 					<button class="fa fa-folder-open _pop-file-refer disable" alt="참고파일" data-ui-tooltip="lt-3" data-editor="3">
-						<#-- <span class="size">12</span> -->
 					</button>
 					
 					<!-- 인쇄 -->
-					<button class="fa fa-floppy-o" alt="인쇄파일" data-ui-tooltip="lt-3" <@dropdown ".work-file" "lb+4" />>
-						<#-- <span class="size">12</span> -->
+					<button class="fa fa-floppy-o btn-work-file disable" alt="인쇄파일" data-ui-tooltip="lt-3" <@dropdown ".work-file" "lb+4" />>
 					</button>
-										
+					
+					<!-- 인쇄파일 등록 -->
+					<button class="fa fa-floppy-o editor" alt="인쇄파일 등록" data-ui-tooltip="lt-3" <@dropdown ".confirm-upload" "lb+3"/>>
+					</button>
+					
 				</dd>
 				
 				<dd class="_state-select">
-						<span tabindex="-1" <@dropdown ".dropdown-state" "rb"/>>${v.workState.name} <i class="fa fa-caret-down"></i></span>
+						<span <@dropdown ".dropdown-state" "rb"/>>${v.workState.name} <i class="fa fa-caret-down"></i></span>
 				</dd>
 			</dl>
 			
 			
-			<#if (.now?long - v.insertTime?long) < (1000*60*60*24)> <#-- 딱 하루 -->
-				<span class="today-work"><i class="fa fa-plus-circle"></i></span>
-			</#if>
-			
-
 			
 			<!----------------- 작업 세부정보 ----------------->
 			<dl class="data-row _item">
 				<dt></dt>
 				<dd>
-					<span data-key="item" data-info="work" data-info-key="${v.id}">${v.item?default('')}</span></dd>
+					<span data-name="item" data-info="work" data-info-key="${v.id}">${v.item?default('')}</span>
+					<#if (.now?long - v.insertTime?long) < (1000*60*60*24)> <#-- 딱 하루 -->
+					<i class="today-work"><img src="/img/new.gif"></i>
+					</#if>
+				</dd>
 			</dl>
 			
 			<dl class="data-row _item-detail">
 				<dt></dt>
 				<dd>
-					<span data-key="itemDetail">${v.itemDetail?default('')}</span>
-					<i class="item-tag fa fa-tags<#if !v.afterProcess?has_content> ui-helper-hidden</#if>" <@dropdown "[data-key='afterProcess']" "lb+3"/> alt="후가공" data-ui-tooltip="lt-3"></i>
+					<span data-name="itemDetail">${v.itemDetail?default('')}</span>
+					<i class="item-tag fa fa-tags<#if !v.afterProcess?has_content> ui-helper-hidden</#if>" <@dropdown "[data-name='afterProcess']" "lb+3"/> alt="후가공" data-ui-tooltip="lt-3"></i>
 				</dd>
 			</dl>
 			
@@ -226,19 +233,19 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 			<dl class="data-row">
 				<dt>크기</dt>
 				<dd>
-					<span data-key="size" data-editor="0">${v.size?default('')}</span>
+					<span data-name="size" data-editor="0">${v.size?default('')}</span>
 				</dd>
 			</dl>
 			<dl class="data-row">
 				<dt>수량</dt>
 				<dd>
-					<span data-key="count">${v.count?default('')}</span>
+					<span data-name="count">${v.count?default('')}</span>
 				</dd>
 			</dl>
 			<dl class="data-row _price">
 				<dt>금액</dt>
 				<dd>
-					<span data-key="price">${v.price?default('')}</span>
+					<span data-name="price">${v.price?default('')}</span>
 				</dd>
 			</dl>
 			
@@ -246,9 +253,9 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 			
 			<!----------------- 기타정보 ----------------->
 			<dl class="data-row">
-				<dt data-key="insertTime">${v.insertTime?string('yyyy-MM-dd HH:mm')}</dt>
+				<dt data-name="insertTime">${v.insertTime?string('yyyy-MM-dd HH:mm')}</dt>
 				<dd class="right">
-					<span data-key="subcontractor" <@dropdown ".dropdown-subcontractor" "rb" />>${v.subcontractor.name}</span>
+					<span data-name="subcontractor" <@dropdown ".dropdown-subcontractor" "rb" />>${v.subcontractor.name}</span>
 				</dd>
 			</dl>
 			
@@ -281,26 +288,35 @@ data-ui-dropdown="${selector} ${class}" data-ui-option="${position}"
 				</#list>
 			</ul>
 			
-			<div class="ui-helper-hidden drop-box work-file">
-				<a class="zip" href="#"></a>
-				<dl class="data-row">
-					<dt><i class="fa fa-signal"></i></dt>
-					<dd>1,245KB</dd>
-				</dl>
-				<dl class="data-row">
-					<dt><i class="fa fa-clock-o"></i></dt>
-					<dd>2015-05-16 am8:40</dd>
-				</dl>
-				<span>이 파일은 여러개의 파일의 묶음입니다.</span>
+			<#-- 인쇄파일 올리기 -->
+			<div class="ui-helper-hidden drop-box confirm-upload">
+				<input type="file" name="file"><button class="ui-helper-hidden">업로드</button>
 			</div>		
 			
-			<div class="drop-box" data-key="memo">
-				<div class="text-box">
+			<div class="ui-helper-hidden drop-box work-file">
+				<a href="#" data-name="fileType"></a>
+				<dl class="data-row">
+					<dt>파일명</dt>
+					<dd data-name="originalName"></dd>
+				</dl>
+				<dl class="data-row">
+					<dt>사이즈</dt>
+					<dd data-name="fileSize"></dd>
+				</dl>
+				<dl class="data-row">
+					<dt>등록일</dt>
+					<dd data-name="uploadTime"></dd>
+				</dl>
+				<span data-name="memo"></span>
+			</div>		
+			
+			<div class="drop-box data-memo ui-helper-hidden">
+				<div class="text-box" data-name="memo">
 					<#if v.memo?has_content>${v.memo?replace("\n", "<BR />")}</#if>
 				</div>
 			</div>
 			
-			<div class="drop-box" data-key="afterProcess">
+			<div class="drop-box ui-helper-hidden" data-name="afterProcess">
 				<div class="text-box">
 					<#if v.afterProcess?has_content>${v.afterProcess}</#if>
 				</div>

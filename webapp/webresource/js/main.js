@@ -19,17 +19,23 @@ require.config({
         'utils': 'lib/Utils',
         'ui': 'lib/ui',
         'component': 'lib/component',
+        'json': 'src/json',
         
         'text': 'https://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min',
         'css': 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.5/css.min',
-        'json': 'https://cdnjs.cloudflare.com/ajax/libs/requirejs-plugins/1.0.3/json.min',
+        '#json': 'https://cdnjs.cloudflare.com/ajax/libs/requirejs-plugins/1.0.3/json.min',
     },
     urlArgs : 'ts=' + (new Date()).getTime(),
 });
 
 
+
 // 1) jquery를 미리 로드한다.
-require(['jquery', 'json!files.json'], function($, files) {
+require([
+	'jquery',
+	'#json!files.json',
+],
+function($, files) {
 	
 	if(files.indexOf(moduleId) !== -1) {
 		// 1) 각 path에 해당하는 메인을 호출한다.

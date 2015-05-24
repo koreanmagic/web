@@ -2,12 +2,14 @@ package kr.co.koreanmagic.service;
 
 import java.beans.Transient;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import kr.co.koreanmagic.commons.KoDateUtils;
 import kr.co.koreanmagic.commons.KoStringUtils;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
@@ -20,7 +22,6 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Component
+@SuppressWarnings("unchecked")
 public class WorkService extends GenericService<Work, String> {
 
 	@Autowired WorkResourceFileService resourceService;
@@ -88,11 +90,12 @@ public class WorkService extends GenericService<Work, String> {
 	}
 	
 	
-	
+	@Transactional(readOnly=true)
 	public Object[] getWorkList(Criterion method, PagingQuery paging) {
 		return getWorkList(method, paging.getStart(), paging.getLimit(), paging.getOrder());
 	}
 	
+	@Transactional(readOnly=true)
 	public Object[] getWorkList(Criterion method, int start, int limit, String order) {
 		
 		Object[] result = new Object[2];
@@ -108,12 +111,61 @@ public class WorkService extends GenericService<Work, String> {
 		return result; 
 	}
 	
+	
+	
+	@Transactional(readOnly=true)
 	public Criteria listCriteria() {
 		return getDao().criteria()
-				.createAlias("customer", "c", CriteriaSpecification.INNER_JOIN)
-				.createAlias("subcontractor", "s", CriteriaSpecification.INNER_JOIN)
-				.createAlias("manager", "m", CriteriaSpecification.LEFT_JOIN);
+				.setFetchMode("customer", FetchMode.JOIN)
+				.setFetchMode("subcontractor", FetchMode.JOIN)
+				.setFetchMode("manager", FetchMode.JOIN)
+				;
 	}
+	
+	
+	// 기준 날짜에서 월 빼거나 더하기
+	@Transactional(readOnly=true)
+	public Object[] getListByMonth(WorkState state, LocalDateTime from, int months, PagingQuery paging) {
+		LocalDateTime to = null;
+		from = from == null ? LocalDateTime.now() : from;
+		
+		if(months < 0) {
+			to = from;
+			from = to.minusMonths( -(months));
+		} else {
+			to = from.plusMonths(months);
+		}
+		
+		return getListByDate(state,
+										KoDateUtils.localDateTimeToDate(from), 
+										KoDateUtils.localDateTimeToDate(to), 
+										paging
+									);
+	}
+	
+	// 기준 날짜에서 일수 빼거나 더하기
+	@Transactional(readOnly=true)
+	public Object[] getListByDays(WorkState state, LocalDateTime from, int days, PagingQuery paging) {
+		LocalDateTime to = null;
+		from = from == null ? LocalDateTime.now() : from;
+		
+		if(days < 0) {
+			to = from;
+			from = to.minusDays( -(days));
+		} else {
+			to = from.plusDays(days);
+		}
+		return getListByDate(state,
+										KoDateUtils.localDateTimeToDate(from), 
+										KoDateUtils.localDateTimeToDate(to), 
+										paging
+									);
+	}
+	
+	public Object[] getListByDate(WorkState state, Date from, Date to, PagingQuery paging) {
+		return getWorkList(Restrictions.between("insertTime", from, to), paging);
+	}
+	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▲ boardList ▲ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 
 	
@@ -133,6 +185,8 @@ public class WorkService extends GenericService<Work, String> {
 	public List<Long> getStateCountByDate() {
 		return getStateCountByDate(new Date());
 	}
+	
+// eq-같다  bt-사이값  nb-사이값제외  ge-이상  le-이하  gt-초과  lt-미만  ne-같지않다 
 	@Transactional
 	public List<Long> getStateCountByDate(Date date) {
 		return currentSession()
@@ -141,7 +195,7 @@ public class WorkService extends GenericService<Work, String> {
 											+ "ON w.state = s.id AND w.stateTime > :date "
 											+ "GROUP BY s.id")
 				.addScalar("count", LongType.INSTANCE)
-				.setDate("date", date)
+				.setTimestamp("date", date )
 				.list();
 	}
 	@Transactional

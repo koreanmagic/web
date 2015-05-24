@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class GenericService<T, P extends Serializable> implements Service<T, P> {
 	
 	private GeneralDao<T, P> dao;
-	private Map<String, PropertyDescriptor> descriptors;
 	private String tableName;
 	
 	protected void setDao(GeneralDao<T, P> dao) {
@@ -59,109 +58,8 @@ public abstract class GenericService<T, P extends Serializable> implements Servi
 		Class<T> clazz = KoReflectionUtils.getActualType(getClass(), 0);
 		setDao(new GeneralDao<T, P>(clazz, factory));
 		
-		descriptors = new HashMap<>(); 
-		for(PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
-			descriptors.put( descriptor.getName(), descriptor );
-		}
-		
 		this.tableName = clazz.getAnnotation(Table.class).name();
 	}
-	
-	public Map<String, PropertyDescriptor> getDescriptors() {
-		return this.descriptors;
-	}
-	
-	
-	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▼ 리플렉션으로 Data Map 가지고 오기 ▼  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	@Transactional(readOnly=true)
-	public Object[] getValueMapById(P id, String[] properties, Function<Object, String> lamda) {
-		return getValueMap(get(id), properties, lamda);
-	}
-	
-	// 단일 객체
-	@Transactional(readOnly=true)
-	public Object[] getValueMap(Object bean, String[] properties, Function<Object, String> lamda) {
-		
-		Object[] result = new Object[2];
-		result[0] = bean;
-		
-		if(bean == null) throw new NullPointerException();
-		
-		lamda = (lamda == null) ?
-				(v) -> { return v.toString(); }
-				: lamda;
-		
-		Map<String, String> map = new HashMap<>();
-		
-		Object value = null;
-		String stringValue = null;
-		
-		for(String property : properties) {
-
-			value = value(property, bean);
-			
-			if(value == null) continue;
-			if( (stringValue = lamda.apply(value)) == null ) continue;
-			
-			map.put(property, stringValue);
-		}
-		
-		result[1] = map;
-		
-		return result;
-	}
-
-	// name.id로 되는 객체 그래프 탐색
-	private Object value(String prop, Object bean) {
-		String[] props = prop.split("\\.");
-		PropertyDescriptor des = descriptors.get(props[0]);
-		
-		if(des == null)
-			throw new IllegalArgumentException(bean.getClass().getSimpleName() + "의 " + props[0] + "는 없는 프로퍼티입니다.");
-		
-		Object obj = null; 
-		String name = null;
-		
-		try {
-			Method method = null;
-			obj = des.getReadMethod().invoke(bean);
-			for(int i=1, l=props.length; i<l; i++) {
-				if(obj == null) break;
-				name = props[i];
-				method = obj.getClass().getMethod(  KoStringUtils.propertyName(name, "get")  );
-				// null값이 나올 경우 리턴한다. 루프를 중지하고 반환한다.
-				obj = method.invoke(obj);
-			}
-		} catch(NoSuchMethodException e) {
-			throw new RuntimeException(obj.getClass().getSimpleName() + "의 " + name+ "는 없는 메서드입니다.", e);
-		} catch(Exception e) {
-			throw new RuntimeException(prop + " ==> " + obj + "의 객체그래프 탐색 중 실패", e);
-		}
-		return obj;
-	}
-	
-	// 리스트 객체
-	@Transactional(readOnly=true)
-	public Object[] getValueListMap(List<T> list, String[] properties, Function<Object, String> lamda) {
-		Object[] result = new Object[2];
-		List<Object> beans = new ArrayList<>();
-		List<Map<String, String>> maps = new ArrayList<>();
-		
-		Object[] valueMap = null;
-		
-		for( T bean : list ) {
-			valueMap = getValueMap(bean, properties, lamda);
-			beans.add( valueMap[0] );
-			maps.add( (Map<String, String>)valueMap[1] );
-		}
-		
-		result[0] = beans;
-		result[1] = maps;
-		return result;
-	}
-	
-	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▲ 리플렉션으로 Data Map 가지고 오기 ▲  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	
 	
 	
 	public<V> V query(boolean isArray, String query) {
@@ -176,6 +74,12 @@ public abstract class GenericService<T, P extends Serializable> implements Servi
 	@Override
 	public T update(T entity) {
 		return getDao().makePersistent(entity);
+	}
+	
+	@Override
+	public T refresh(T entity) {
+		getDao().refresh(entity);
+		return entity;
 	}
 
 	@Override

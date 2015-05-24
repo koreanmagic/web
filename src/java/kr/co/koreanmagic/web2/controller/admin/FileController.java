@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
-@RequestMapping("/admin/file")
+//@Controller
+//@RequestMapping("/admin/file")
 public class FileController extends AdminController<WorkFile, Long> {
 
 	private Logger logger = Logger.getLogger(getClass());

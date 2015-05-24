@@ -7,29 +7,29 @@
  		<tbody>
  			<tr>
  				<th>사업자번호</th>
- 				<td colspan="3" data-key="bizNum"></td>
+ 				<td colspan="3" data-name="bizNum"></td>
  			</tr>
  			<tr>
  				<th>대표자</th>
- 				<td data-key="ceoName"></td>
+ 				<td data-name="ceoName"></td>
  				<th>휴대전화</th>
- 				<td data-key="mobile"></td>
+ 				<td data-name="mobile"></td>
  			</tr>
  			<tr>
  				<th>대표전화</th>
- 				<td data-key="tel"></td>
+ 				<td data-name="tel"></td>
  				<th>대표팩스</th>
- 				<td data-key="fax"></td>
+ 				<td data-name="fax"></td>
  			</tr>
  			<tr>
  				<th>이메일</th>
- 				<td colspan="3" data-key="email"></td>
+ 				<td colspan="3" data-name="email"></td>
  			</tr>
  			<tr>
  				<th>웹하드</th>
- 				<td data-key="webhard"></td>
+ 				<td data-name="webhard"></td>
  				<th>홈페이지</th>
- 				<td data-key="web"></td>
+ 				<td data-name="web"></td>
  			</tr>
  		</tbody>
  	
@@ -46,37 +46,37 @@
  		<tbody>
  			<tr>
  				<th>등록시간</th>
- 				<td data-key="insertTime"></td>
+ 				<td data-name="insertTime"></td>
  				<th>수정시간</th>
- 				<td data-key="updateTime"></td>
+ 				<td data-name="updateTime"></td>
  			</tr>
  			<tr>
  				<th>품목</th>
- 				<td colspan="3" data-key="item"></td>
+ 				<td colspan="3" data-name="item"></td>
  			</tr>
  			<tr>
  				<th>품목상세</th>
- 				<td data-key="itemDetail"></td>
+ 				<td data-name="itemDetail"></td>
  				<th>후가공</th>
- 				<td data-key="afterProcess"></td>
+ 				<td data-name="afterProcess"></td>
  			</tr>
  			<tr>
  				<th>사이즈</th>
- 				<td data-key="size"></td>
+ 				<td data-name="size"></td>
  				<th>수량</th>
- 				<td data-key="count"></td>
+ 				<td data-name="count"></td>
  			</tr>
  			<tr>
  				<th>금액</th>
- 				<td colspan="3" data-key="price"></td>
+ 				<td colspan="3" data-name="price"></td>
  			</tr>
  			<tr>
  				<th>배송방법</th>
- 				<td colspan="3" data-key="delivery"></td>
+ 				<td colspan="3" data-name="delivery"></td>
  			</tr>
  			<tr>
  				<th>메모</th>
- 				<td colspan="3" data-key="memo"></td>
+ 				<td colspan="3" data-name="memo"></td>
  			</tr>
  		</tbody>
  	
@@ -94,25 +94,25 @@
  			<tr>
  				<th>이름</th>
  				<td colspan="3">
- 					<span data-key="name"></span>
- 					<span data-key="position"></span>
+ 					<span data-name="name"></span>
+ 					<span data-name="position"></span>
  				</td>
  			</tr>
  			<tr>
  				<th>휴대전화</th>
- 				<td data-key="mobile"></td>
+ 				<td data-name="mobile"></td>
  				<th>이메일</th>
- 				<td data-key="email"></td>
+ 				<td data-name="email"></td>
  			</tr>
  			<tr>
  				<th>전화</th>
- 				<td data-key="tel"></td>
+ 				<td data-name="tel"></td>
  				<th>팩스</th>
- 				<td data-key="fax"></td>
+ 				<td data-name="fax"></td>
  			</tr>
  			<tr>
  				<th>메모</th>
- 				<td colspan="3" data-key="memo"></td>
+ 				<td colspan="3" data-name="memo"></td>
  			</tr>
  		</tbody>
  	

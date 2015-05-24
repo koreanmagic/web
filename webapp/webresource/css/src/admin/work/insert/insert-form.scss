@@ -1,39 +1,6 @@
 @charset "UTF-8";
 
 
-// 품목 이름
-._item-names {
-  
-  ._item-category {
-    display: block;
-    padding: .5em 0;
-    margin-bottom: 4px;
-    border-bottom: 1px solid rgb(220,220,220);
-        
-    text-indent: 1em;
-    text-align: left;
-    font-weight: bold;
-  }
-      
-  ul {
-    
-    li {
-      display: inline-block;
-      padding: .4em;
-      width: 20%;
-      text-align: center;
-      cursor: pointer;
-      &:hover {
-        background: rgb(240,240,240);
-      }
-    } // li
-    
-    &+._item-category {
-      margin-top: 15px;
-    }
-  } // ul
-}
-
 // 하청업체 자동완성
 ._subcontractor-list {
   

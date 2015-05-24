@@ -59,14 +59,15 @@ var options = {
 				tasks: ['copy:sass', 'sass']
 			},
 			js: {
-				files: ['js/**/*.js'],
-				tasks: ['uglify:js', 'list']
+				files: ['js/**/*.js', 'js/**/*.json'],
+				tasks: ['uglify:js', 'copy:js', 'list']
 			},
 			jade: {
 				files: ['jade/**/*.jade'],
 				tasks: ['jade']
 			}
 		},
+		
 		
 		uglify: {
 			js: {
@@ -75,7 +76,7 @@ var options = {
 					cwd: 'js',
 					src: '**/*.js',
 					dest: '../js/'
-      		}],
+      		},],
       		options: {
 		        sourceMap: true,
 		        //sourceMapName: '../js/sourcemap.map'
@@ -91,7 +92,7 @@ var options = {
 			},
 			js: {
 				files: [
-					 {expand: true, cwd: 'js', src: ['**/*'], dest: '../js'},
+					 {expand: true, cwd: 'js', src: ['**/*.json'], dest: '../js'},
 				]
 			}
 		},

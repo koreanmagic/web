@@ -6,7 +6,7 @@ define([
 	'./list/editor',
 	'./list/itemContainer',
 	'./context',
-], function($, a) {
+], function($) {
 	
 	function link( inner, obj ) {
 		return '<a href="/resource/' + obj.saveName + '">' + inner + '</a>'; 
@@ -72,14 +72,6 @@ define([
 	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ Item.prototype 확장 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */ 
 	var itemExtend = {
 		
-		// Item객체는 jQuery를 상속한다. jQuery의 init메서드와 중복되지 않게 _를 접두사로 한다.
-		// Item객체 생성시 호출된다.
-		init: function( ) {
-		
-			this.resourceRefresh();
-		
-		}, // init
-		
 		
 		// 여기에 등록하면 위젯 이벤트로 등록된다. halder <this:: widget>
 		// string이면 prototype에 등록된 핸들러 이름으로 사용한다.
@@ -107,6 +99,7 @@ define([
 				e.item.find("._work").removeClass("delete");
 			},
 			
+			
 			"click [data-info]": function(e) {
 				e.preventDefault();
 				var self = this,
@@ -121,47 +114,61 @@ define([
 				});
 			},
 			
+			// 에디터 열기
 			"click [data-editor]": function(e) {
 				e.preventDefault();
 				e.item.editor({ openTab: e.currentTarget.getAttribute("data-editor") });
 			},
 			
+			// 컨트롤키를 누르고 클릭하면 인쇄파일 업로드 창이 열린다.
+			"click ._work-controller": function(e) {
+				var ct = $(e.currentTarget);
+				
+				if(e.ctrlKey) ct.toggleClass('editor');
+			},
+			
+			
+			// ****** ▼ 파일 업로드 ▼ ******
+			// 드랍다운 열릴시 초기화
+			"dropdownon .confirm-upload": function(e) {
+				$(e.currentTarget).find('input').val('');
+				$(e.currentTarget).find('button').addClass('ui-helper-hidden');
+			},
+			
+			// 인풋 등록시 버튼 나타나게..
+			"change .confirm-upload > input": function(e) {
+				if(e.currentTarget.files.length) $(e.currentTarget).next().removeClass('ui-helper-hidden');
+				else $(e.currentTarget).next().addClass('ui-helper-hidden');
+			},
+			
+			// 업로드
+			"click .confirm-upload > button": function(e) {
+				e.preventDefault();
+				
+				var item = e.item,
+					formData = new FormData();
+				
+				formData.append("file", e.currentTarget.previousSibling.files[0]);
+				formData.append("work", e.item.id);
+				formData.append("serviceType", 'workConfirmFile');
+				
+				$.ajax({
+					url: '/admin/work/editor/resource/upload',
+					processData: false,
+					contentType: false,
+					data: formData,
+					type: 'POST',
+				}).success(function(){
+					item.confirmFile();
+				});
+			},
+			// ****** ▲ 파일 업로드 ▲ ******
+			
+			
 			// 아이템 박스에서 포커스 아웃되면 모든 이벤트를 초기화시킨다.
 			"focusout ._work-wrap": "initialize",
 		},
 		
-		
-		refresh: function() {
-			this.refreshItemData();
-			this.resourceRefresh();
-		},
-		
-		// 데이터 갱신
-		refreshItemData: function() {
-			var self = this;
-			this.getJSON(this.URL("/admin/work/editor/get/"),
-				function(data) {
-					self.values(data);
-				});
-		},
-		
-		
-		// 참고파일 등 확인
-		resourceRefresh: function() {
-			var self = this,
-				div = this.find("._pop-file-refer");
-			
-			$.getJSON("/admin/work/get/resource/size/" + this.id)
-				.success(function( data ) {
-					if( data.size > 0 ) {
-						div.removeClass("disable");
-						div.find(".size").text(data.size);
-					} 
-					else div.addClass("disable");
-					
-				});
-			
-		},
 		
 		// 모든 이벤츠 초기화
 		// 아이템 박스에서 포커스가 아웃되었을때 지울만한 것들을 써넣으면 된다.

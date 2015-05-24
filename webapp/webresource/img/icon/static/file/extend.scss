@@ -1,0 +1,45 @@
+
+
+
+[class*='{{dir}}'] {
+  @include sprite($default);
+}
+
+
+
+
+$extends: (
+$xls: (xlsx, xlsm, xlsb, xls, xltm, xltx, xlt),
+$jpg: (jpeg, gif, png),
+$ppt: (pptx, pptm, potx, pot),
+);
+
+
+@mixin sprites3($extends) {
+  @each $sprite, $names in $extends {
+    
+    @each $name in $names {
+      
+      .{{dir}}-#{$name} {
+        @include sprite-position($sprite);
+      }
+        
+    } // @each $name
+    
+  }
+}
+
+@include sprites3( $extends );
+
+
+/***** GLOBAL SCSS *****/ 
+@mixin sprites2($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .{{dir}}-#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+@include sprites2( $spritesheet-sprites );

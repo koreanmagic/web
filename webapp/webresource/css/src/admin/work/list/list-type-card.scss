@@ -142,22 +142,22 @@ $item-resource-height: 26px;
 ._work {
 
   
-[data-key], .customer-info > dd {
+[data-name], .customer-info > dd {
   color: rgb(85,85,85);
 }
 
-.customer-info > dd, [data-key='item'], [data-key='subcontractor'] {
+.customer-info > dd, [data-name='item'], [data-name='subcontractor'] {
   font-family: $special-font-family;
   font-weight: bold;
   letter-spacing: -1.3px;
 }
 
 // 내용 옆에 아이콘을 붙이기 위한 기발한 설정!!
-[data-key='item'], [data-key='itemDetail'] {
+[data-name='item'], [data-name='itemDetail'] {
   max-width: 92%;
   box-sizing: border-box;
 }
-[data-key='item'] {
+[data-name='item'] {
   margin-bottom: 2px;
   font-size: 14px;
   color: rgb(52, 52, 52);
@@ -165,12 +165,12 @@ $item-resource-height: 26px;
   cursor: pointer;
 }
 
-[data-key='itemDetail'] {
+[data-name='itemDetail'] {
   font-size: 11px;
   color: rgb(199, 97, 44);
 }
 
-[data-key='manager'] {
+[data-name='manager'] {
   top: -2px;
   font-weight: normal;
   color: rgb(170,170,170);
@@ -181,7 +181,7 @@ $item-resource-height: 26px;
   }
 }
 
-[data-key='manager.position'] {
+[data-name='manager.position'] {
   font-size: 11px;
   color: rgb(76, 117, 181);
   letter-spacing: -1px;
@@ -189,7 +189,7 @@ $item-resource-height: 26px;
 
 
     
-[data-key*='cost'], [data-key*='price'] {
+[data-name*='cost'], [data-name*='price'] {
   font-family: tahoma;
   font-weight: bold;
   color: rgb(52, 118, 166);
@@ -206,14 +206,14 @@ $item-resource-height: 26px;
   }
 }     
 
-[data-key*='cost'] {
+[data-name*='cost'] {
   &:before {
     content: "제작단가 : ";
     font-weight: normal;
   }
 }   
 
-[data-key*='insertTime'] {
+[data-name*='insertTime'] {
   font-size: 11px;
   font-family: 'tahoma';
   color: rgb(150,150,150);
@@ -255,12 +255,17 @@ $item-resource-height: 26px;
       white-space: nowrap;
       max-width: 100%;
     }
-    .item-tag {
+    .item-tag, .today-work {
       position: absolute;
-      margin-top: 3px;
       margin-left: 3px;
+    }
+    .item-tag {
+      margin-top: 3px;
       font-size: 10px;
       color: rgb(102, 107, 101);
+    }
+    .today-work {
+      
     }
     &.right {
       text-align: right;
@@ -289,7 +294,7 @@ $item-resource-height: 26px;
 
 .customer-info {
   $img-size: 35px;
-  margin-top: 6px;
+  margin-top: 15px;
   margin-bottom: 12px;
   
   height: $img-size;
@@ -312,8 +317,15 @@ $item-resource-height: 26px;
 }
 
 .work-file {
-  width: 70%;
+  
+  padding: .1em;
+  width: 250px;
   white-space: normal;
+  
+  > a {
+    display: block;
+    margin: 7px auto;
+  }
 }
 
 .text-box {
@@ -333,8 +345,8 @@ $item-resource-height: 26px;
   text-align: center;
   background: rgb(230,230,230);
         
-  ._screen > img {
-    max-height: 130px;
+  > img {
+    height: inherit;
   }
   
 } // ._panel
@@ -342,6 +354,22 @@ $item-resource-height: 26px;
 
 
 ._work-controller {
+  
+  
+  .editor {
+    display: none;
+  }
+  
+  &.editor {
+    dd {
+      * {
+        display: none;
+      }
+      > button:first-child, .editor {
+        display: inline-block;
+      }
+    }
+  }
   
   dd {
     line-height: normal;

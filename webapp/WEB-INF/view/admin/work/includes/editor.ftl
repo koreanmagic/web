@@ -23,7 +23,7 @@
 						<td colspan="3">
 							<div class="form-group">
 							<div class="tooltip-focus input-group">
-								<input id="item" name="item" type="text" class="tooltip-target" data-value-target="mousedown ._item-names ul li" autocomplete="off" readonly>
+								<input id="item" name="item" type="text" class="tooltip-target" data-name-target="mousedown ._item-names ul li" autocomplete="off" readonly>
 								<div class="tooltip-content _item-names _tooltip-pop">
 									<div class="_item-category">일반출력</div>
 									<ul>

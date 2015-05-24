@@ -5,8 +5,22 @@ define([
 	'jquery',
 	'component/FormValidate',
 	'src/common/listTable',
+	'#json!json/itemCategory.json',
 	
-], function($, FormValidate, listTable) {
+	'component/dom-ui',
+	
+], function($, FormValidate, listTable, items) {
+	
+	var itemList = '<div class="_item-names drop-box ui-helper-hidden">',
+		ul;
+	$.each(items, function( header, list ) {
+		ul = '<ul><li class="header">' + header + '</li>';
+		$.each(list, function( i, name ) {
+			ul += '<li data-value>' + name + '</li>';
+		});
+		itemList += ul + '</ul>';
+	});
+	itemList = $(itemList + '</div>').appendTo('.item-category');
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  하청업체 자동완성  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  //
 	var	addressHidden = $("#address"),

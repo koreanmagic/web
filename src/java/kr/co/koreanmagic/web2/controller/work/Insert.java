@@ -33,20 +33,6 @@ public class Insert extends WorkControllerMember {
 		model.put("command", work);
 		return "admin.work.insert";
 	}
-	/*
-	// ★ 기본값이 있을때
-	@RequestMapping(value="/insert/{customer}", params={"item"}, method=RequestMethod.GET)
-	public String insertGetDefault(
-									ModelMap model,
-									@ModelAttribute("command") Work work,
-									@PathVariable("customer") Customer customer
-								) throws Exception {
-		work.setWorkState(new WorkState(1));
-		work.setCustomer(customer);
-		model.put("command", work);
-		return "admin.work.insert";
-	}
-	*/
 	@RequestMapping(value="/insert/{customer}", method=RequestMethod.POST)
 	public String insertPost(ModelMap model,
 							@ModelAttribute("command") Work work,

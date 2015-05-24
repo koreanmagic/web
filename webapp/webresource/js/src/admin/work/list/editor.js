@@ -357,12 +357,13 @@ define([
 					common =  {
 						selectElement: false,
 					},
+					
 					listOptions = {
 						removeHandler: function( item, uuid ) {
 							var self = this,
 								flag = removeFlag;
 							if(!flag) {
-								$.ajax( prefix + "resource/delete/" + item.id )
+								$.get( prefix + "resource/delete/" + item.id, { "serviceType": 'workResourceFile' } )
 								.success(function() {
 									removeFlag = true;
 									self.remove(uuid);
@@ -426,11 +427,12 @@ define([
 					data["upload"].clear();
 					data["list"].clear();
 					
-					$.getJSON(prefix + "resource/list")
+					$.getJSON(prefix + "resource/list", { "work": this.getWorkId(), "serviceType": 'workResourceFile' })
 					.success(function(json) {
 						data["list"].addList(json);
 					});
 				},
+				
 				
 				open: function( data, accessNum ) {
 					

@@ -189,25 +189,6 @@
   height: 15px;
   background-position: -130px -186px; }
 
-._item-names ._item-category {
-  display: block;
-  padding: .5em 0;
-  margin-bottom: 4px;
-  border-bottom: 1px solid gainsboro;
-  text-indent: 1em;
-  text-align: left;
-  font-weight: bold; }
-._item-names ul li {
-  display: inline-block;
-  padding: .4em;
-  width: 20%;
-  text-align: center;
-  cursor: pointer; }
-  ._item-names ul li:hover {
-    background: #f0f0f0; }
-._item-names ul + ._item-category {
-  margin-top: 15px; }
-
 ._subcontractor-list ul.result li span {
   font-family: "맑은 고딕", "Apple SD Gothic Neo", Sans-serif;
   font-weight: bold;

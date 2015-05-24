@@ -5,6 +5,8 @@ import java.util.Map;
 
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 import kr.co.koreanmagic.hibernate3.mapper.domain.WorkResourceFile;
+import kr.co.koreanmagic.service.WorkConfirmFileService;
+import kr.co.koreanmagic.service.WorkFileService;
 import kr.co.koreanmagic.service.WorkResourceFileService;
 import kr.co.koreanmagic.web2.controller.work.WorkController.WorkControllerMember;
 import kr.co.koreanmagic.web2.support.argresolver.annotation.Service;
@@ -111,29 +113,29 @@ public class Editor extends WorkControllerMember {
 	@RequestMapping(value="/editor/resource/upload", method=RequestMethod.POST)
 	@ResponseBody
 	public void uploadResource(ModelMap model,
-							@ModelAttribute("bean") Work work,
+							@RequestParam("work") Work work,
 							@RequestParam("file") List<MultipartFile> files,
-							@Service WorkResourceFileService service
+							@Service(param="serviceType") WorkFileService<?> service
 							) throws Exception {
-		for(MultipartFile file : files) {
-			logger.debug(file.getOriginalFilename());
-		}
 		service.saveFile(files, work);
 	}
 	
 	@RequestMapping(value="/editor/resource/list", method=RequestMethod.GET)
 	@ResponseBody
-	public Object getResources( @ModelAttribute("bean") Work work,
-								@Service WorkResourceFileService resourceService ) throws Exception {
-		return resourceService.getList(work);
+	public Object getResources( @RequestParam("work") Work work,
+										@Service(param="serviceType") WorkFileService<?> service
+									) throws Exception {
+		return service.getList(work);
 	}
 	
 	@RequestMapping(value="/editor/resource/delete/{id}", method=RequestMethod.GET)
 	@ResponseBody
-	public void removeResource( @PathVariable("id") WorkResourceFile resource,
-									@Service WorkResourceFileService resourceService ) throws Exception {
-		resourceService.delete(resource);
+	public void removeResource( @PathVariable("id") Long fileId,
+											@Service(param="serviceType") WorkFileService<?> service
+										) throws Exception {
+		service.delete(fileId);
 	}
+	
 	
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  File Resource  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //

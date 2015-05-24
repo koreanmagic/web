@@ -18,7 +18,7 @@ public class StringToAddress implements Converter<String, Address> {
 	@Override
 	@Transactional
 	public Address convert(String source) {
-		logger.debug(source);
+		if(source.equals("null")) return null;
 		return service.load(Long.valueOf(source));
 	}
 }

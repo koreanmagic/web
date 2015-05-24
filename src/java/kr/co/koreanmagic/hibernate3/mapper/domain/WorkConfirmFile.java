@@ -1,10 +1,11 @@
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-//@Entity
+@Entity
 @Table(name="work_confirm_files")
 public class WorkConfirmFile extends WorkFile {
 

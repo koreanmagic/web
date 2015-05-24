@@ -47,29 +47,8 @@
 					</dt>
 					
 					<dd>
-						<div class="tooltip-focus input-group">
-							<input id="item" name="item" type="text" class="tooltip-target" data-value-target="mousedown ._item-names ul li" size="50" autocomplete="off" readonly>
-							<div class="tooltip-content _item-names _tooltip-pop">
-								<div class="_item-category">일반출력</div>
-								<ul>
-									<li>명함</li>
-									<li>스티커</li>
-									<li>전단</li>
-									<li>봉투</li>
-									<li>상업인쇄</li>
-									<li>경인쇄</li>
-									<li>기타</li>
-								</ul>
-								<div class="_item-category">대형인쇄</div>
-								<ul>
-									<li>간판</li>
-									<li>현수막</li>
-									<li>실사</li>
-									<li>시트컷팅</li>
-									<li>스카시</li>
-									<li>기타</li>
-								</ul>
-							</div>
+						<div class="item-category input-group">
+							<input id="item" name="item" type="text" size="50" autocomplete="off" data-ui-dropdown="._item-names" readonly>
 							<span class="addon" data-check-for="item"></span>
 						</div>
 						<span class="description"><i class="fa fa-exclamation-triangle"></i> 품목명을 추가해야할 경우, 한컴 관리자에게 문의</span>

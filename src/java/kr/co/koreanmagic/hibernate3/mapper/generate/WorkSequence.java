@@ -1,10 +1,14 @@
 package kr.co.koreanmagic.hibernate3.mapper.generate;
 
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 
@@ -15,15 +19,13 @@ import org.hibernate.id.IdentifierGenerator;
 
 public class WorkSequence implements IdentifierGenerator {
 
-	Logger logger = Logger.getLogger(getClass());
+	private static Logger logger = Logger.getLogger(WorkSequence.class);
+	
 	
 	@Override
 	public Serializable generate(SessionImplementor session, Object object) throws HibernateException {
 		
-		Work work = (Work)object;
-		
-		if(work.getId() != null)
-			return work.getId();
+		String key = null;
 		
 		Connection con = session.connection();
 		PreparedStatement ps = null;
@@ -31,18 +33,13 @@ public class WorkSequence implements IdentifierGenerator {
 			ps = con.prepareStatement("SELECT date_seq(curdate())");
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			return log(rs.getString(1));
+			key = rs.getString(1);
+			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+		
+		return key;
 	}	
 
-	private<T> T log(T msg) {
-		log0(msg);
-		return msg;
-	}
-	
-	private void log0(Object msg) {
-		System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ >" + msg);
-	}
 }

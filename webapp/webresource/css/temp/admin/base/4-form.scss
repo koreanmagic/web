@@ -78,5 +78,36 @@
 }
 
 
+// 인풋 객체 바로 아래에 생성되는 박스
+.item-category {
+  position: relative;
+  
+  // 실제 패널
+  ._item-names {
+    padding: .5em;
+    width: 100%;
+    box-sizing: border-box;
+    >ul {
+      float: left;
+      text-align: center;
+      
+      li {
+        padding: .3em .8em;
+        &:hover {
+          background: rgb(245,245,245); 
+        }
+        
+        &.header {
+          font-weight: bold;
+          &:hover {
+            background: none; 
+          }
+        }
+      }
+    }
+    
+  }
+}
+
 
 

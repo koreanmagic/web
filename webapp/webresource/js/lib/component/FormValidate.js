@@ -117,7 +117,7 @@ define([
 			
 			// input은 readOnly이고 다른 엘리먼트를 선택해서 값을 입력받을 경우
 			var self = this,
-				refer = this.attr("data-value-target"); 
+				refer = this.attr("data-name-target"); 
 				
 			if ( refer ) {
 				refer = /([^\s]+)(.*)/.exec(refer);

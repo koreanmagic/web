@@ -93,9 +93,6 @@ blockquote:before, blockquote:after, q:before, q:after {
 input, select, textarea, button {
   vertical-align: middle; }
 
-*:focus {
-  outline: medium none; }
-
 body.outline-all * {
   outline: 1px solid #aaa; }
 
@@ -469,6 +466,7 @@ form .btns {
     font-size: 11px;
     color: #868686;
     white-space: nowrap;
+    vertical-align: middle;
     background: #f8f8f8; }
 
 /* 버튼
@@ -1097,7 +1095,7 @@ span.btn {
   .ui-overlay > * {
     position: relative; }
 
-[data-ui-dropdown] {
+[data-ui-dropdown], [data-value] {
   cursor: pointer; }
 
 .drop-box {

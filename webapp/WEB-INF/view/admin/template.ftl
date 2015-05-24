@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="/css/base.css?ts=${temp}" type="text/css" media="screen" title="no title" charset="utf-8"/>
         <link rel="stylesheet" href="/css/admin/default.css?ts=${temp}" type="text/css" media="screen" title="no title" charset="utf-8"/>
         <link rel="stylesheet" href="/css/admin/${resourceName}/${requestInfo.view}.css?ts=${temp}" type="text/css" media="screen" title="no title" charset="utf-8"/>
+        <link rel="stylesheet" href="/css/img/static.css?ts=${temp}" type="text/css" media="screen" title="no title" charset="utf-8"/>
         
         
    		<!-- [if IE 7]>

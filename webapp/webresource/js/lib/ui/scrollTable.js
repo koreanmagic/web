@@ -54,12 +54,7 @@ define([
 	
 	
 	/* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 위젯 옵션  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
-	var types = $.extend( {}, Utils.dataConvert(null),
-			{
-				"$index": function( item, uuid ) {
-					return uuid;
-				},
-			});
+	var 
 	
 		widgetOptions =	{
 		
@@ -69,8 +64,6 @@ define([
 		// 리스트에 변동이 있을때마다 호출 
 		changeHandler: function() {},
 		
-		// 데이터 컨버터
-		types: types,
 		
 		overlapHandler: function( item ) {
 			return true;
@@ -287,6 +280,17 @@ proto = $.extend({},
 		return this.getEle("select").append( this._createUL( this.getItem(uuid), uuid ) );
 	},
 	
+	dataConvertor: Utils.dataConvert({
+		"$index": function( value, uuid, item ) {
+			return uuid;
+		},
+		"fileType": function( value, uuid, item ) {
+			return '<a href="/resource/' + item['parentPath'] + '/' + item['saveName'] 
+							+'" class="icon-static-file-s-' + value 
+							+ '" style="display:inline-block; vertical-align: middle;"></a>';
+		},
+	}),
+	
 	_createUL: function( item, uuid ) {
 		var self = this,
 			types = this.options["types"],
@@ -301,6 +305,8 @@ proto = $.extend({},
 		this.find(".header ul li[data-type]").each(function( i, li ) {
 			
 			type = li.getAttribute("data-type");
+			value = self.dataConvertor(item, type);
+			/*
 			typeHandler = types[type];
 			value = item[type];
 			// 값이 있거나 $로 시작하는 특수타입일 경우에만 타입핸들러를 쓴다.
@@ -308,31 +314,19 @@ proto = $.extend({},
 				value = typeHandler ?
 				
 						typeof typeHandler === 'string' ?
-							types[typeHandler].call(self, item[type], uuid, ul) :
-							typeHandler.call(self, item[type], uuid, ul)
+							types[typeHandler].call(self, item[type], uuid, item) :
+							typeHandler.call(self, item[type], uuid, item)
 							
 						: value || "";
 			}
 			else value = "";
+			*/
 			
 			html += '<li class="' + li.className.match(/(span-\d)/)[1] + " " + type + '">' + value + '</li>';
 			
 		});
 		
 		return ul.append( html ).appendTo( this.getEle("list") );
-	},
-	
-	// 등록된 타입핸들러를 거친 value를 돌려준다.
-	typeConvertValue: function( item, type ) {
-		var types = options["types"],
-			typeHandler = types[type],
-			value = item[type];
-			
-		return value && typeHandler ?
-				typeof typeHandler === 'string' ?
-						types[typeHandler].call(self, item[type], uuid, ul) :
-						typeHandler.call(self, item[type], uuid, ul)
-				: value || "";
 	},
 	
 	

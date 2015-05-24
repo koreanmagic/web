@@ -6,10 +6,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -27,9 +29,11 @@ public abstract class WorkFile {
 	@JsonProperty private String originalName;		// 업로드할때 이름
 	@JsonProperty private String saveName;		// 저장할때 이름
 	@JsonProperty private String parentPath;		// 부모경로 (저장 루트경로는 동적으로 결정된다.)
-	@JsonProperty private Integer size;			// 파일 사이즈
+	@JsonProperty("fileSize") private Integer size;			// 파일 사이즈
 	@JsonProperty private String fileType;		// 파일 종류
 	@JsonProperty private String memo;			// 파일 메모
+	
+	
 	
 	@Id @GeneratedValue
 	public Long getId() {

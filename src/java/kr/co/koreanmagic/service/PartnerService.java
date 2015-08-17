@@ -1,12 +1,18 @@
 package kr.co.koreanmagic.service;
 
+import java.util.List;
+import java.util.Map;
+
 import kr.co.koreanmagic.hibernate3.mapper.domain.Address;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Bank;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Manager;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
 
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +52,22 @@ public abstract class PartnerService<T extends Partner> extends GenericService<T
 		T stale = get(id);
 		return (T)getDao().getSession().merge(bean);
 	}
+	
+	
+	public List<Map<String, String>> getNameList(String word) {
+		return getNameList(word, new String[]{"id", "name"});
+	}
+	public List<Map<String, String>> getNameList(String word, String[] props) {
+		ProjectionList p = Projections.projectionList();
+		for(String prop : props) {
+			p.add(Projections.property(prop).as(prop));
+		}
+		return getDao().criteria().add(Restrictions.like("name", "%" + word + "%"))
+								.setProjection(p)
+								.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+								.list();
+	}
+	
 	
 	// 매니저 추가
 	@Transactional

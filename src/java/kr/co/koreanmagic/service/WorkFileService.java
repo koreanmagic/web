@@ -3,6 +3,7 @@ package kr.co.koreanmagic.service;
 import java.io.IOException;
 import java.util.List;
 
+import kr.co.koreanmagic.hibernate3.스프링_하이버네이트_테스트;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 import kr.co.koreanmagic.hibernate3.mapper.domain.WorkFile;
 
@@ -54,7 +55,7 @@ public abstract class WorkFileService<T extends WorkFile> extends GenericService
 	@Transactional
 	public T saveFile(MultipartFile file, Work work) {
 		
-		T workFile = createBean(work, (int)file.getSize(), file.getOriginalFilename(), file.getContentType() );
+		T workFile = createBean(work, (int)file.getSize(), file.getOriginalFilename() );
 		
 		try {
 			work.saveFile(file.getInputStream(), workFile);
@@ -67,7 +68,7 @@ public abstract class WorkFileService<T extends WorkFile> extends GenericService
 	}
 	
 	// 객체 생성
-	private T createBean(Work work, Integer size, String orignalFileName, String contentType) {
+	private T createBean(Work work, Integer size, String orignalFileName) {
 		T file = getInitalBean();
 		
 		file.setFile(orignalFileName);

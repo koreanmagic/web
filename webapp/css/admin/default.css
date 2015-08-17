@@ -93,7 +93,7 @@
   border-top: 1px solid #595959; }
 
 #bodyContainer {
-  padding-top: 127px;
+  padding-top: 120px;
   margin: 0 auto;
   width: 1140px; }
 
@@ -158,15 +158,21 @@
 .command-img {
   float: left; }
 
-#SearchBar {
+#searchContainer {
   display: inline-block;
+  position: relative;
   margin-top: 13.5px;
   width: 500px; }
-  #SearchBar > .select-btn, #SearchBar #searchInput, #SearchBar .submit {
+  #searchContainer > .select-btn, #searchContainer #searchInput, #searchContainer .submit {
     height: 37px;
     border: none;
     box-sizing: border-box; }
-  #SearchBar > .select-btn {
+  #searchContainer #searchInput {
+    font-size: 16px;
+    font-family: '돋움',dotum,'Apple SD Gothic NEO',helvetica,sans-serif;
+    font-weight: bold;
+    letter-spacing: -.7px; }
+  #searchContainer > .select-btn {
     float: left;
     padding: 0 .6em;
     border-right: 1px solid #c8c8c8;
@@ -175,27 +181,46 @@
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 3px;
     background-color: #f3f3f3; }
-    #SearchBar > .select-btn:active, #SearchBar > .select-btn.active {
+    #searchContainer > .select-btn:active, #searchContainer > .select-btn.active {
       color: #141414;
       background-color: gainsboro;
       text-shadow: none; }
-  #SearchBar .submit {
+  #searchContainer .submit {
     border-top-left-radius: 0px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 0px;
     float: right;
     width: 40px;
-    color: #393939;
     font-size: 20px;
-    background-color: #bebebe; }
-    #SearchBar .submit:hover {
-      background-color: #a0a0a0; }
-  #SearchBar .input {
+    color: white;
+    background-color: #f08900; }
+    #searchContainer .submit.disable {
+      color: #969696;
+      background-color: #bebebe; }
+  #searchContainer .send {
+    width: 45px;
+    margin-left: 7px; }
+  #searchContainer .input {
     overflow: hidden; }
-
-#searchInput {
-  width: 100%; }
+    #searchContainer .input .drop-box {
+      padding: 1em; }
+  #searchContainer .date-options {
+    width: 100%;
+    box-sizing: border-box; }
+    #searchContainer .date-options .title {
+      font-weight: bold;
+      margin-bottom: 9px; }
+    #searchContainer .date-options .duration {
+      margin-left: 7px; }
+    #searchContainer .date-options input[type='text'] {
+      font-family: 'tahoma';
+      font-size: 14px;
+      font-weight: bold;
+      color: #435d80;
+      text-align: center; }
+    #searchContainer .date-options .date-select {
+      float: right; }
 
 #contextLine dl.btn {
   display: inline-block;
@@ -298,6 +323,31 @@
 .scroll-table .view table td {
   width: 40%; }
 
+.page-nums {
+  display: inline-block;
+  margin: 0 auto;
+  font-size: 0;
+  vertical-align: middle; }
+  .page-nums a {
+    padding: .2em .3em;
+    border: 1px solid transparent;
+    text-align: center;
+    vertical-align: middle;
+    color: #969696;
+    font-family: 'tahoma';
+    font-size: 13px;
+    box-sizing: border-box; }
+    .page-nums a.current {
+      font-size: 16px;
+      font-weight: bold;
+      cursor: default;
+      color: #2e69b6; }
+      .page-nums a.current:hover {
+        border: 1px solid transparent; }
+    .page-nums a:hover {
+      border: 1px solid #bebebe;
+      color: #282828; }
+
 [class*='_img-static'] {
   background-image: url("/img/global-static-img.png"); }
 
@@ -313,17 +363,6 @@
 
 [data-href] {
   cursor: pointer; }
-
-#KScript-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); }
-  #KScript-popup #KScript-popup-container > * {
-    margin: 0 auto; }
 
 .fileTable .info {
   min-height: 21px; }

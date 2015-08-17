@@ -10,7 +10,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
-import kr.co.koreanmagic.commons.KoStringUtils;
+import kr.co.koreanmagic.commons.StringUtils;
 
 /*
  * forEach 루틴를 구현한 태그
@@ -141,7 +141,7 @@ public class ForEach extends SimpleTagSupport {
 		
 		try {
 			for(int i=0, l=names.length; i<l; i++) {
-				name = KoStringUtils.propertyName(names[i], "get");
+				name = StringUtils.propertyName(names[i], "get");
 				method = obj.getClass().getMethod(name);
 				
 				// null값이 나올 경우 리턴한다. 루프를 중지하고 반환한다.

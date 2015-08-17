@@ -32,10 +32,37 @@
 	
 	
 </table>
-		
-	${boardList.pageTag}
+
+
+<#-- 링크 -->
+<#macro url page><#compress>
+	${boardList.path}?page=${page}&list=${boardList.size}&order=${boardList.order}
+</#compress></#macro>
+
+<#compress>
+<div class="page-nums">
 	
-</div> <!-- ._partner-insert -->
+	<#if boardList.prev != -1>
+		<a class="prev" href="<@url boardList.prev />"><i class="fa fa-chevron-left"></i></a>
+	</#if>
+	
+	<#list boardList.before as num>
+		<a href="<@url num />">${num}</a>
+	</#list>
+	
+	<a class="current" href="#" onClick="return false;">${boardList.this}</a>
+	
+	<#list boardList.after as num>
+		<a href="<@url num />">${num}</a>
+	</#list>
+	
+	<#if  boardList.next != -1>
+		<a class="next" href="<@url boardList.next />"><i class="fa fa-chevron-right"></i></a>
+	</#if>
+</div>
+</#compress>
+	
+</div> <#-- ._partner-insert -->
 
 <script>
 

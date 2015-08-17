@@ -3,7 +3,6 @@ package kr.co.koreanmagic.context.support.convert;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;

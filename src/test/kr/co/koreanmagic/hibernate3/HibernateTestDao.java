@@ -2,6 +2,7 @@ package kr.co.koreanmagic.hibernate3;
 
 import java.io.Serializable;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,10 +17,7 @@ public class HibernateTestDao {
 	@Autowired(required=false) PlatformTransactionManager transactionManager;
 	
 	
-	protected void setFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-	protected SessionFactory sessionFactory() {
+	protected SessionFactory factory() {
 		return this.sessionFactory;
 	}
 	
@@ -99,6 +97,10 @@ public class HibernateTestDao {
 		session = null;
 
 		return closed;
+	}
+	
+	protected Criteria criteria(Class<?> clazz) {
+		return currentSession().createCriteria(clazz);
 	}
 	
 	protected Object log(Object obj) {

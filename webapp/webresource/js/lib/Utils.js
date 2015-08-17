@@ -6,7 +6,7 @@ define([
 
 
 
-	var weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+	var weekName = ["일", "월", "화", "수", "목", "금", "토"];
 	
 	Date.prototype.format = function(f) {
 	    if (!this.valueOf()) return " ";
@@ -84,14 +84,29 @@ define([
 	};
 	
 	
+	function setter(context, key, value) {
+		var result = $.data(context, key);
+		$.data(this, key, value);
+		return result;
+	};
+	
 	Utils = {
 		
 		access: function(key, value, force) {
-			var i, keys, data, key, length, getter = (value === undefined);
+			var i,
+				keys,
+				data,
+				key,
+				length,
+				getter = (value === undefined),
+				result;	// setter시 원래있던 값 돌려준다.
 		
 			// Key 1개
-			if(key.indexOf(".") === -1)
-				return getter ? $.data(this, key) : $.data(this, key, value) && value;
+			if(key.indexOf(".") === -1) {
+				result = $.data(this, key);
+				getter || $.data(this, key, value);
+				return result;
+			}
 			
 			keys = key.split(".");
 			data = $.data(this, key = keys.shift());
@@ -116,7 +131,9 @@ define([
 					data = data[keys[i]];
 				}
 			};
-			return getter ? data[key] : (data[key] = value) && value;
+			result = data[key];
+			getter || (data[key] = value);
+			return result;
 		},
 		
 		// 중첩오브젝트로 이루어진 json데이터를 name.name으로 읽어준다.

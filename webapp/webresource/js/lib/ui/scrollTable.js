@@ -285,7 +285,8 @@ proto = $.extend({},
 			return uuid;
 		},
 		"fileType": function( value, uuid, item ) {
-			return '<a href="/resource/' + item['parentPath'] + '/' + item['saveName'] 
+			return '<a href="/resource/' + item['parentPath'] + '/' + item['saveName']  + '.' + item['fileType']
+							+ '?filename=' + item['originalName'] + '.' + item['fileType']
 							+'" class="icon-static-file-s-' + value 
 							+ '" style="display:inline-block; vertical-align: middle;"></a>';
 		},

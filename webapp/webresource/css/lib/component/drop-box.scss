@@ -35,9 +35,13 @@
         letter-spacing: -1px;
         color: rgb(107, 107, 107);
         
-        &:hover {
+        &.selected, &:hover {
           color: white;
           background: rgb(66, 139, 202);
+        }
+        
+        &.selected {
+          cursor: default;
         }
       } // .list
     } // li

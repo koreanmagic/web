@@ -1,6 +1,6 @@
 
 <div class="_home">
-	<a href="http://koreanmagic.co.kr:8259/admin/work/list/1"><span class="_home"></span></a>
+	<a href="/admin/work/list/1"><span class="_home"></span></a>
 </div>
 
 

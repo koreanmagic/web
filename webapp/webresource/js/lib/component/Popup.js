@@ -17,11 +17,12 @@ define([
 	};
 	
 	var overlayUUID = 1,
+		on = false,
 	
 	Popup = (function(){
 			
 		var body = $(document.body),
-			table = $('<table id="KScript-popup"><tbody><tr><td id="KScript-popup-container"></td></tr></tbody></table>')
+			table = $('<table id="ui-popup"><tbody><tr><td id="ui-popup-container"></td></tr></tbody></table>')
 								.addClass('ui-helper-hidden').appendTo(body),
 			td = table.find("td"),
 			dummy = $('<div style="display:none;"></div>'),
@@ -32,11 +33,22 @@ define([
 			relateTarget;
 			
 		table.on("click", function(e) {
-			if( e.target.id === "KScript-popup-container" ) {
+			if( e.target.id === "ui-popup-container" ) {
 				Popup( false );	// 직접 호출하면 기존 객체를 돌려받을 수 있다.
 			} 
 		});
 		
+		table.on("click", '.popOff', function(e) {
+			Popup( false );	// 직접 호출하면 기존 객체를 돌려받을 수 있다.
+		});
+		
+		body.on('keyup', function(e) {
+			if(on && e.keyCode == 27) {
+				Popup( false );
+			};
+		});
+		
+		// data-popup="selector"
 		body.on("click", "[data-popup]", function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -56,21 +68,23 @@ define([
 				ele = targetElement;
 				targetElement = false;
 				
+				on = false;
 				return ele	// 오버레이 객체에서 떼어낸다.
 						.trigger("popOff")
 						.removeClass("ui-helper-block");
 			}
 			
-			
 			oldEle = popup( false );
 			
 			targetElement = $(ele).before(dummy);
-			targetElement.appendTo(td)
-						.trigger("popOn", relateTarget)
-						.addClass("ui-helper-block");
 			
 			table.removeClass("ui-helper-hidden");
 			
+			targetElement.appendTo(td)
+						.addClass("ui-helper-block")
+						.trigger("popOn", relateTarget);
+			
+			on = true;
 			return oldEle;
 		};
 		

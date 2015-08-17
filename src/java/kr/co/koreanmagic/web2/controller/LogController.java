@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.co.koreanmagic.commons.KoStringUtils;
+import kr.co.koreanmagic.commons.StringUtils;
 import kr.co.koreanmagic.service.CustomerService;
 import kr.co.koreanmagic.service.WorkService;
 
@@ -121,7 +121,7 @@ public class LogController {
 	}
 	
 	private String arrayValue(Object array) {
-		return KoStringUtils.join("", ", ", array);
+		return StringUtils.join("", ", ", array);
 	}
 	
 	// Request Header
@@ -173,7 +173,7 @@ public class LogController {
 	}
 	
 	protected void log(Object...t) {
-		System.out.println(KoStringUtils.join("", ",", t));
+		System.out.println(StringUtils.join("", ",", t));
 	}
 	
 

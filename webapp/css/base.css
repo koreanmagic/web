@@ -227,8 +227,8 @@ button, .btn-group > a {
   display: inline-block;
   padding: 0 5px;
   margin: 0;
-  min-width: 27px;
-  height: 27px;
+  min-width: 23px;
+  height: 23px;
   border: 1px solid #868686;
   border-radius: 3px;
   box-sizing: border-box;
@@ -242,10 +242,10 @@ button, .btn-group > a {
   button:hover, .btn-group > a:hover {
     background: whitesmoke; }
   button.active, .btn-group > a.active {
-    border: 1px solid #1f4679;
+    border: 1px solid #414141;
     color: white;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.4);
-    background: #2e69b6; }
+    background: #2e69b6;
+    cursor: default; }
   button.disable, .btn-group > a.disable {
     color: #c8c8c8;
     cursor: no-drop; }
@@ -333,7 +333,7 @@ ul.radius {
 
 form [type='submit'], form [type='reset'] {
   width: 75px;
-  height: 31px;
+  height: 32px;
   background: white;
   border-width: 1px;
   border-style: solid;
@@ -386,11 +386,6 @@ form .btns {
     float: left; }
   .form-group + .form-group {
     margin-top: 15px; }
-  .form-group .separator {
-    float: left;
-    margin: 0 4px;
-    text-align: center;
-    line-height: 32px; }
   .form-group .description, .form-group .error {
     float: left;
     clear: both;
@@ -405,7 +400,7 @@ form .btns {
   .form-group.small dt > label {
     height: 24px;
     line-height: 24px; }
-  .form-group.small .input-group [type*='text'], .form-group.small .input-group .addon, .form-group.small .input-group [type='radio'] + label, .form-group.small .input-group [type='checkbox'] + label, .form-group.small .input-group [type='file'] + label, .form-group.small .input-group textarea, .form-group.small .input-group select, .form-group.small .input-group label {
+  .form-group.small .input-group [type='text'], .form-group.small .input-group .addon, .form-group.small .input-group [type='radio'] + label, .form-group.small .input-group [type='checkbox'] + label, .form-group.small .input-group [type='file'] + label, .form-group.small .input-group textarea, .form-group.small .input-group select, .form-group.small .input-group label {
     height: 24px; }
   .form-group dt, .form-group dd {
     display: table-cell; }
@@ -426,19 +421,24 @@ form .btns {
   position: relative; }
   .input-group.inline {
     float: left; }
-  .input-group [type*='text'], .input-group .addon, .input-group [type='radio'] + label, .input-group [type='checkbox'] + label, .input-group [type='file'] + label, .input-group textarea, .input-group select, .input-group label {
+  .input-group [type='text'], .input-group .addon, .input-group [type='radio'] + label, .input-group [type='checkbox'] + label, .input-group [type='file'] + label, .input-group textarea, .input-group select, .input-group label {
     box-sizing: border-box;
     height: 32px;
     font-size: 12px; }
-  .input-group [type*='text'], .input-group .addon, .input-group [type='radio'] + label, .input-group [type='checkbox'] + label, .input-group [type='file'] + label, .input-group textarea, .input-group select {
+  .input-group [type='text'], .input-group .addon, .input-group [type='radio'] + label, .input-group [type='checkbox'] + label, .input-group [type='file'] + label, .input-group textarea, .input-group select {
     border-width: 1px;
     border-style: solid;
     border-color: #bebebe; }
-  .input-group [type*='text'], .input-group .addon, .input-group select, .input-group label, .input-group textarea {
-    display: table-cell; }
-  .input-group [type*='text'] ~ .addon, .input-group .addon + [type*='text'], .input-group .addon + textarea, .input-group .addon + select {
+  .input-group [type='text'], .input-group .addon, .input-group select, .input-group label, .input-group textarea {
+    display: table-cell;
+    border-right: 0; }
+    .input-group [type='text']:last-child, .input-group .addon:last-child, .input-group select:last-child, .input-group label:last-child, .input-group textarea:last-child {
+      border-width: 1px;
+      border-style: solid;
+      border-color: #bebebe; }
+  .input-group [type='text'] + .addon, .input-group .addon + [type='text'], .input-group .addon + textarea, .input-group .addon + select {
     border-left: 0; }
-  .input-group [type*='text'], .input-group textarea {
+  .input-group [type='text'], .input-group textarea {
     width: 100%;
     padding: .6em;
     text-indent: .2em; }
@@ -459,15 +459,25 @@ form .btns {
       display: inline-block;
       color: white;
       background: #2e69b6; }
-  .input-group .addon, .input-group .text {
+  .input-group .addon {
     padding-left: 5px;
     padding-right: 5px;
     width: 1%;
     font-size: 11px;
     color: #868686;
     white-space: nowrap;
-    vertical-align: middle;
-    background: #f8f8f8; }
+    vertical-align: middle; }
+    .input-group .addon:first-child {
+      border-right: 0; }
+  .input-group + .separator {
+    float: left;
+    margin: 0 4px;
+    text-align: center;
+    line-height: 32px; }
+
+[type='text'][disabled], [type='text'][readOnly] {
+  background-color: #f2f2f2;
+  color: #b0b0b0; }
 
 /* 버튼
  * 버튼은 font 속성을 상속받지 않는다!
@@ -1118,13 +1128,16 @@ span.btn {
       text-align: center;
       letter-spacing: -1px;
       color: #6b6b6b; }
-      .drop-box.menu li a:hover {
+      .drop-box.menu li a.selected, .drop-box.menu li a:hover {
         color: white;
         background: #428bca; }
+      .drop-box.menu li a.selected {
+        cursor: default; }
 
 .btn-group {
   display: inline-block;
-  font-size: 0; }
+  font-size: 0;
+  vertical-align: middle; }
   .btn-group > a {
     display: inline-block; }
   .btn-group > button, .btn-group > a {
@@ -1830,17 +1843,6 @@ a:visited {
   cursor: pointer; }
 
 /* bagic 함수 */
-.tooltip-hover .tooltip-fixed:hover, .tooltip-hover .tooltip-fixed:focus, .tooltip-hover.tooltip-target.tooltip-content:hover, .tooltip-hover.tooltip-target:hover .tooltip-content, .tooltip-hover.tooltip-target.active.tooltip-content, .tooltip-hover.tooltip-target.active .tooltip-content, .tooltip-hover .tooltip-target:hover .tooltip-content, .tooltip-hover .tooltip-target:hover ~ .tooltip-content, .tooltip-hover.tooltip-target.active ~ .tooltip-content, .tooltip-active .tooltip-fixed:hover, .tooltip-active .tooltip-fixed:focus, .tooltip-active.tooltip-target.tooltip-content:active, .tooltip-active.tooltip-target:active .tooltip-content, .tooltip-active.tooltip-target.active.tooltip-content, .tooltip-active.tooltip-target.active .tooltip-content, .tooltip-active .tooltip-target:active .tooltip-content, .tooltip-active .tooltip-target:active ~ .tooltip-content, .tooltip-active.tooltip-target.active ~ .tooltip-content, .tooltip-focus .tooltip-fixed:hover, .tooltip-focus .tooltip-fixed:focus, .tooltip-focus.tooltip-target.tooltip-content:focus, .tooltip-focus.tooltip-target:focus .tooltip-content, .tooltip-focus.tooltip-target.active.tooltip-content, .tooltip-focus.tooltip-target.active .tooltip-content, .tooltip-focus .tooltip-target:focus .tooltip-content, .tooltip-focus .tooltip-target:focus ~ .tooltip-content, .tooltip-focus.tooltip-target.active ~ .tooltip-content, input[type='checkbox'].toggle-box:checked ~ .off {
-  display: block; }
-.tooltip-hover .block.tooltip-fixed:hover, .tooltip-hover .block.tooltip-fixed:focus, .block.tooltip-hover.tooltip-target.tooltip-content:hover, .tooltip-hover.tooltip-target:hover .block.tooltip-content, .block.tooltip-hover.tooltip-target.active.tooltip-content, .tooltip-hover.tooltip-target.active .block.tooltip-content, .tooltip-hover .tooltip-target:hover .block.tooltip-content, .tooltip-hover .tooltip-target:hover ~ .block.tooltip-content, .tooltip-hover.tooltip-target.active ~ .block.tooltip-content, .tooltip-active .block.tooltip-fixed:hover, .tooltip-active .block.tooltip-fixed:focus, .block.tooltip-active.tooltip-target.tooltip-content:active, .tooltip-active.tooltip-target:active .block.tooltip-content, .block.tooltip-active.tooltip-target.active.tooltip-content, .tooltip-active.tooltip-target.active .block.tooltip-content, .tooltip-active .tooltip-target:active .block.tooltip-content, .tooltip-active .tooltip-target:active ~ .block.tooltip-content, .tooltip-active.tooltip-target.active ~ .block.tooltip-content, .tooltip-focus .block.tooltip-fixed:hover, .tooltip-focus .block.tooltip-fixed:focus, .block.tooltip-focus.tooltip-target.tooltip-content:focus, .tooltip-focus.tooltip-target:focus .block.tooltip-content, .block.tooltip-focus.tooltip-target.active.tooltip-content, .tooltip-focus.tooltip-target.active .block.tooltip-content, .tooltip-focus .tooltip-target:focus .block.tooltip-content, .tooltip-focus .tooltip-target:focus ~ .block.tooltip-content, .tooltip-focus.tooltip-target.active ~ .block.tooltip-content, input[type='checkbox'].toggle-box:checked ~ .block.off {
-  display: block; }
-.tooltip-hover .inline-block.tooltip-fixed:hover, .tooltip-hover .inline-block.tooltip-fixed:focus, .inline-block.tooltip-hover.tooltip-target.tooltip-content:hover, .tooltip-hover.tooltip-target:hover .inline-block.tooltip-content, .inline-block.tooltip-hover.tooltip-target.active.tooltip-content, .tooltip-hover.tooltip-target.active .inline-block.tooltip-content, .tooltip-hover .tooltip-target:hover .inline-block.tooltip-content, .tooltip-hover .tooltip-target:hover ~ .inline-block.tooltip-content, .tooltip-hover.tooltip-target.active ~ .inline-block.tooltip-content, .tooltip-active .inline-block.tooltip-fixed:hover, .tooltip-active .inline-block.tooltip-fixed:focus, .inline-block.tooltip-active.tooltip-target.tooltip-content:active, .tooltip-active.tooltip-target:active .inline-block.tooltip-content, .inline-block.tooltip-active.tooltip-target.active.tooltip-content, .tooltip-active.tooltip-target.active .inline-block.tooltip-content, .tooltip-active .tooltip-target:active .inline-block.tooltip-content, .tooltip-active .tooltip-target:active ~ .inline-block.tooltip-content, .tooltip-active.tooltip-target.active ~ .inline-block.tooltip-content, .tooltip-focus .inline-block.tooltip-fixed:hover, .tooltip-focus .inline-block.tooltip-fixed:focus, .inline-block.tooltip-focus.tooltip-target.tooltip-content:focus, .tooltip-focus.tooltip-target:focus .inline-block.tooltip-content, .inline-block.tooltip-focus.tooltip-target.active.tooltip-content, .tooltip-focus.tooltip-target.active .inline-block.tooltip-content, .tooltip-focus .tooltip-target:focus .inline-block.tooltip-content, .tooltip-focus .tooltip-target:focus ~ .inline-block.tooltip-content, .tooltip-focus.tooltip-target.active ~ .inline-block.tooltip-content, input[type='checkbox'].toggle-box:checked ~ .inline-block.off {
-  display: inline-block; }
-.tooltip-hover .inline.tooltip-fixed:hover, .tooltip-hover .inline.tooltip-fixed:focus, .inline.tooltip-hover.tooltip-target.tooltip-content:hover, .tooltip-hover.tooltip-target:hover .inline.tooltip-content, .inline.tooltip-hover.tooltip-target.active.tooltip-content, .tooltip-hover.tooltip-target.active .inline.tooltip-content, .tooltip-hover .tooltip-target:hover .inline.tooltip-content, .tooltip-hover .tooltip-target:hover ~ .inline.tooltip-content, .tooltip-hover.tooltip-target.active ~ .inline.tooltip-content, .tooltip-active .inline.tooltip-fixed:hover, .tooltip-active .inline.tooltip-fixed:focus, .inline.tooltip-active.tooltip-target.tooltip-content:active, .tooltip-active.tooltip-target:active .inline.tooltip-content, .inline.tooltip-active.tooltip-target.active.tooltip-content, .tooltip-active.tooltip-target.active .inline.tooltip-content, .tooltip-active .tooltip-target:active .inline.tooltip-content, .tooltip-active .tooltip-target:active ~ .inline.tooltip-content, .tooltip-active.tooltip-target.active ~ .inline.tooltip-content, .tooltip-focus .inline.tooltip-fixed:hover, .tooltip-focus .inline.tooltip-fixed:focus, .inline.tooltip-focus.tooltip-target.tooltip-content:focus, .tooltip-focus.tooltip-target:focus .inline.tooltip-content, .inline.tooltip-focus.tooltip-target.active.tooltip-content, .tooltip-focus.tooltip-target.active .inline.tooltip-content, .tooltip-focus .tooltip-target:focus .inline.tooltip-content, .tooltip-focus .tooltip-target:focus ~ .inline.tooltip-content, .tooltip-focus.tooltip-target.active ~ .inline.tooltip-content, input[type='checkbox'].toggle-box:checked ~ .inline.off {
-  display: inline; }
-.tooltip-hover .table.tooltip-fixed:hover, .tooltip-hover .table.tooltip-fixed:focus, .table.tooltip-hover.tooltip-target.tooltip-content:hover, .tooltip-hover.tooltip-target:hover .table.tooltip-content, .table.tooltip-hover.tooltip-target.active.tooltip-content, .tooltip-hover.tooltip-target.active .table.tooltip-content, .tooltip-hover .tooltip-target:hover .table.tooltip-content, .tooltip-hover .tooltip-target:hover ~ .table.tooltip-content, .tooltip-hover.tooltip-target.active ~ .table.tooltip-content, .tooltip-active .table.tooltip-fixed:hover, .tooltip-active .table.tooltip-fixed:focus, .table.tooltip-active.tooltip-target.tooltip-content:active, .tooltip-active.tooltip-target:active .table.tooltip-content, .table.tooltip-active.tooltip-target.active.tooltip-content, .tooltip-active.tooltip-target.active .table.tooltip-content, .tooltip-active .tooltip-target:active .table.tooltip-content, .tooltip-active .tooltip-target:active ~ .table.tooltip-content, .tooltip-active.tooltip-target.active ~ .table.tooltip-content, .tooltip-focus .table.tooltip-fixed:hover, .tooltip-focus .table.tooltip-fixed:focus, .table.tooltip-focus.tooltip-target.tooltip-content:focus, .tooltip-focus.tooltip-target:focus .table.tooltip-content, .table.tooltip-focus.tooltip-target.active.tooltip-content, .tooltip-focus.tooltip-target.active .table.tooltip-content, .tooltip-focus .tooltip-target:focus .table.tooltip-content, .tooltip-focus .tooltip-target:focus ~ .table.tooltip-content, .tooltip-focus.tooltip-target.active ~ .table.tooltip-content, input[type='checkbox'].toggle-box:checked ~ .table.off {
-  display: table; }
-
 .ui-helper-hidden {
   display: none !important; }
 
@@ -1860,74 +1862,123 @@ a:visited {
 .ui-helper-visible {
   visibility: visible; }
 
-/*
- * tooltip
- * 3종류가 있다. tooltip-  hover(마우스오버시) / active(클릭시) / focus(포커스 시)
- * 
- * 1) tooltip-{값}이나 그 하위 엘리먼트는, tooltip-target클래스를 가질 수 있다.
- *    tooltip-target는 css 이벤트를 Listener하는 대상이 된다.
- *   이벤트 리스너는 툴팁을 감싸는 부모엘리먼트가 될수도 있고, 하위의 다른 자식 엘리먼트가 될수도 있다.
- *    자식 엘리먼트가 target이 될 경우, 툴팁 엘리먼트는 자식엘리먼트 바로 뒤에 위치해야 한다. 
- * 
- * 2) tooltip-content는 이벤트 발생시, 나타날 툴팁 엘리먼트다.
- * 
- *  
- */
-/*
- * 엘리먼트 바로 뒤에 있는 엘리먼트를 감춰두었다가, 마우스오버시에만 나타나게 한다. 
- */
-.tooltip-hover {
-  position: relative; }
-  .tooltip-hover.tooltip-static {
-    position: static; }
-  .tooltip-hover .tooltip-content {
-    display: none; }
-.tooltip-active {
-  position: relative; }
-  .tooltip-active.tooltip-static {
-    position: static; }
-  .tooltip-active .tooltip-content {
-    display: none; }
-.tooltip-focus {
-  position: relative; }
-  .tooltip-focus.tooltip-static {
-    position: static; }
-  .tooltip-focus .tooltip-content {
-    display: none; }
-
-.tooltip-focus .tooltip-target {
-  cursor: pointer; }
-  .tooltip-focus .tooltip-target .tooltip-content {
-    cursor: default; }
-
-/*
- * 체크박스를 클릭하면 각 on, off로 마킹된 엘리먼트가 번갈아 나타난다.
- */
-input[type='checkbox'].toggle-box {
-  display: none; }
-  input[type='checkbox'].toggle-box ~ .off {
-    display: none; }
-  input[type='checkbox'].toggle-box:checked ~ .on {
-    display: none; }
-  input[type='checkbox'].toggle-box:checked ~ .off {
-    display: block; }
-  input[type='checkbox'].toggle-box:checked ~ table.off {
-    display: table; }
-
-label.toggle-btn {
-  font-size: 11px;
-  font-weight: normal;
-  cursor: pointer; }
+#ui-gallery {
+  position: relative;
+  height: 100%;
+  padding-left: 200px; }
+  #ui-gallery .side-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background: black; }
+    #ui-gallery .side-container .info {
+      height: 31px;
+      line-height: 31px;
+      text-align: center;
+      font-family: 'tahoma';
+      font-weight: bold;
+      color: #616161; }
+    #ui-gallery .side-container .thumbnails {
+      width: inherit; }
+      #ui-gallery .side-container .thumbnails li {
+        float: left;
+        padding: 10px;
+        width: 200px;
+        height: 100px;
+        text-align: center;
+        box-sizing: border-box; }
+        #ui-gallery .side-container .thumbnails li.selected img {
+          cursor: default !important; }
+        #ui-gallery .side-container .thumbnails li.selected img, #ui-gallery .side-container .thumbnails li img:hover {
+          opacity: 1;
+          outline: 1px solid #eab646; }
+        #ui-gallery .side-container .thumbnails li img {
+          max-width: 180px;
+          max-height: 80px;
+          opacity: .7;
+          cursor: pointer; }
+  #ui-gallery .container {
+    display: table;
+    width: 100%;
+    height: 100%; }
+    #ui-gallery .container .large-img {
+      display: table-cell;
+      height: inherit;
+      text-align: center;
+      vertical-align: middle; }
+      #ui-gallery .container .large-img img {
+        max-width: 80%;
+        max-height: 80%; }
+  #ui-gallery [data-name='filename'] {
+    margin-top: 8px;
+    font-family: "맑은 고딕", "Apple SD Gothic Neo", Sans-serif;
+    font-size: 14px;
+    color: #d7d7d7; }
+  #ui-gallery [data-name='datetime'] {
+    margin-top: 4px;
+    font-family: 'tahoma';
+    font-size: 12px;
+    color: #9e9e9e; }
+  #ui-gallery .add-img {
+    float: right;
+    margin-right: 10px; }
+  #ui-gallery .add-box {
+    position: absolute;
+    padding: 1em;
+    width: 230px;
+    height: 130px;
+    background: white;
+    border: 1px solid #323232;
+    border-radius: 4px; }
+  #ui-gallery .control-btns {
+    position: absolute;
+    top: 8px;
+    right: 18px;
+    color: #515151;
+    font-size: 2.5em; }
+    #ui-gallery .control-btns > span {
+      cursor: pointer; }
+      #ui-gallery .control-btns > span:hover {
+        color: #b4b4b4; }
+      #ui-gallery .control-btns > span.active {
+        color: #b4b4b4; }
+    #ui-gallery .control-btns .menu-btn .on {
+      display: inline-block; }
+    #ui-gallery .control-btns .menu-btn .off {
+      display: none; }
+    #ui-gallery .control-btns .menu-btn.active .off {
+      display: inline-block; }
+    #ui-gallery .control-btns .menu-btn.active .on {
+      display: none; }
 
 .tooltip-box {
   position: absolute;
-  z-index: 1;
-  padding: .2em .4em;
-  border: 1px solid whitesmoke;
+  padding: 5.5px;
+  color: #222222;
+  border: 2px solid #aaaaaa;
+  box-shadow: #aaaaaa 0px 0px 5px;
   border-radius: 4px;
-  box-shadow: 0px 0px 5px #a5a5a5;
-  color: whitesmoke;
-  background: #464646; }
+  background: white; }
+
+.ui-autocomplete-container {
+  z-index: 100; }
+
+#ui-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); }
+  #ui-popup #ui-popup-container > * {
+    margin: 0 auto; }
+
+.ui-datepicker {
+  z-index: 9999 !important;
+  width: 15em !important; }
 
 [class*='img-icons-file-'] {
   display: inline-block;
@@ -2135,5 +2186,8 @@ label.toggle-btn {
   width: 18px;
   height: 18px;
   background-position: -162px -30px; }
+
+.helper-text-right {
+  text-align: right; }
 
 /*# sourceMappingURL=base.css.map */

@@ -1,23 +1,18 @@
 package kr.co.koreanmagic.service;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import javax.persistence.Table;
 
-import kr.co.koreanmagic.commons.KoReflectionUtils;
-import kr.co.koreanmagic.commons.KoStringUtils;
+import kr.co.koreanmagic.commons.DateUtils;
+import kr.co.koreanmagic.commons.ReflectionUtils;
 import kr.co.koreanmagic.dao.GeneralDao;
 import kr.co.koreanmagic.web.service.Service;
-import kr.co.koreanmagic.web.support.board.PagingQuery;
+import kr.co.koreanmagic.web.support.board.PagingRequest;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
@@ -55,7 +50,7 @@ public abstract class GenericService<T, P extends Serializable> implements Servi
 	
 	@Autowired
 	private void init(SessionFactory factory) throws Exception {
-		Class<T> clazz = KoReflectionUtils.getActualType(getClass(), 0);
+		Class<T> clazz = ReflectionUtils.getActualType(getClass(), 0);
 		setDao(new GeneralDao<T, P>(clazz, factory));
 		
 		this.tableName = clazz.getAnnotation(Table.class).name();
@@ -106,9 +101,17 @@ public abstract class GenericService<T, P extends Serializable> implements Servi
 		return (T)getDao().getSession().load(getServiceClass(), primarykey);
 	}
 	
-	@Transactional(readOnly=true)
-	public List<T> getList(PagingQuery paging) {
-		return getList(paging.getStart(), paging.getLimit(), paging.getOrder());
+	
+	public List<T> getList(PagingRequest req) {
+		return getList(getDao().criteria(), req);
+	}
+	
+	public List<T> getList(Criteria criteria, PagingRequest req) {
+		return getDao().getList(criteria,		
+										req.getStart(),
+										req.getLimit(),
+										req.getOrder()
+									);
 	}
 	
 	@Override
@@ -187,4 +190,8 @@ public abstract class GenericService<T, P extends Serializable> implements Servi
 		return obj != null && obj.equals("null") ? null : obj;
 	}
 	
+	// 테이블 명 알아내기
+	public static final String getTableName(Object obj) {
+		return obj.getClass().getAnnotation(Table.class).name();
+	}
 }

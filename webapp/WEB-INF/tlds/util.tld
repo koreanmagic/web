@@ -47,26 +47,39 @@
     
     
     <tag>
-        <name>js</name>
-        <tag-class>kr.co.koreanmagic.web2.servlet.tag.IncludeJS</tag-class>
-        <body-content>empty</body-content>
-        <description>
-        	자바스크립트 임포트
-		</description>
-		<attribute>
-        	<name>path</name>
-        	<description>디렉터리 glob패턴</description>
-        	<required>false</required>
-		</attribute>
-    </tag>
-    
-    <tag>
         <name>trace</name>
         <tag-class>kr.co.koreanmagic.web2.servlet.tag.Trace</tag-class>
         <body-content>empty</body-content>
         <description>
         	리퀘스트 값 찍어보기
 		</description>
+    </tag>
+    
+    <tag>
+        <name>date</name>
+        <tag-class>kr.co.koreanmagic.web2.servlet.tag.DatePicker</tag-class>
+        <body-content>empty</body-content>
+        <description>
+        	날짜관련
+		</description>
+		
+		<attribute>
+        	<name>date</name>
+        	<description>기준날짜</description>
+        	<required>false</required>
+		</attribute>
+		
+		<attribute>
+        	<name>day</name>
+        	<description>기준날짜에 더하거나 뺄 값</description>
+        	<required>false</required>
+		</attribute>
+		
+		<attribute>
+        	<name>month</name>
+        	<description>기준날짜에 더하거나 뺄 값</description>
+        	<required>false</required>
+		</attribute>
     </tag>
 
 </taglib>

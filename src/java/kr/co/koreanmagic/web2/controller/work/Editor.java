@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
-import kr.co.koreanmagic.hibernate3.mapper.domain.WorkResourceFile;
-import kr.co.koreanmagic.service.WorkConfirmFileService;
 import kr.co.koreanmagic.service.WorkFileService;
 import kr.co.koreanmagic.service.WorkResourceFileService;
 import kr.co.koreanmagic.web2.controller.work.WorkController.WorkControllerMember;

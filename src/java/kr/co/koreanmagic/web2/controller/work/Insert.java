@@ -6,8 +6,10 @@ import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.WorkType;
+import kr.co.koreanmagic.service.CustomerService;
 import kr.co.koreanmagic.service.WorkStateService;
 import kr.co.koreanmagic.web2.controller.work.WorkController.WorkControllerMember;
+import kr.co.koreanmagic.web2.support.argresolver.annotation.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,10 +28,12 @@ public class Insert extends WorkControllerMember {
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  Insert  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	@RequestMapping(value="/insert/{customer}", method=RequestMethod.GET)
-	public String insertGet( ModelMap model, @PathVariable("customer") Customer customer ) throws Exception {
+	public String insertGet( ModelMap model, 
+										@PathVariable("customer") Customer customer,
+										@Service CustomerService customerService) throws Exception {
 		Work work = service.getInitalBean();
 		work.setWorkState(new WorkState(1));
-		work.setCustomer(customer);
+		work.setCustomer(customerService.get(customer.getId(), true));
 		model.put("command", work);
 		return "admin.work.insert";
 	}

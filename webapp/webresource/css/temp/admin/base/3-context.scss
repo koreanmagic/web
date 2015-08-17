@@ -12,10 +12,11 @@ $radius: $default-border-radius;
   float: left;
 }
 
-
-#SearchBar {
+// 검색바
+#searchContainer {
   
   display: inline-block;
+  position: relative;
   margin-top: ($context-line-height - $height) / 2;
   
   width: $width;
@@ -24,6 +25,13 @@ $radius: $default-border-radius;
     height: $height;
     border: none;
     box-sizing: border-box;
+  }
+  
+  #searchInput {
+    font-size: 16px;
+    font-family: '돋움',dotum,'Apple SD Gothic NEO',helvetica,sans-serif;
+    font-weight: bold;
+    letter-spacing: -.7px;
   }
   
   // 선택버튼
@@ -41,32 +49,70 @@ $radius: $default-border-radius;
       text-shadow: none;
     }
   }
+ 
   
   // 검색버튼
   .submit {
     @include setRadius(right, $radius);
     float: right;
     width: 40px;
-    color: rgb(57, 57, 57);
     font-size: 20px;
+    color: white;
+    background-color: rgb(240, 137, 0);
     
-    //background-color: rgb(254, 189, 105);
-    background-color: rgb(190, 190, 190);
-    &:hover {
-      //background-color: rgb(247, 170, 70);
-      background-color: rgb(160,160,160);
+    &.disable {
+      color: rgb(150,150,150);
+      background-color: rgb(190, 190, 190);
+    }    
+    &.active {
+      //color: white;
     }
   }
   
-  // 인풋
+  .send {
+    width: 45px;
+    margin-left: 7px;
+  }
+  
+  // 인풋박스를 갑싸는 박스
   .input {
     overflow: hidden;
+    
+    .drop-box {
+      padding: 1em;
+    }
   }
+  
+  .date-options {
+    
+    width: 100%;
+    box-sizing: border-box;
+    
+    .title {
+      font-weight: bold;
+      margin-bottom: 9px;
+    }
+    .duration {
+      margin-left: 7px;
+    }
+    
+    input[type='text'] {
+      font-family: 'tahoma';
+      font-size: 14px;
+      font-weight: bold;
+      color: rgb(67, 93, 128);
+      text-align: center;
+    }
+    
+    //선택버튼
+    .date-select {
+      float: right;
+    }
+    
+  }
+  
 }
 
-#searchInput {
-  width: 100%;
-}
 
 #contextLine {
   

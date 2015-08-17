@@ -5,10 +5,11 @@ import javax.servlet.http.HttpSession;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
 import kr.co.koreanmagic.hibernate3.mapper.domain.marker.PartnerMember;
 import kr.co.koreanmagic.service.BankNameService;
+import kr.co.koreanmagic.service.PartnerService;
 import kr.co.koreanmagic.service.marker.PartnerMemberService;
-import kr.co.koreanmagic.web2.support.argresolver.annotation.BoardList;
+import kr.co.koreanmagic.web.support.board.GeneralBoard;
+import kr.co.koreanmagic.web2.support.argresolver.annotation.Board;
 import kr.co.koreanmagic.web2.support.argresolver.annotation.Service;
-import kr.co.koreanmagic.web2.support.paging.GenericBoardList;
 
 import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.support.SessionStatus;
 /*
  * Customer와 Subcontractor의 공통부분만 설정한다.
  */
-//@Controller
 @SessionAttributes({"command"})
 public abstract class PartnerController<T extends Partner> extends AdminController<T, Long> {
 
@@ -66,27 +66,23 @@ public abstract class PartnerController<T extends Partner> extends AdminControll
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  List  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public String list(@BoardList GenericBoardList boardList ) throws Exception {
-		boardList.setTotalSize( (int)getService().rowCount() );
+	public String list(@Board GeneralBoard boardList ) throws Exception {
+		boardList.setRowCount( (int)getService().rowCount() );
 		boardList.setList( getService().getList(boardList) );
 		return "admin.partner.list";
 	}
 	
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  Ajax  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	@RequestMapping(value="/ajax/list/{data}", method=RequestMethod.GET)
-	public Object getManager(
-							@RequestParam("names") String[] names,
-							@RequestParam("id") Long partnerId
-							) throws Exception {
-		return "admin.partner.list";
-	}
-	
-	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  Ajax  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	@RequestMapping(value="/ajax/test/{id}", method=RequestMethod.GET)
+	//거래처, 하청업체 이름 검색(like)
+	@RequestMapping(value="/search/byname/{word}", method=RequestMethod.GET)
 	@ResponseBody
-	public Object test(@RequestParam("id") Long id) throws Exception {
-		return getService().get(id, true);
+	public Object getNames(
+							@PathVariable("word") String word,
+							@RequestParam(value="props", required=false) String[] props
+							) throws Exception {
+		PartnerService<?> service = (PartnerService<?>)getService();
+		return props == null ? service.getNameList(word) : service.getNameList(word, props);
 	}
 	
 	
@@ -106,5 +102,18 @@ public abstract class PartnerController<T extends Partner> extends AdminControll
 			getService().add(bean);
 		}		
 	}
+
+
+
+	/*@Override
+	protected GenericService<T, Long> getService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	protected String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
 	
 }

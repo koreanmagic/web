@@ -56,6 +56,7 @@ public class ApplicationStartUp extends WebMvcConfigurerAdapter {
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		for(Converter<?,?> converter : converters) {
+			System.out.println(converter);
 			registry.addConverter(converter);
 		}
 		super.addFormatters(registry);

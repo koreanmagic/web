@@ -10,7 +10,7 @@
 			<th>담당자</th>
 			<td>
 			
-				<@listTable name="manager-table" size=5 headers=["1 $index No", "1 position 직책", "2 name 이름",  "2 tel 전화번호", "2 fax 팩스", "3 email 이메일"] addList="/WEB-INF/view/admin/includes/scrollTable-add-manager.ftl" />
+				<@listTable name="manager-table" size=5 headers=["1 $index No", "1 position 직책", "2 name 이름",  "2 tel 전화번호", "2 fax 팩스", "3 email 이메일"] addList="/WEB-INF/view/admin/#include/snippet/scrollTable-add-manager.ftl" />
 			</td>
 		</tr>
 	</tbody>
@@ -21,10 +21,20 @@
 			<th>작업정보</th>
 			<td>
 			
+			
 			<form id="command" method="post" data-customer-id="${command.customer.id}" >
 				<input id="subcontractor" name="subcontractor" type="hidden">
 				<input id="address" name="address" type="hidden">
 				<input id="manager" name="manager" type="hidden">
+				
+				<dl class="form-group">
+					<dt>
+						<label>거래처</label>
+					</dt>
+					<dd>
+						<span class="customer-name">${command.customer.name}</span>
+					</dd>
+				</dl>
 							
 				<dl class="form-group">
 					<dt>
@@ -71,6 +81,8 @@
 					</dd>
 				</dl>
 				
+				
+				<#--
 				<dl class="form-group">
 					<dt>
 						<label>후가공</label>
@@ -85,6 +97,7 @@
 						<span class="error" data-error-for="afterProcess"></span>
 					</dd>
 				</dl>
+				-->
 				
 				<dl class="form-group">
 					<dt>
@@ -163,7 +176,7 @@
 					
 					<dd>
 						<div class="input-group">
-							<textarea name="memo" id="memo" style="height:80px"></textarea>
+							<textarea name="memo" id="memo" style="height:80px" maxlength="245"></textarea>
 						</div>
 						<span class="description">전달사항</span>
 					</dd>
@@ -194,7 +207,7 @@
 		<tr>
 			<th>배송정보</th>
 			<td>
-				<@listTable name="address-table" size=4 headers=["1 $index No", "6 text 주소", "3 mobile 연락처", "2 name 받는사람"] addList="/WEB-INF/view/admin/includes/scrollTable-add-address.ftl" />
+				<@listTable name="address-table" size=4 headers=["1 $index No", "6 text 주소", "3 mobile 연락처", "2 name 받는사람"] addList="/WEB-INF/view/admin/#include/snippet/scrollTable-add-address.ftl" />
 			</td>
 		</tr>
 	</tbody>

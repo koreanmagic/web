@@ -18,7 +18,7 @@ form {
   $block-background: rgb(236, 236, 236);
   [type='submit'], [type='reset'] {
     width: 75px;
-    height: 31px;
+    height: $height;
     background: rgb(255, 255, 255);
     border-width: 1px;
     border-style: solid;
@@ -146,13 +146,6 @@ form {
   
   @extend %float-extend;
   
-  .separator {
-    float: left;
-    margin: 0 4px;
-    
-    text-align: center;
-    line-height: $height;
-  }
   
   .description, .error {
     float: left;
@@ -182,7 +175,7 @@ form {
     }
     
     .input-group {
-      [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label  {
+      [type='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label  {
          height: $small-height;
       }
     }
@@ -221,28 +214,36 @@ form {
     float: left;
   }
   
-  [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label {
+  [type='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select, label {
     box-sizing: border-box;
     height: $height;
     font-size: 12px;
   }
   
-  [type*='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select {
+  [type='text'], .addon, [type='radio']+label, [type='checkbox']+label, [type='file']+label, textarea, select {
     border-width: 1px;
     border-style: solid;
     border-color: $border-color;
   }
   
   // input-group의 멤버로 들어갈 수 있는 엘리먼트들
-  [type*='text'], .addon, select, label, textarea {
+  [type='text'], .addon, select, label, textarea {
     display: table-cell;
+    border-right: 0;
+    
+    &:last-child {
+      border-width: 1px;
+      border-style: solid;
+      border-color: $border-color;
+    }
   }
   
-  [type*='text']~.addon, .addon+[type*='text'], .addon+textarea, .addon+select {
+  // 맞붙어있는 경우
+  [type='text']+.addon, .addon+[type='text'], .addon+textarea, .addon+select {
     border-left: 0;
   }
   
-  [type*='text'], textarea {
+  [type='text'], textarea {
     width: 100%;
     padding: .6em;
     text-indent: .2em;
@@ -279,7 +280,8 @@ form {
       }
     } // &:checked
   }  
-  .addon, .text {
+  
+  .addon {
     padding-left: 5px;
     padding-right: 5px;
     width: 1%;
@@ -288,8 +290,29 @@ form {
     color: rgb(134, 134, 134);
     white-space: nowrap;
     vertical-align: middle;
-      
-    background: rgb(248, 248, 248);
+    
+    &:first-child {
+      border-right: 0;
+    }
+    
+    //background: rgb(248, 248, 248);
+  }
+  
+  
+  & + .separator {
+    float: left;
+    margin: 0 4px;
+    
+    text-align: center;
+    line-height: $height;
   }
   
 } // .input-group
+
+
+[type='text'] {
+  &[disabled], &[readOnly] {
+    background-color: rgb(242,242,242);
+    color: rgb(176, 176, 176);
+  }
+}

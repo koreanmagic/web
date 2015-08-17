@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kr.co.koreanmagic.commons.KoUtils;
+import kr.co.koreanmagic.commons.Utils;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.apache.log4j.Logger;

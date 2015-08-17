@@ -4,32 +4,32 @@ import java.beans.Transient;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import kr.co.koreanmagic.commons.KoDateUtils;
-import kr.co.koreanmagic.commons.KoStringUtils;
-import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
+import kr.co.koreanmagic.commons.DateUtils;
+import kr.co.koreanmagic.commons.StringUtils;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 import kr.co.koreanmagic.hibernate3.mapper.domain.WorkBackUp;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.WorkType;
-import kr.co.koreanmagic.web.support.board.PagingQuery;
+import kr.co.koreanmagic.service.boardlist.WorkBoard;
+import kr.co.koreanmagic.service.example.WorkExample;
+import kr.co.koreanmagic.service.transformer.WorkStateCount;
+import kr.co.koreanmagic.web.support.board.PagingRequest;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -70,140 +70,122 @@ public class WorkService extends GenericService<Work, String> {
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▼ boardList ▼ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	// 작업상황 리스트
+	// eq-같다  bt-사이값  nb-사이값제외  ge-이상  le-이하  gt-초과  lt-미만  ne-같지않다 
+	
+	// 검색기능
 	@Transactional(readOnly=true)
-	public Object[] getStateList(WorkState state, boolean today, PagingQuery paging) {
-		Criterion method = today ?
-									Restrictions.and(Restrictions.eq("workState", state), Restrictions.lt("stateTime", new Date())) :
-									Restrictions.eq("workState", state);
-									
-		return getWorkList(method, paging);
-	}
-	
-	
-	// 거래처 혹은 하청업체 해당 리스트
-	@Transactional(readOnly=true)
-	public Object[] getPartnerList(WorkState state, Partner partner, String name, PagingQuery paging) {
-		return getWorkList(
-						Restrictions.and(Restrictions.eq("workState", state), Restrictions.eq(name, partner)),
-						paging
-					);
-	}
-	
-	
-	@Transactional(readOnly=true)
-	public Object[] getWorkList(Criterion method, PagingQuery paging) {
-		return getWorkList(method, paging.getStart(), paging.getLimit(), paging.getOrder());
-	}
-	
-	@Transactional(readOnly=true)
-	public Object[] getWorkList(Criterion method, int start, int limit, String order) {
+	public WorkBoard getList0(WorkExample example, WorkBoard workBoard) {
 		
-		Object[] result = new Object[2];
 		
-		// 총 갯수
-		result[0] = (int)(long)getDao().criteria()
-									.add(method)
-									.setProjection(Projections.rowCount())
+		Map<String, Criterion> criterions = example.getExamples( currentSession() );	// Example을 담은 리스트
+		
+		Criterion workExample = example.getOwnerExample();
+		Criterion dateCriterion = example.getDateCriterion("insertTime");	// startDate, endDate 쿼리가 있을 경우
+		
+		WorkState state = example.getState();
+		
+		Integer[] stateCount = null;	// 해당 스테이트 전체 갯수 구할때 사용
+		
+		Criteria criteria = null;
+		
+		// 1) 오늘 변경된 state 신규 갯수
+		criteria = criteriaForCount(workExample)
+							.add(Restrictions.ge("stateTime", DateUtils.localToDate(LocalDateTime.now().minusDays(1))));
+		workBoard.setTodayCount(  getStateCount( 
+											addExamples(criteria, criterions).add(dateCriterion) ).get()
+										);
+		
+		
+		// 2) 조건에 해당하는 전체 state 갯수
+		criteria = criteriaForCount(workExample);
+		stateCount = getStateCount( addExamples(criteria, criterions).add(dateCriterion) ).get();
+		workBoard.setStateCount(  stateCount  );
+		
+		
+		// 3) 리스트 구하기
+		criteria = addExamples( 
+							criteriaForList(example.getOwnerExample())
+												.add( example.getStateCriterion() ),		// 리스트를 가지고 올 해당 state를 설정한다.
+							criterions
+						).add(dateCriterion);
+		
+		workBoard.setList( getList(criteria, workBoard) );
+		workBoard.setRowCount( stateCount[state.getId() - 1] );
+		
+		return workBoard;
+		
+	}
+	
+	
+	// state별 카운트 구하기
+	private WorkStateCount getStateCount( Criteria criteria ) {
+		return (WorkStateCount)criteria.setProjection(Projections.projectionList()
+										.add(Projections.count("this.id").as("count"))
+										.add(Projections.groupProperty("this.workState.id").as("id"))
+									)
+									.setResultTransformer(new WorkStateCount())
 									.uniqueResult();
-		// 리스트
-		result[1] = getDao().getList(listCriteria().add(method), start, limit, order, null);
-		
-		return result; 
 	}
 	
 	
+	private Criteria addExamples(Criteria criteria, Map<String, Criterion> list) {
+		
+		Criterion criterion = null;
+		String associationPath = null;
+		
+		for(Entry<String, Criterion> entry : list.entrySet()) {
+			
+			associationPath = entry.getKey();
+			criterion = entry.getValue();
+			
+			// Example일 경우에는 예제로 등록, 아닐 경우에는 엔터티 검색
+			if( criterion instanceof Example )
+				criteria.createCriteria(associationPath ).add(entry.getValue() );
+			else
+				criteria.add( entry.getValue() );
+		}
+		
+		return criteria;
+	}
 	
-	@Transactional(readOnly=true)
-	public Criteria listCriteria() {
-		return getDao().criteria()
+	// 카운트계산용 크리테리아
+	public Criteria criteriaForCount(Criterion workExample) {
+		Criteria criteria = getDao().criteria();
+		return workExample == null ? criteria : criteria.add(workExample);
+	}
+	
+	
+	// 리스트용 크리테리아
+	public Criteria criteriaForList() {
+		return criteriaForList(null);
+	}
+	public Criteria criteriaForList(Criterion workExample) {
+		Criteria criteria = getDao().criteria()
+				
 				.setFetchMode("customer", FetchMode.JOIN)
 				.setFetchMode("subcontractor", FetchMode.JOIN)
 				.setFetchMode("manager", FetchMode.JOIN)
+				
+				// manager는 null이 있을 수 있기때문에 inner join으로 가지고 오면 리스트가 빠질 수 있다.
 				;
+		return workExample == null ? criteria : criteria.add(workExample);
 	}
 	
 	
-	// 기준 날짜에서 월 빼거나 더하기
-	@Transactional(readOnly=true)
-	public Object[] getListByMonth(WorkState state, LocalDateTime from, int months, PagingQuery paging) {
-		LocalDateTime to = null;
-		from = from == null ? LocalDateTime.now() : from;
-		
-		if(months < 0) {
-			to = from;
-			from = to.minusMonths( -(months));
-		} else {
-			to = from.plusMonths(months);
-		}
-		
-		return getListByDate(state,
-										KoDateUtils.localDateTimeToDate(from), 
-										KoDateUtils.localDateTimeToDate(to), 
-										paging
-									);
-	}
-	
-	// 기준 날짜에서 일수 빼거나 더하기
-	@Transactional(readOnly=true)
-	public Object[] getListByDays(WorkState state, LocalDateTime from, int days, PagingQuery paging) {
-		LocalDateTime to = null;
-		from = from == null ? LocalDateTime.now() : from;
-		
-		if(days < 0) {
-			to = from;
-			from = to.minusDays( -(days));
-		} else {
-			to = from.plusDays(days);
-		}
-		return getListByDate(state,
-										KoDateUtils.localDateTimeToDate(from), 
-										KoDateUtils.localDateTimeToDate(to), 
-										paging
-									);
-	}
-	
-	public Object[] getListByDate(WorkState state, Date from, Date to, PagingQuery paging) {
-		return getWorkList(Restrictions.between("insertTime", from, to), paging);
-	}
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▲ boardList ▲ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 
 	
 	
 	
-	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▼ SEARCH ▼ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	@Transactional
-	public List<Work> getStateTodayList(WorkState state) {
-		return null;
-	}
-	
-	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▲ SEARCH ▲ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	
 	
-	// 작업진행 현황
-	@Transactional
-	public List<Long> getStateCountByDate() {
-		return getStateCountByDate(new Date());
-	}
 	
-// eq-같다  bt-사이값  nb-사이값제외  ge-이상  le-이하  gt-초과  lt-미만  ne-같지않다 
-	@Transactional
-	public List<Long> getStateCountByDate(Date date) {
-		return currentSession()
-				.createSQLQuery("SELECT count(w.id) as count "
-											+ "FROM work_state s LEFT JOIN hancome_work w "
-											+ "ON w.state = s.id AND w.stateTime > :date "
-											+ "GROUP BY s.id")
-				.addScalar("count", LongType.INSTANCE)
-				.setTimestamp("date", date )
-				.list();
-	}
-	@Transactional
-	public List<Long> getStateCount() {
-		return currentSession()
-				.createQuery("select count(w.id) from Work w group by w.workState")
-				.list();
-	}
+	
+	
+	
+	
+	
 	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▼ UPDATE ▼ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	
@@ -224,7 +206,6 @@ public class WorkService extends GenericService<Work, String> {
 		.executeUpdate();
 	}	
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ▲ UPDATE ▲ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
-	
 	
 	
 	
@@ -304,10 +285,10 @@ public class WorkService extends GenericService<Work, String> {
 			List<String> columns = new ArrayList<>();
 			for(Method method : WorkBackUp.class.getDeclaredMethods()) {
 				if(method.getAnnotation(Transient.class) == null && method.getName().startsWith("get")) {
-					columns.add( StringUtils.uncapitalize(method.getName().substring(3)) );
+					columns.add( org.springframework.util.StringUtils.uncapitalize(method.getName().substring(3)) );
 				}
 			}
-			backupColumns = KoStringUtils.join(", ", columns);
+			backupColumns = StringUtils.join(", ", columns);
 		}
 		return backupColumns;
 	}

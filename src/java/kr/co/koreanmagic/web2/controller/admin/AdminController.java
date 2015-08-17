@@ -2,7 +2,7 @@ package kr.co.koreanmagic.web2.controller.admin;
 
 import java.io.Serializable;
 
-import kr.co.koreanmagic.commons.KoStringUtils;
+import kr.co.koreanmagic.commons.StringUtils;
 import kr.co.koreanmagic.service.GenericService;
 
 import org.apache.log4j.Logger;
@@ -84,6 +84,6 @@ public abstract class AdminController<T, P extends Serializable> {
 	}
 	
 	protected void log(Object...t) {
-		System.out.println(KoStringUtils.join("", ",", t));
+		System.out.println(StringUtils.join("", ",", t));
 	}
 }

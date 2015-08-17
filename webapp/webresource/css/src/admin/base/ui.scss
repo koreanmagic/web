@@ -6,24 +6,6 @@
 }
 
 
-// 오버레이
-#KScript-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  
-  //포지션 함수를 위한 리셋
-  // overlay에 올라가는 순간 ui-helper-block이 붙여지므로 display:block은 필요없다.
-  #KScript-popup-container > * {
-    margin: 0 auto;
-  }
-
-}
-
 
 .fileTable {
   

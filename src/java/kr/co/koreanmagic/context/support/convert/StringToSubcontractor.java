@@ -1,8 +1,6 @@
 package kr.co.koreanmagic.context.support.convert;
 
 import kr.co.koreanmagic.hibernate3.mapper.domain.Subcontractor;
-import kr.co.koreanmagic.hibernate3.mapper.domain.code.BankName;
-import kr.co.koreanmagic.service.BankNameService;
 import kr.co.koreanmagic.service.SubcontractorService;
 
 import org.apache.log4j.Logger;

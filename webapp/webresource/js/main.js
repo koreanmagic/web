@@ -15,14 +15,16 @@ require.config({
         'jquery': 'http://code.jquery.com/jquery-2.1.4.min',
         //'jquery': 'lib/jquery-2.1.4',
         'jquery-ui': 'http://code.jquery.com/ui/1.11.4/jquery-ui.min',
+        'jquery-ui-css': 'http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui',
         
+        'events': 'lib/Events',
         'utils': 'lib/Utils',
         'ui': 'lib/ui',
         'component': 'lib/component',
         'json': 'src/json',
         
         'text': 'https://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min',
-        'css': 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.5/css.min',
+        '#css': 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.8/css.min',
         '#json': 'https://cdnjs.cloudflare.com/ajax/libs/requirejs-plugins/1.0.3/json.min',
     },
     urlArgs : 'ts=' + (new Date()).getTime(),
@@ -34,6 +36,8 @@ require.config({
 require([
 	'jquery',
 	'#json!files.json',
+	
+	'src/admin/context',
 ],
 function($, files) {
 	
@@ -49,7 +53,8 @@ function($, files) {
 	
 	//디버그 작업
 	$('#topLine').on('click', function(e) {
-		$(document.body).toggleClass('outline-all');
+		if(e.ctrlKey)
+			$(document.body).toggleClass('outline-all');
 	});
 	
 });

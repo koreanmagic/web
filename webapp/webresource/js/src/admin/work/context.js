@@ -2,9 +2,12 @@
 define([
 	
 	'jquery',
-	'ui/scrollTable'
+	'events',
 	
-], function($) {
+	'ui/scrollTable',
+	
+], function($, Events) {
+	
 	
 	/* ***********************  ▼ 작업리스트 추가 ▼  *********************** */
 	var obj = (function() {
@@ -20,31 +23,28 @@ define([
 			element = context.find("#searchCustomer"),
 			table = context.find(".customer-table").scrollTable(options).scrollTable("instance"),
 			input = element.find("input"),
-			existKeyword;
+			props = '?props=' + ['id', 'name', 'ceoName', 'tel'].join('&props=');
+			;
 		
 		element.on("popOn", function() {
 			table.clear();
 			input.val("");
+			input.focus();
 		});
 		
-		input.on("keyup", function(e) {
-			var keyword = input.val();
-			// 빠르게 타이핑쳤을떄 같은 글씨가 두번 호출되는 걸 방지하는 코드
-			if( existKeyword === (keyword = $(e.target).val())) return;
-			if( keyword.length === 0 ) {
-				input.val("");
-				table.clear();
-				return;
-			} 
-			existKeyword = keyword;
-			
-			if( /^[가-힣|\w|\s]+$/.test(keyword) ) {
-				$.getJSON("/admin/customer/search/name/" + keyword)
+		
+		Events.keyup(input, function( word ) {
+			if( word ) {
+				$.getJSON("/admin/customer/search/byname/" + word + props )
 					.success( function(data) {
 						table.clear();
 						table.addList(data);
 					});
-				}
+			} else {
+				input.val("");
+				table.clear();
+				return;
+			}
 		});
 		
 	})();

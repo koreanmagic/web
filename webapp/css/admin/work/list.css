@@ -341,8 +341,11 @@
     line-height: 60px;
     color: gainsboro; }
     ._item-notice [class*='_work-count-num']._current {
-      font-size: 38px;
-      color: #fafafa; }
+      font-size: 30px;
+      color: #ffde76;
+      text-decoration: underline; }
+      ._item-notice [class*='_work-count-num']._current:hover {
+        color: #ffd654; }
     ._item-notice [class*='_work-count-num']:hover {
       color: white; }
   ._item-notice ._notice-state {
@@ -381,16 +384,27 @@
   opacity: .25;
   text-align: center; }
 
+.control-box, ._work-wrap {
+  position: relative;
+  margin-top: .65em; }
+
+.control-box {
+  vertical-align: middle;
+  text-align: right; }
+  .control-box a {
+    color: #a0a0a0; }
+    .control-box a.active {
+      color: #505050;
+      font-weight: bold; }
+    .control-box a:hover {
+      color: #505050; }
+
 /*
  * 사용자 요구에 따라 리스트를 펼치는 위젯
  * 실시간으로 리스트를 수정하고 삭제하는 기능이 있다. 
  */
 ._work-container {
   position: relative; }
-
-._work-wrap {
-  position: relative;
-  margin-top: 1em; }
 
 ._work {
   position: relative;
@@ -411,7 +425,8 @@
     font-size: 18.2px;
     color: rgba(0, 0, 0, 0.6);
     background: rgba(0, 0, 0, 0.3);
-    cursor: pointer; }
+    cursor: pointer;
+    opacity: .5; }
     ._work .delete:hover {
       color: rgba(0, 0, 0, 0.8);
       background: rgba(0, 0, 0, 0.5); }
@@ -438,6 +453,9 @@
   font-size: 14px;
   color: #343434;
   cursor: pointer; }
+._work [data-name='size'] {
+  font-weight: bold;
+  color: #565656; }
 ._work [data-name='itemDetail'] {
   font-size: 11px;
   color: #c7612c; }
@@ -452,10 +470,14 @@
   font-size: 11px;
   color: #4c75b5;
   letter-spacing: -1px; }
+._work [data-name='memo'] {
+  font-size: 11px;
+  font-family: 'Dotum';
+  letter-spacing: -.7px;
+  color: #2c69c7; }
 ._work [data-name*='cost'], ._work [data-name*='price'] {
   font-family: tahoma;
-  font-weight: bold;
-  color: #3476a6; }
+  color: #6b6b6b; }
   ._work [data-name*='cost']:after, ._work [data-name*='price']:after {
     content: "원";
     font-weight: normal; }
@@ -464,42 +486,51 @@
 ._work [data-name*='cost']:before {
   content: "제작단가 : ";
   font-weight: normal; }
+._work [data-name='subcontractor'] {
+  font-size: 12px; }
 ._work [data-name*='insertTime'] {
   font-size: 11px;
   font-family: 'tahoma';
-  color: #969696; }
+  color: #6e6e6e; }
+  ._work [data-name*='insertTime'] .date {
+    font-size: 13px;
+    color: #464646; }
+  ._work [data-name*='insertTime'] .week {
+    font-size: 12px; }
 ._work [data-editor], ._work [data-info] {
   cursor: pointer; }
 
 .data-row {
-  padding: 0 8px;
+  padding: 0 9px;
   height: 17px; }
   .data-row dt, .data-row dd {
+    overflow: hidden;
+    white-space: nowrap;
     height: 17px;
     line-height: 17px; }
+    .data-row dt > span, .data-row dd > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%; }
   .data-row dt {
     float: left;
     margin-right: 6px;
     min-width: 10px;
     font-size: 11px;
     color: #ababab; }
-  .data-row dd {
-    overflow: hidden;
-    white-space: nowrap; }
-    .data-row dd > span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%; }
-    .data-row dd .item-tag, .data-row dd .today-work {
-      position: absolute;
-      margin-left: 3px; }
-    .data-row dd .item-tag {
-      margin-top: 3px;
-      font-size: 10px;
-      color: #666b65; }
-    .data-row dd.right {
-      text-align: right; }
+    .data-row dt.right {
+      float: right;
+      text-align: right;
+      margin-right: 0;
+      margin-left: 6px; }
+  .data-row dd .item-tag, .data-row dd .today-work {
+    position: absolute;
+    margin-left: 3px; }
+  .data-row dd .item-tag {
+    margin-top: 3px;
+    font-size: 10px;
+    color: #666b65; }
 
 ._item {
   margin-top: 7px;
@@ -509,13 +540,13 @@
   margin-bottom: 8px; }
 
 ._price {
-  margin-bottom: 6px; }
+  margin-bottom: 9px; }
 
 .item-info {
   margin-bottom: 8px; }
 
 .customer-info {
-  margin-top: 15px;
+  margin-top: 10px;
   margin-bottom: 12px;
   height: 35px; }
   .customer-info dt {
@@ -546,11 +577,21 @@
 
 /* ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 이미지 갤러리 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
 ._work-img {
+  overflow: hidden;
   height: 100px;
   text-align: center;
-  background: #e6e6e6; }
+  background: #c8c8c8;
+  border-bottom: 1px solid gainsboro;
+  cursor: pointer;
+  line-height: 100px; }
+  ._work-img.empty {
+    background: #e8e8e8; }
+  ._work-img:hover > img {
+    opacity: 1; }
   ._work-img > img {
-    height: inherit; }
+    max-width: 200px;
+    max-height: 100px;
+    opacity: .7; }
 
 ._work-controller .editor {
   display: none; }
@@ -630,5 +671,21 @@
   .info-table table td {
     width: 35%;
     text-indent: 1em; }
+
+.result-list {
+  overflow: auto;
+  max-height: 200px; }
+  .result-list span {
+    display: block;
+    padding: .4em 0;
+    font-size: 14px;
+    font-family: 굴림;
+    cursor: pointer; }
+    .result-list span:hover {
+      background: whitesmoke; }
+
+#searchInput {
+  width: 100%;
+  text-indent: 1em; }
 
 /*# sourceMappingURL=list.css.map */

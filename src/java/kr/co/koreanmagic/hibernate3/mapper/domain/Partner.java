@@ -26,6 +26,7 @@ import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Fetch;
@@ -37,6 +38,7 @@ import org.hibernate.annotations.Type;
 				getterVisibility = Visibility.NONE, 
 				setterVisibility = Visibility.NONE)
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @Table(name="partners")

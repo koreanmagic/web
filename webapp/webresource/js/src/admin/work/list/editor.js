@@ -291,6 +291,7 @@ define([
 					}
 				},
 			},
+			
 			"2": {
 				// 탭 위젯이 만들어질때
 				create: function( data ) {
@@ -350,21 +351,24 @@ define([
 				_events: {
 				},
 			}, // 2
+			
 			"3": {
 				// 탭 위젯이 만들어질때
 				create: function( data ) {
-					var removeFlag = false, 
+					var widget = this, 
+					removeFlag = false, 
 					common =  {
 						selectElement: false,
 					},
 					
 					listOptions = {
+						
+						// 파일 삭제
 						removeHandler: function( item, uuid ) {
 							var self = this,
 								flag = removeFlag;
 							if(!flag) {
-								$.get( prefix + "resource/delete/" + item.id, { "serviceType": 'workResourceFile' } )
-								.success(function() {
+								widget.getItem().removeResource( 'workResourceFile', item.id, function(){
 									removeFlag = true;
 									self.remove(uuid);
 									alert(item.originalName + " 삭제");
@@ -375,12 +379,15 @@ define([
 							return flag;
 						},
 					},
+					
 					uploadOptions = {
+						// 업로드 파일 등록시 업로드 버튼 보이도록
 						changeHandler: function() {
 							if( this.size() ) $(".btn-upload").removeClass("ui-helper-hidden");
 							else $(".btn-upload").addClass("ui-helper-hidden");
 						},
 					},
+					
 					upload,
 					events = {
 						"#file": {
@@ -390,21 +397,11 @@ define([
 						},
 						".btn-upload": {
 							"click": function(e) {
-								var items = upload.getItems(),
-									formData = new FormData();
-								$.each(items, function( i, file ) {
-									formData.append("file", file);
+								
+								widget.getItem().resourceUpload('workResourceFile', upload.getItems(), function() {
+									data.init();
 								});
-								 $.ajax({
-					                url: prefix + 'resource/upload',
-					                processData: false,
-					                contentType: false,
-					                data: formData,
-					                type: 'POST',
-					                success: function(result){
-					                   data.init();
-					                }
-					            });
+								
 							}
 						}
 					};
@@ -427,7 +424,7 @@ define([
 					data["upload"].clear();
 					data["list"].clear();
 					
-					$.getJSON(prefix + "resource/list", { "work": this.getWorkId(), "serviceType": 'workResourceFile' })
+					$.getJSON(prefix + "resource/list", { "work": this.getItem().id, "serviceType": 'workResourceFile' })
 					.success(function(json) {
 						data["list"].addList(json);
 					});
@@ -579,11 +576,6 @@ proto = $.extend({},
 		
 		getItem: function() {
 			return this.options.item;
-		},
-		
-		// 현재 수정중인 workId
-		getWorkId: function() {
-			return this.getItem().id;
 		},
 		// 현재 수정중인 work의 customerId
 		getCustomerId: function() {

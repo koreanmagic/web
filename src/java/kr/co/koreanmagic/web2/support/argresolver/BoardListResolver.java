@@ -2,10 +2,12 @@ package kr.co.koreanmagic.web2.support.argresolver;
 
 import static kr.co.koreanmagic.web2.support.argresolver.Utils.cast;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
-import kr.co.koreanmagic.web2.support.argresolver.annotation.BoardList;
-import kr.co.koreanmagic.web2.support.paging.GenericBoardList;
+import kr.co.koreanmagic.web.support.board.BoardList;
+import kr.co.koreanmagic.web2.support.argresolver.annotation.Board;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.MethodParameter;
@@ -23,29 +25,42 @@ public class BoardListResolver implements HandlerMethodArgumentResolver {
 	
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.hasParameterAnnotation(BoardList.class);
+		return parameter.hasParameterAnnotation(Board.class);
 	}
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 									NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-		BoardList paging = parameter.getParameterAnnotation(BoardList.class);
+		Board paging = parameter.getParameterAnnotation(Board.class);
 		HttpServletRequest req  = cast(webRequest);
 		ModelMap model = mavContainer.getModel();
 		
 		// 제원확인
+		BoardList<?> boardList = null;
+		
 		String orderBy = req.getParameter("order") == null ? paging.orderBy() : req.getParameter("order");
+		
 		int page = req.getParameter("page") == null ? paging.page() : Integer.parseInt(req.getParameter("page")),
-			size = req.getParameter("size") == null ? paging.size() : Integer.parseInt(req.getParameter("size"));
+			size = req.getParameter("size") == null ? paging.size() : Integer.parseInt(req.getParameter("size")),
+			links = paging.linkLen();
+			
 		
-		GenericBoardList pagingObj = new GenericBoardList( paging.linkLen() );
+			boardList = (BoardList<?>)parameter
+								.getParameterType()
+								.getConstructor(int.class, int.class, int.class, String.class, String.class)
+								.newInstance( links,
+													size,
+													page,
+													orderBy,
+													req.getServletPath()
+												);
+		if( req.getQueryString() != null )
+			boardList.addQuery( req.getParameterMap() );
 		
-		pagingObj.setPath(req.getServletPath());	// 패스입력
-		pagingObj.setOrder(orderBy);				// 정렬방식 입력
-		model.put(paging.name(), pagingObj.set(page, size) );
+		model.put(paging.name(), boardList );
 		
-		return pagingObj;
+		return boardList;
 	}
 
 }

@@ -31,9 +31,19 @@
   }
   .input-group {
     width : 500px;
+    
   }
   
   input+label {
     width: 85px;
+  }
+  
+  .customer-name {
+    margin-bottom: 15px;
+    
+    font-size: 1.7em;
+    font-weight: bold;
+    font-family: $special-font-family;
+    letter-spacing: -2px;
   }
 }

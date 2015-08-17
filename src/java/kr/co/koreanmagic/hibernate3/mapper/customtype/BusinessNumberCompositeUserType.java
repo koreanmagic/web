@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kr.co.koreanmagic.commons.KoReflectionUtils;
-import kr.co.koreanmagic.commons.KoStringUtils;
+import kr.co.koreanmagic.commons.ReflectionUtils;
+import kr.co.koreanmagic.commons.StringUtils;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
 import org.apache.commons.lang3.ObjectUtils;

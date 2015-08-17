@@ -1,6 +1,6 @@
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
-import static kr.co.koreanmagic.commons.KoStringUtils.nullValue;
+import static kr.co.koreanmagic.commons.StringUtils.nullValue;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

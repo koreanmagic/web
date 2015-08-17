@@ -1,16 +1,21 @@
 package kr.co.koreanmagic.web2.controller.work;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import kr.co.koreanmagic.hibernate3.mapper.domain.Partner;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Work;
 import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.WorkType;
 import kr.co.koreanmagic.service.WorkStateService;
+import kr.co.koreanmagic.service.boardlist.WorkBoard;
+import kr.co.koreanmagic.service.example.WorkExample;
 import kr.co.koreanmagic.web2.controller.work.WorkController.WorkControllerMember;
 import kr.co.koreanmagic.web2.servlet.exception.NoSearchListException;
-import kr.co.koreanmagic.web2.support.argresolver.annotation.BoardList;
-import kr.co.koreanmagic.web2.support.paging.GenericBoardList;
+import kr.co.koreanmagic.web2.support.argresolver.annotation.Board;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,58 +58,28 @@ public class WorkList extends WorkControllerMember {
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  list  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	@RequestMapping(value="/list/{state}")
 	public String list(ModelMap model,
+						HttpServletRequest request,
 						@PathVariable("state") WorkState state,
 						@RequestParam(value="today", required=false) boolean today,  
-						@BoardList(size=10) GenericBoardList boardList
+						@ModelAttribute WorkExample examples,	// 검색어 쿼리를 받아 Example객체를 만드는데 쓰인다.	
+						@Board(size=10,orderBy="<stateTime") WorkBoard boardList		// 뷰에서 사용할 각종 데이터가 담긴다.
 						) throws Exception {
 		
-		Object[] result = service.getStateList(state, today, boardList);
+		service.getList0( examples.setState(state), boardList );
 		
-		// 데이터가 없을 경우
-		if( (int)result[0] == 0 ) {
-			if(today) return "redirect:/admin/work/list/" + state.getId();
-			else return "redirect:/admin/work/list/" + state.getId() + 1;
-		}
-		
-		boardList.setTotalSize((int)result[0]);
-		boardList.setList((List<Work>)result[1]);
 		return "admin.work.list";
 	}
 	
-	// eq-같다  bt-사이값  nb-사이값제외  ge-이상  le-이하  gt-초과  lt-미만  ne-같지않다 
-	// 거래처로 검색
-	@RequestMapping(value="/list/{state}/{type}/{partnerId}")
-	public String customerList(ModelMap model,
-			@PathVariable("state") WorkState state,
-			@PathVariable("partnerId") Partner partner,
-			@PathVariable("type") String name,
-			@BoardList(size=10) GenericBoardList boardList
-			) throws Exception {
-		
-		Object[] result = service.getPartnerList(state, partner, name, boardList);
-		boardList.setTotalSize((int)result[0]);
-		boardList.setList((List<Work>)result[1]);
-		return "admin.work.list";
+	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  list  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
+	@RequestMapping(value="/list/test")
+	public String list1() throws Exception {
+		return "admin.work.list2";
 	}
 	
-	// 거래처로 검색
-	@RequestMapping(value="/test")
-	public String test() throws Exception {
-		return "admin.work.test";
-	}
 		
 	// ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  View ModelMap  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ //
 	@Autowired WorkStateService stateService;
 	
-	@ModelAttribute("states")
-	public List<Long> states() {
-		return service.getStateCount();
-	}
-	@ModelAttribute("states_today")
-	public List<Long> statesToday() {
-		return service.getStateCountByDate();
-	}
-
 	@ModelAttribute("workTypes")
 	public WorkType[] workTypes() {
 		return WorkType.values();

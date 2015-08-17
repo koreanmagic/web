@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kr.co.koreanmagic.commons.KoReflectionUtils;
-import kr.co.koreanmagic.commons.KoUtils;
+import kr.co.koreanmagic.commons.ReflectionUtils;
+import kr.co.koreanmagic.commons.Utils;
 import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
 import kr.co.koreanmagic.hibernate3.mapper.usertype.ThreeNumber;
 
@@ -81,7 +81,7 @@ public class BusinessNumberCompositeUserType implements CompositeUserType {
 			return;
 		}
 		
-		ThreeNumber bn = KoReflectionUtils.cast(value);
+		ThreeNumber bn = ReflectionUtils.cast(value);
 		
 		/* 값 입력 */
 		st.setString(index++, bn.getNum1());

@@ -6,6 +6,7 @@ define([
 	'utils',
 	
 	'jquery-ui',
+	'ui/gallery',
 	
 ], function($, Popup, Utils) {
 	
@@ -17,6 +18,8 @@ define([
 		
 		convertor = Utils.dataConvert(),	// 기본적인 데이터 컨버터
 		
+		// 기본적으로 data-name="{bane}" 엘리먼트의 textContent를 변경해준다.
+		// 이보다 복잡한 작업이 필요할 경우는 직접 커스터마이징한다.
 		defaultTypeHandlers = {
 			"default": function( v, name, values, ele ) {
 				var ele;
@@ -34,23 +37,6 @@ define([
 				
 				ele[0].className = '';
 				ele.addClass(className).attr('href', url);
-			},
-			"subcontractor": function( v, name, values, ele ) {
-				this.find("[data-info='subcontractor']").attr("data-info-key", v.id);
-				ele.text( v.name );
-			},
-			"manager": function( v, name, values, ele ) {
-				var manager = ele,
-					position = getEle.call(this, "manager.position");
-					
-				if( v != null ) {
-					manager.text(v.name).attr("data-info-key", v.id).attr("data-info", "manager");
-					position.text(v.position);
-				}
-				else {
-					manager.text("담당자 없음").attr("data-info-key", "").removeAttr("data-info");
-					position.text("");
-				}
 			},
 		}
 		;
@@ -135,7 +121,7 @@ define([
 		},
 		
 		_init: function() {
-			
+			//this[2].gallery();
 		},
 		
 		// 모두 삭제
@@ -275,7 +261,14 @@ define([
 	);
 	
 	// widget 코드 시작
-	var selectBtn = $.widget("ui.itemContainer", widgetPrototype);
+	var selectBtn = $.widget("ui.itemContainer", widgetPrototype),
+		
+		gallery = $('#ui-gallery')
+							.gallery()
+							.on('popOff', function( e ) {
+								$(this).data('itemObj').draftFile();
+							})
+							.gallery( 'instance' );
 	
 	
 	
@@ -284,14 +277,19 @@ define([
 	 * Item 객체는 각 작업 게시물 하나를 뜻한다.
 	 * 이는 jQuery를 상속한 객체이므로, jQuery를 이용하는 것과 동일하게 작업하면 된다.
 	 */
-	function Item( element, parent ) {
+	function Item( element, widget ) {
 		
-		var split, i, obj;
+		var split, i, obj, self = this;
 		this[0] = this.element = element.nodeType === 1 ? element : element[0];
 		this.length = 1;
-		this.parent = parent;
+		this.widget = widget;
 		
 		this.data("instance", this);
+
+
+		this.setValue = function() {
+			Item.prototype.setValue.apply(self, arguments);
+		};
 		
 		this.create();
 	}
@@ -313,9 +311,11 @@ define([
 		create: function() {
 			this.id = this.access("workId");		// DB primary Key
 			this.customer = this.access("customerId");
+			this.state = this.access("workState");
 			
 			this.resourceFile();
 			this.confirmFile();
+			this.draftFile();
 		},
 		
 		
@@ -334,9 +334,110 @@ define([
 				self.setValue(json);
 				self.resourceFile();
 				self.confirmFile();
+				self.draftFile();
 			});
 		},
 		
+		
+		/********************* ▼ RESOURCE FILE ▼ *********************/
+		// [UPLOAD] 리소스파일 업로드하기
+		resourceUpload: function( type, files, handler ) {
+			var self = this, 
+				formData = new FormData();
+			
+			$.each(files, function( i, file ) {
+				formData.append("file", file);
+			});
+			formData.append("work", this.id);
+			formData.append("serviceType", type);
+				
+			$.ajax({
+				url: '/admin/work/editor/resource/upload',
+				processData: false,
+				contentType: false,
+				data: formData,
+				type: 'POST',
+			}).success(function(){
+				handler.call(self);
+			});
+				
+			return false;
+		},
+		
+		// [GET] 리소스파일 리스트 가지고 오기
+		getResource: function( type, handler ) {
+			var self = this;
+			
+			$.getJSON( '/admin/work/editor/resource/list',
+				{"work": this.id, 'serviceType': type}
+			).success(function( json ) {
+				handler.call(self, json);
+			});
+		},
+		
+		// [REMOVE] 리소스파일 지우기
+		removeResource: function( type, resourceId, handler ) {
+			var self = this;
+			$.ajax({
+				url: '/admin/work/editor/resource/delete/' + resourceId,
+				type: 'GET',
+				data: {"work": item.id, 'serviceType': type},
+			}).success(function(data) {
+				handler.call(self);
+			});
+		},
+		
+		/********************* ▲ RESOURCE FILE ▲ *********************/
+		
+		
+		// 시안 갤러리
+		gallery: function() {
+			
+			this.getResource( 'workDraftFile', function( json ) {
+				var self = this, 
+					data = [];		
+				
+				gallery._init();
+				
+				// 갤러리 이미지 삭제 콜백
+				gallery.options.removeHandler = function( index, imgObj ) {
+					var returnValue = false;
+					$.ajaxSetup({ async: false });	// 동기식으로
+					
+					self.removeResource( 'workDraftFile', imgObj.id, function(e) {
+						returnValue = true;
+					});
+					
+					$.ajaxSetup({ async: true });
+					return returnValue;
+				};
+				
+				// 이미지 추가시, 업로드 후 gallery를 재부트한다.
+				gallery.options.addHandler = function(files) {
+					self.resourceUpload( 'workDraftFile', files, function() { this.gallery(); });
+				};
+				
+				
+				$.each(json, function( i, values ) {
+					// 데이터 컨버팅
+					data.push({
+						id: values.id,
+						src: '/resource/' + values['parentPath'] + '/' + values['saveName'] + '.' + values['fileType'],
+						thumbnail: '/resource/' + values['parentPath'] + '/' + values['saveName'] + '-thumbnail.' + values['fileType'],
+						filename: values['originalName']  + '.' + values['fileType'],
+						length: values['size'],
+						datetime: values['uploadTime'],
+					});
+					
+				});	
+				
+				gallery.put(data);
+				if( data.length ) gallery.view(0);
+				
+				// 팝오프시 재호출을 위한 아이템을 저장한다.
+				this.widget.popup( gallery.element.data('itemObj', this) );
+			});
+		},
 		
 		// 참고파일이 있는지 확인하고 버튼 생성
 		resourceFile: function() {
@@ -360,39 +461,44 @@ define([
 				target = $( btn.data('uiDropdown') )
 				;
 				
-			$.getJSON( '/admin/work/editor/resource/list',
-					{"work": this.id, 'serviceType': 'workConfirmFile'}
-			)
-			.success(function( data ) {
+			this.getResource( 'workConfirmFile', function( data ) {
 				data = data[0];
 				if( data ) {
 					btn.removeClass('disable');
-					
 					// 실제 다운받게 될 파일명
-					data['filename'] = self.id + '_' + self.getValue(['customer', 'item']).join('_') 
+					data['filename'] = self.id + '_'
+												+ self.getValue(['customer', 'item']).join('_') 
 												+ '.' + data['fileType'];  
 					
 					setValues.call(target, data);
-					
 				} else {
 					btn.addClass('disable');
 				}
 			});
+				
 		},
 		
-		
 		draftFile: function() {
-			var self = this,
-			btn = self.find('.btn-work-file'),
-				target = $( btn.data('uiDropdown') )
-				;
+			this.getResource( 'workDraftFile', function( data ) {
+				var ele = this.find('._work-img').empty();
+				data = data[0];
+				
+				if(!data) {
+					ele.addClass('empty');
+					return this;
+				};
+				
+				ele.append(
+					'<img src="/resource/' + data['parentPath'] + '/' + data['saveName'] + '-thumbnail.' + data['fileType'] + '">'
+				).removeClass('empty');
+			});
 		},
 		
 		// 에디터 열기
 		// 1) 먼저 work 하이버네이트 프록시를 세션에 저장한다.
 		editor: function( option ) {
 			var item = this,
-				widget = this.parent;
+				widget = this.widget;
 				
 			// 세션에 작업 아이디 저장
 			$.ajax("/admin/work/editor/init/" + this.id)
@@ -402,14 +508,15 @@ define([
 				});
 		},
 		
+		
 		setValue: setValuesFactory({
-				"afterProcess": function( v, name, values ) {
+				"afterProcess": function( v, name, values, ele ) {
 					v ? 
 						getEle.call(this, 'itemDetail').next().removeClass('ui-helper-hidden') :
 						getEle.call(this, 'itemDetail').next().addClass('ui-helper-hidden');
 				}, // afterProcess
 				
-				"memo": function( v, name, values ) {
+				"memo": function( v, name, values, ele ) {
 					if(v) {
 						this.find('.btn-memo').removeClass('disable');
 						defaultTypeHandlers.memo.apply(this, arguments);
@@ -418,10 +525,9 @@ define([
 					}
 				}, // memo
 				
-				"delivery": function( v, name, values ) {
+				"delivery": function( v, name, values, ele ) {
 					var className = ['fa-cubes', 'fa-male', 'fa-truck'],
-						ordinal = v.ordinal,
-						ele = getEle.call(this, name);
+						ordinal = v.ordinal;
 					
 					$.each(className, function(i, cName) {
 						if( i == ordinal ) {
@@ -431,6 +537,34 @@ define([
 						else ele.removeClass(cName);
 					});
 				}, // delivery
+				
+				'count': function( v, name, values, ele ) {
+					var num = values.num ? '(' + values.num + '건)' : '';
+					
+					ele.text( v + ' ' + num );
+				}, // count
+				
+				"subcontractor": function( v, name, values, ele ) {
+					this.find("[data-info='subcontractor']").attr("data-info-key", v.id);
+					ele.text( v.name );
+				},
+				"manager": function( v, name, values, ele ) {
+					var manager = ele,
+						position = getEle.call(this, "manager.position");
+						
+					if( v != null ) {
+						manager.text(v.name).attr("data-info-key", v.id).attr("data-info", "manager");
+						position.text(v.position);
+					}
+					else {
+						manager.text("담당자 없음").attr("data-info-key", "").removeAttr("data-info");
+						position.text("");
+					}
+				},
+				
+				'insertTime': function( v, name, values, ele ) {
+					return;
+				},
 			}
 		),
 		

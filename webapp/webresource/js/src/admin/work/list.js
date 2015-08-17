@@ -1,12 +1,26 @@
 
 define([
 	'jquery',
+	'#json!json/itemCategory.json',
+	
 	'component/dom-ui',
 	
 	'./list/editor',
 	'./list/itemContainer',
 	'./context',
-], function($) {
+], function($, items) {
+	
+	
+	var itemList = '<div class="_item-names drop-box ui-helper-hidden">',
+		ul;
+	$.each(items, function( header, list ) {
+		ul = '<ul><li class="header">' + header + '</li>';
+		$.each(list, function( i, name ) {
+			ul += '<li data-value>' + name + '</li>';
+		});
+		itemList += ul + '</ul>';
+	});
+	itemList = $(itemList + '</div>').appendTo('.item-category');
 	
 	function link( inner, obj ) {
 		return '<a href="/resource/' + obj.saveName + '">' + inner + '</a>'; 
@@ -79,17 +93,15 @@ define([
 			
 			// 아이템 삭제
 			"click ._work .delete": function(e) {
-				var handlers =  {
-					success: function () {
-						alert("삭제 완료");
-						location.reload(); 
-					},
-					error: function() {
-						alert("삭제 실패\n한컴 관리자에 문의하세요");
-					}
-				};
-				
-				this.getJSON("/admin/work/delete/" + e.item.id,  handlers);
+				if(!confirm('정말 삭제하시겠습니까?')) return;
+				$.getJSON("/admin/work/delete/" + e.item.id)
+				.success(function() {
+					alert("삭제 완료");
+					location.reload(); 
+				})
+				.fail(function(){
+					alert("삭제 실패\n한컴 관리자에 문의하세요");
+				});
 			},
 			
 			"mouseover ._work .delete": function(e) {
@@ -144,26 +156,24 @@ define([
 			// 업로드
 			"click .confirm-upload > button": function(e) {
 				e.preventDefault();
-				
-				var item = e.item,
-					formData = new FormData();
-				
-				formData.append("file", e.currentTarget.previousSibling.files[0]);
-				formData.append("work", e.item.id);
-				formData.append("serviceType", 'workConfirmFile');
-				
-				$.ajax({
-					url: '/admin/work/editor/resource/upload',
-					processData: false,
-					contentType: false,
-					data: formData,
-					type: 'POST',
-				}).success(function(){
-					item.confirmFile();
-				});
+				e.item.resourceUpload( 'workConfirmFile',
+												e.currentTarget.previousSibling.files,
+												function() {
+													e.item.confirmFile();
+													this.find('.editor').trigger('ui-disable');		// 팝업창 없애고
+													$('._work-controller').removeClass('editor');	// 에디터모드 바꾸고
+													if( parseInt(this.state) < 3 && confirm('작업상황을 바꾸시겠습니까?'))
+														location.href= "/admin/work/set/state/" + this.id + "/" + 3;
+														
+												});
 			},
 			// ****** ▲ 파일 업로드 ▲ ******
 			
+			
+			// 시안 이미지 올리기
+			"click ._work-img": function( e ) {
+				e.item.gallery();
+			},
 			
 			// 아이템 박스에서 포커스 아웃되면 모든 이벤트를 초기화시킨다.
 			"focusout ._work-wrap": "initialize",

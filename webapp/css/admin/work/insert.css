@@ -207,5 +207,11 @@
   width: 500px; }
 #command input + label {
   width: 85px; }
+#command .customer-name {
+  margin-bottom: 15px;
+  font-size: 1.7em;
+  font-weight: bold;
+  font-family: "맑은 고딕", "Apple SD Gothic Neo", Sans-serif;
+  letter-spacing: -2px; }
 
 /*# sourceMappingURL=insert.css.map */

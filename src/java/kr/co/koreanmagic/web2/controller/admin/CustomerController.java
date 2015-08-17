@@ -1,15 +1,11 @@
 package kr.co.koreanmagic.web2.controller.admin;
 
-import java.util.List;
-
 import kr.co.koreanmagic.hibernate3.mapper.domain.Customer;
 import kr.co.koreanmagic.service.BankNameService;
 import kr.co.koreanmagic.service.CustomerService;
 import kr.co.koreanmagic.service.ManagerService;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

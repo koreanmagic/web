@@ -1,11 +1,9 @@
 package kr.co.koreanmagic.hibernate3.mapper.domain;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,20 +29,25 @@ import kr.co.koreanmagic.hibernate3.mapper.domain.code.WorkState;
 import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.DeliveryType;
 import kr.co.koreanmagic.hibernate3.mapper.domain.enumtype.WorkType;
 import kr.co.koreanmagic.hibernate3.mapper.generate.WorkSequence;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.name.Rename;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+
 
 @JsonAutoDetect(fieldVisibility=Visibility.NONE, 
 				getterVisibility = Visibility.NONE, 
 				setterVisibility = Visibility.NONE)
 
 @GenericGenerator(name="seq_id", strategy="kr.co.koreanmagic.hibernate3.mapper.generate.WorkSequence")
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @Entity
 @Table(name="hancome_work")
 public class Work {
@@ -329,13 +332,13 @@ public class Work {
 	
 	// 채워져 들어오는 항목 :: orignalName, fileType, size
 	public final void saveFile(InputStream is, WorkFile file) {
-		if(file instanceof WorkResourceFile) fill(is, file, "files");
-		else if (file instanceof WorkDraftFile) fill(is, file, "imgs");
-		else if (file instanceof WorkConfirmFile) fill(is, file, "");
+		if(file instanceof WorkResourceFile) fill(is, file, "files", false);
+		else if (file instanceof WorkDraftFile) fill(is, file, "imgs", true);
+		else if (file instanceof WorkConfirmFile) fill(is, file, "", false);
 		else throw new RuntimeException("올바른 WorkFile객체가 아닙니다.");
 	}
 	
-	private final void fill(InputStream is, WorkFile file, String subPath) {
+	private final void fill(InputStream is, WorkFile file, String subPath, boolean thumb) {
 		
 		subPath = subPath.length() > 0 ? "/" + subPath : "";
 		
@@ -345,14 +348,24 @@ public class Work {
 		save(is, RESOURCE_PATH
 						.resolve(file.getParentPath())
 						.resolve( String.join(".", file.getSaveName(), file.getFileType()) )
+						, thumb
 		);
 	}
 	
 	// 파일저장
-	private final void save(InputStream is, Path target) {
+	private final void save(InputStream is, Path target, boolean thumb) {
 		try {
 			Files.createDirectories(target.getParent());
 			Files.copy(is, target);
+			System.out.println(target);
+			// 썸네일 이미지 생성
+			if(thumb) {
+				Thumbnails.of(target.toFile())
+					.height(150)
+					.outputFormat("jpg")
+					.toFiles(Rename.SUFFIX_HYPHEN_THUMBNAIL);
+			}
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

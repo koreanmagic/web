@@ -3,7 +3,7 @@
 
 
 %button {
-  $height: 27px;
+  $height: 23px;
   
   display: inline-block;
   padding: 0 5px;
@@ -31,10 +31,10 @@
   }
   // 클릭시 테두리 점선 없애기
   &.active {
-    border: 1px solid darken(rgb(46, 105, 182), 15%);
+    border: 1px solid rgb(65,65,65);
     color: white;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.4);
     background: rgb(46, 105, 182);
+    cursor: default;
   }
   
   &.disable {

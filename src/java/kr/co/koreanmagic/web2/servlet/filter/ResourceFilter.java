@@ -1,6 +1,7 @@
 package kr.co.koreanmagic.web2.servlet.filter;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import javax.servlet.Filter;
@@ -22,7 +23,7 @@ public class ResourceFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		
 	}
-
+	
 	
 	// ?filename={name.type}
 	@Override
@@ -35,10 +36,20 @@ public class ResourceFilter implements Filter {
 		 * 이를 위해 인코딩된 문자를 다시 한번 replace 해준다. 
 		 */
 		String fileName = resolveFileName((HttpServletRequest)request);
+		//fileName = URLEncoder.encode(fileName, "utf-8").replace("+", "%20");
+		fileName = URLEncoder.encode(fileName, "utf-8")
+								.replaceAll("\\+", "%20")
+			                .replaceAll("\\%21", "!")
+			                .replaceAll("\\%27", "'")
+			                .replaceAll("\\%28", "(")
+			                .replaceAll("\\%29", ")")
+			                .replaceAll("\\%7E", "~")
+			                .replaceAll("\\%40", "@");
 		
 		((HttpServletResponse)response)
 				.setHeader("Content-Disposition",
-						String.join("", "attachment; filename=\"", URLEncoder.encode(fileName, "utf-8").replace("+", "%20"), "\"") );
+						//String.join("", "attachment; filename=\"", URLEncoder.encode(fileName, "utf-8").replace("+", "%20"), "\"") );
+						String.join("", "attachment; filename=\"", fileName, "\"") );
 	
 		chain.doFilter(request, response);
 	}
